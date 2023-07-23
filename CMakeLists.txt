@@ -7,4 +7,6 @@ include_directories(.)
 include_directories(turboaccelerated-rainbow-tables)
 
 add_executable(turboaccelerated_rainbow_tables
-        turboaccelerated-rainbow-tables/main.c)
+        turboaccelerated-rainbow-tables/main.c
+        turboaccelerated-rainbow-tables/md5_calc.c
+        turboaccelerated-rainbow-tables/md5_calc.h)
