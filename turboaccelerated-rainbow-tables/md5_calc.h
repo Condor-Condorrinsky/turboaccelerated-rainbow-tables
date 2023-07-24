@@ -5,8 +5,10 @@
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
 #define TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
 
-#define EVP_DIGEST_UPDATE_NUM_BYTES 1024
+#define MD5_DIGEST_LENGTH           16
+#define EVP_DIGEST_UPDATE_NUM_BYTES 64
 
-uint32_t compute_md5(const char* input, unsigned char digest[EVP_MAX_MD_SIZE]);
+unsigned int compute_md5(const char* input, unsigned char digest[MD5_DIGEST_LENGTH]);
+void print_hash(const unsigned char* input);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
