@@ -4,3 +4,6 @@ A proof-of-concept application generating rainbow tables for MD5 hash function w
 
 ##### Authors
 - Konrad Dumin
+
+###### Notes
+- GoogleTest discourages usage of underscore in test suite names, hence inconsistent naming scheme in tests
