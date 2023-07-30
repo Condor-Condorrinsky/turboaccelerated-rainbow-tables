@@ -7,3 +7,4 @@ A proof-of-concept application generating rainbow tables for MD5 hash function w
 
 ###### Notes
 - GoogleTest discourages usage of underscore in test suite names, hence inconsistent naming scheme in tests
+

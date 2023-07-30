@@ -11,9 +11,12 @@ unsigned int compute_md5(const char* input, unsigned char* digest){
 }
 
 void convert_to_string(const unsigned char* input, char* output){
+    // one byte -> 2 hex digits plus null terminator
+    const int MAX_BYTE_TO_HEX_STR_LENGTH = 3;
+
     char* ptr = &output[0];
     for (int i = 0; i < MD5_DIGEST_LENGTH; i++){
-        ptr += sprintf(ptr, "%02X", output[i]);
+        ptr += snprintf(ptr, MAX_BYTE_TO_HEX_STR_LENGTH, "%02X", input[i]);
     }
 }
 

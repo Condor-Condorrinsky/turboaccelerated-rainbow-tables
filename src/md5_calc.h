@@ -19,6 +19,7 @@
 unsigned int compute_md5(const char* input, unsigned char* digest);
 
 /*
+ * razz's answer
  * https://stackoverflow.com/questions/6357031/how-do-you-convert-a-byte-array-to-a-hexadecimal-string-in-c
  *
  * Similar to print_hash, but converts to null-terminated string in memory instead of
