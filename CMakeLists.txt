@@ -3,20 +3,20 @@ project(turboaccelerated_rainbow_tables)
 
 set(CMAKE_C_STANDARD 11)
 
-include_directories(.)
-include_directories(src)
-
 OPTION(TESTS "Compile tests" OFF)
 
 if(TESTS)
-    include_directories(tst)
     add_executable(turboaccelerated_rainbow_tables
             # Test files
-            # tst/gtest_main.cpp
             tst/md5_calc_test.cpp
             # Src, without main
-            src/md5_calc.c
-            src/md5_calc.h)
+            src/md5_calc.h
+            src/md5_calc.c)
+
+    target_include_directories(turboaccelerated_rainbow_tables
+            PUBLIC src
+            PUBLIC tst
+    )
 
     enable_testing()
     set(GTest_DIR .)
@@ -29,6 +29,10 @@ else ()
             src/main.c
             src/md5_calc.c
             src/md5_calc.h)
+
+    target_include_directories(turboaccelerated_rainbow_tables
+            PUBLIC src
+    )
 endif()
 
 # OpenSSL
