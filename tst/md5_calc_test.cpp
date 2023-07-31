@@ -31,11 +31,18 @@ TEST(MD5CalcTest, ComputeMD5Test){
     convert_to_string(digest2, string_digest2);
     convert_to_string(digest3, string_digest3);
 
-    EXPECT_EQ(string_digest1, s1) << "String digest nr 1 not equal" << std::endl;
-    EXPECT_EQ(string_digest2, s2) << "String digest nr 2 not equal" << std::endl;
-    EXPECT_EQ(string_digest3, s3) << "String digest nr 3 not equal" << std::endl;
+    EXPECT_TRUE(strcmp(string_digest1, s1)) << "String digest nr 1 not equal" << std::endl;
+    EXPECT_TRUE(strcmp(string_digest2, s2)) << "String digest nr 2 not equal" << std::endl;
+    EXPECT_TRUE(strcmp(string_digest3, s3)) << "String digest nr 3 not equal" << std::endl;
 }
 
 TEST(MD5CalcTest, ConvertToStringTest){
+    // 0xea7fc82b5937beff14a7cb274b96b76e
+    const unsigned char test_digest[MD5_DIGEST_LENGTH] =
+            {234, 127, 200, 43, 89, 55, 190, 255,
+             20, 167, 203, 39, 75, 150, 183, 110};
+    char out[2 * MD5_DIGEST_LENGTH + 1];
+    convert_to_string(test_digest, out);
 
+    EXPECT_TRUE(strcmp(out, "ea7fc82b5937beff14a7cb274b96b76e"));
 }
