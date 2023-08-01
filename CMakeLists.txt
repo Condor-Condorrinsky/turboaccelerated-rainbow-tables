@@ -2,23 +2,27 @@ cmake_minimum_required(VERSION 3.25)
 project(turboaccelerated_rainbow_tables)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 OPTION(TESTS "Compile tests" OFF)
 
 if(TESTS)
     add_executable(turboaccelerated_rainbow_tables
             # Test files
-            tst/md5_calc_test.cpp
+            tst/md5calc_test.cpp
             # Src, without main
-            src/md5_calc.h
-            src/md5_calc.c)
-
+            src/md5calc.h
+            src/md5calc.c
+            src/reduction.h
+            src/reduction.c)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
             PUBLIC tst
     )
 
     enable_testing()
+
+    # GTest (Google Test)
     set(GTest_DIR .)
     find_package(GTest CONFIG REQUIRED)
     target_link_libraries(turboaccelerated_rainbow_tables
@@ -27,9 +31,10 @@ if(TESTS)
 else ()
     add_executable(turboaccelerated_rainbow_tables
             src/main.c
-            src/md5_calc.c
-            src/md5_calc.h)
-
+            src/md5calc.h
+            src/md5calc.c
+            src/reduction.h
+            src/reduction.c)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
     )
