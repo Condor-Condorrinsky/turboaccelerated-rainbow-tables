@@ -1,4 +1,4 @@
-#include "md5_calc.h"
+#include "md5calc.h"
 
 unsigned int compute_md5(const char* input, unsigned char* digest){
     unsigned int written;

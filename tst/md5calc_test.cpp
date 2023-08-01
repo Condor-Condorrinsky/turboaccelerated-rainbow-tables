@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 extern "C" {
-    #include "../src/md5_calc.h"
+    #include "../src/md5calc.h"
 }
 
 TEST(MD5CalcTest, ComputeMD5Test){
