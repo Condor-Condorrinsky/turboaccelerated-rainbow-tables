@@ -1,6 +1,6 @@
-#include "stdint.h"
-#include "openssl/types.h"
-#include "openssl/evp.h"
+#include <stdint.h>
+#include <openssl/types.h>
+#include <openssl/evp.h>
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
 #define TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H

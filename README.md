@@ -2,6 +2,10 @@
 
 A proof-of-concept application generating rainbow tables for MD5 hash function written in C and hardware-accelerated using Alveo U50.
 
+##### Dependencies
+- OpenSSL (*libssl* and *libcrypto*)
+- GoogleTest (*libgtest*; only necessary if you need to compile tests)
+
 ##### Authors
 - Konrad Dumin
 
