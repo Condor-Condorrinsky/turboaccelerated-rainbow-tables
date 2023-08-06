@@ -13,10 +13,11 @@
  *
  * input - the string to be hashed
  * digest - buffer where the end result will be stored, MUST be at least 16 chars long
+ * n - length of hashed string, without null terminator
  *
  * Returns the number of bytes written - the length of the digest
  */
-unsigned int compute_md5(const char* input, unsigned char* digest);
+unsigned int compute_md5(const char* input, unsigned char* digest, int n);
 
 /*
  * razz's answer
