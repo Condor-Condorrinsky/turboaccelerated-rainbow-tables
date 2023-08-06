@@ -22,7 +22,7 @@ unsigned int compute_md5(const char* input, unsigned char* digest);
  * razz's answer
  * https://stackoverflow.com/questions/6357031/how-do-you-convert-a-byte-array-to-a-hexadecimal-string-in-c
  *
- * Similar to print_hash, but converts to null-terminated string in memory instead of
+ * Similar to print_hash, but converts to C string and stores output in memory instead of
  * directly printing to stdout.
  *
  * input - md5 digest
@@ -32,6 +32,7 @@ void convert_to_string(const unsigned char* input, char* output);
 
 /*
  * Prints created hash to stdout
+ *
  * input - buffer with computed hash
  */
 void print_hash(const unsigned char* input);
