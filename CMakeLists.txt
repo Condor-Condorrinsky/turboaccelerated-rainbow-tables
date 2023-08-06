@@ -10,6 +10,7 @@ if(TESTS)
     add_executable(turboaccelerated_rainbow_tables
             # Test files
             tst/md5calc_test.cpp
+            tst/reduction_test.cpp
             # Src, without main
             src/md5calc.h
             src/md5calc.c
