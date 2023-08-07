@@ -12,10 +12,12 @@ if(TESTS)
             tst/md5calc_test.cpp
             tst/reduction_test.cpp
             # Src, without main
-            src/md5calc.h
             src/md5calc.c
+            src/md5calc.h
+            src/reduction.c
             src/reduction.h
-            src/reduction.c)
+            src/tablegen.c
+            src/tablegen.h)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
             PUBLIC tst
@@ -32,10 +34,12 @@ if(TESTS)
 else ()
     add_executable(turboaccelerated_rainbow_tables
             src/main.c
-            src/md5calc.h
             src/md5calc.c
+            src/md5calc.h
+            src/reduction.c
             src/reduction.h
-            src/reduction.c)
+            src/tablegen.c
+            src/tablegen.h)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
     )
