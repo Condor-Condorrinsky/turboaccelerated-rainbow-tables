@@ -6,7 +6,6 @@
 #define TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
 
 #define MD5_DIGEST_LENGTH           16
-#define EVP_DIGEST_UPDATE_NUM_BYTES 64
 
 /*
  * Computes the MD5 hash of the given string
@@ -30,12 +29,5 @@ unsigned int compute_md5(const char* input, unsigned char* digest, int n);
  * output - buffer to write to; for MD5 it MUST be at least 2 * MD5_DIGEST_LENGTH + 1 long
  */
 void convert_to_string(const unsigned char* input, char* output);
-
-/*
- * Prints created hash to stdout
- *
- * input - buffer with computed hash
- */
-void print_hash(const unsigned char* input);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H

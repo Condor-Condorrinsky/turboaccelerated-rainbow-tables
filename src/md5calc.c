@@ -19,10 +19,3 @@ void convert_to_string(const unsigned char* input, char* output){
         ptr += snprintf(ptr, MAX_BYTE_TO_HEX_STR_LENGTH, "%02x", input[i]);
     }
 }
-
-void print_hash(const unsigned char* input){
-    for (int i = 0; i < MD5_DIGEST_LENGTH; ++i) {
-        printf("%02x", input[i]);
-    }
-    printf("\n");
-}

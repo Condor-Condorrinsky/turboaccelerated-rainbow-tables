@@ -2,9 +2,10 @@
 
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern){
     const int BASE_10_IDENTIFIER = 10;
+    const int MAX_DELIMITERS_IN_PATTERN = 15;
     const char PATTERN_DELIMITER = '_';
     // Max 16 2-digit numbers plus 15 delimiters
-    char pattern_copy[2 * MD5_DIGEST_LENGTH + 15];
+    char pattern_copy[2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN];
     unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
 
     // Performing copy since strtok() modifies original string
