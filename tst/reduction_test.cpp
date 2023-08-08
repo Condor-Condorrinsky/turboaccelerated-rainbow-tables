@@ -10,7 +10,8 @@ TEST(ReductionTest, ReduceTest){
     char output_buffer[MD5_DIGEST_LENGTH + 1];
     const char* pattern = "15_10_7_12_3_0_8_1";
 
-    reduce(example_digest, output_buffer, pattern);
+    reduce(example_digest, output_buffer, pattern,
+           sizeof example_digest, sizeof output_buffer);
 
     int result = strcmp(output_buffer, "gvvxraux");
     EXPECT_TRUE(result == 0) << "Reduction output not equal to expected value";

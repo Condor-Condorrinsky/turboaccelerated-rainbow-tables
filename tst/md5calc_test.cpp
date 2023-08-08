@@ -10,10 +10,10 @@ TEST(MD5CalcTest, ComputeMD5Test){
     unsigned char digest[MD5_DIGEST_LENGTH];
     char string_digest[2 * MD5_DIGEST_LENGTH + 1];
 
-    unsigned int hash = compute_md5("Hello", digest, hello_length);
+    unsigned int hash = compute_md5("Hello", digest, hello_length, sizeof digest);
     EXPECT_EQ(hash, MD5_DIGEST_LENGTH) << "Digest length nr 1 not equal" << std::endl;
 
-    convert_to_string(digest, string_digest);
+    convert_to_string(digest, string_digest, sizeof digest, sizeof string_digest);
     int result = strcmp(string_digest, s);
     EXPECT_TRUE(result == 0) << "String digest nr 1 not equal" << std::endl;
 }
@@ -25,7 +25,7 @@ TEST(MD5CalcTest, ConvertToStringTest){
              20, 167, 203, 39, 75, 150, 183, 110};
     char out[2 * MD5_DIGEST_LENGTH + 1];
 
-    convert_to_string(test_digest, out);
+    convert_to_string(test_digest, out, sizeof test_digest, sizeof out);
     int result = strcmp(out, "ea7fc82b5937beff14a7cb274b96b76e");
     EXPECT_TRUE(result == 0);
 }
