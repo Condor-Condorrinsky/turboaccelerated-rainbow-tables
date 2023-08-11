@@ -11,7 +11,7 @@
  * Function supports patterns of length from "A" to "A_B_C_D_E_F_G_H_I_J_K_L_M_N_O_P" (up to 16 numbers, since MD5
  * consists of 16 bytes).
  *
- * digest - hash to be reduced into another password
+ * digest - hash (in raw form, not string) to be reduced into another password
  * output - buffer to store the output of operation; minimum 17 bytes of length
  * reduction_pattern - string in the form described earlier
  * digest_len - length of digest array, must be equal to MD5_DIGEST_LENGTH = 16
