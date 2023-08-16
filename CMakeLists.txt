@@ -9,6 +9,7 @@ OPTION(TESTS "Compile tests" OFF)
 if(TESTS)
     add_executable(turboaccelerated_rainbow_tables
             # Test files
+            tst/fileio_test.cpp
             tst/md5calc_test.cpp
             tst/reduction_test.cpp
             # Src, without main

@@ -24,7 +24,7 @@ int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len){
     return bytes_read;
 }
 
-void write_line(FILE* file, char* pass, char* reduced){
+void write_line(FILE* file, const char* pass, const char* reduced){
     fprintf(file, "%s%s%s\n", pass, RAINBOW_TABLE_SEPARATOR, reduced);
 }
 
@@ -40,7 +40,7 @@ long get_file_size(FILE* file){
 
 int count_lines(FILE* file) {
     char buf[IO_BUFF_SIZE];
-    int counter = 0;
+    int counter = 1;
 
     for(;;) {
         size_t res = fread(buf, sizeof(char), IO_BUFF_SIZE, file);
@@ -48,13 +48,16 @@ int count_lines(FILE* file) {
             fprintf(stderr, "Error encountered when counting lines");
             return IO_EXIT_FAILURE;
         }
-        if (feof(file) || res == 0)
+        if (res == 0)
             break;
 
         int i;
         for(i = 0; i < res; i++)
             if (buf[i] == '\n')
                 counter++;
+
+        if (feof(file))
+            break;
     }
 
     return counter;
