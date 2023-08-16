@@ -18,7 +18,9 @@ if(TESTS)
             src/reduction.h
             src/tablegen.c
             src/tablegen.h
-            src/patternenum.h)
+            src/patternenum.h
+            src/fileio.c
+            src/fileio.h)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
             PUBLIC tst
@@ -41,7 +43,9 @@ else ()
             src/reduction.h
             src/tablegen.c
             src/tablegen.h
-            src/patternenum.h)
+            src/patternenum.h
+            src/fileio.c
+            src/fileio.h)
     target_include_directories(turboaccelerated_rainbow_tables
             PUBLIC src
     )

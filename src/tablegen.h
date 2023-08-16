@@ -6,7 +6,7 @@
 #define TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H
 
 /*
- * Main function generating a single complete rainbow chain stemming from one passsword
+ * Main function generating a single complete rainbow chain stemming from one password
  *
  * passwd - C string to generate chain from
  * endrslt - buffer to write a final reduced hash to
