@@ -40,7 +40,7 @@ TEST_F(FileIOFixture, LoadPassDictionaryTest){
 }
 
 TEST_F(FileIOFixture, WriteFileTest){
-    const char* outpath = "../tst/rsrc/write_file_test.txt";
+    const char* outpath = "../tst/out/write_file_test.txt";
     const char* expected = "message -> qazwsxed";
     char* out_buffer;
 
