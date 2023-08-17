@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/stat.h>
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H
 #define TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H

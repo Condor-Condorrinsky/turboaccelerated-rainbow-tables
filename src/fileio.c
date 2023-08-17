@@ -10,6 +10,7 @@ int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len){
 
     for(;;) {
         size_t res = fread(buffer, sizeof(char), IO_BUFF_SIZE, file);
+        bytes_read += (int) res;
         if (ferror(file)) {
             fprintf(stderr, "IO generic error");
             return IO_EXIT_FAILURE;
@@ -17,7 +18,6 @@ int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len){
         if (feof(file) || res == 0)
             break;
 
-        bytes_read += (int) res;
         buffer += IO_BUFF_SIZE;
     }
 
@@ -30,10 +30,18 @@ void write_line(FILE* file, const char* pass, const char* reduced){
 
 long get_file_size(FILE* file){
     long fsize;
+    struct stat s;
+    int fd;
 
-    fseek(file, 0, SEEK_END);
-    fsize = ftell(file);
-    rewind(file);
+    if ((fd = fileno(file)) < 0){
+        fprintf(stderr, "Couldn't open file descriptor for size estimation");
+        return -1;
+    }
+    if ((fstat(fd, &s))){
+        fprintf(stderr, "Couldn't get file info for size estimation");
+        return -2;
+    }
+    fsize = s.st_size;
 
     return fsize;
 }
