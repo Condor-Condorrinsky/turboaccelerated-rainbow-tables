@@ -1,3 +1,4 @@
+#include "fileio.h"
 #include "md5calc.h"
 #include "patternenum.h"
 #include "reduction.h"
@@ -6,7 +7,16 @@
 #define TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H
 
 /*
- * Main function generating a single complete rainbow chain stemming from one password
+ * Main function generating whole rainbow table from given input file with exemplary passwords
+ * (new line separated) and storing the result in another file
+ *
+ * in - FILE handler for input file
+ * out - FILE handler for output file
+ */
+void generate_rainbow_table(FILE* in, FILE* out);
+
+/*
+ * Function generating a single complete rainbow chain stemming from one password
  *
  * passwd - C string to generate chain from
  * endrslt - buffer to write a final reduced hash to

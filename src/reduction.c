@@ -8,6 +8,7 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
     // Max 16 2-digit numbers plus 15 delimiters plus NULL
     char pattern_copy[2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN + 1];
     unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
+    char* tok_saved;
 
     if (digest_len != MD5_DIGEST_LENGTH){
         fprintf(stderr, "Digest buffer is of wrong length");
@@ -18,7 +19,7 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
         exit(EXIT_FAILURE);
     }
 
-    // Performing copy since strtok() modifies original string
+    // Performing copy since strtok_r() modifies original string
     strncpy(pattern_copy, reduction_pattern, 2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN + 1);
     if (pattern_copy[sizeof(pattern_copy) - 1] != '\0') {
         // We have overflow.
@@ -27,7 +28,7 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
     }
 
     // Extract the first token
-    char* token = strtok(pattern_copy, &PATTERN_DELIMITER);
+    char* token = strtok_r(pattern_copy, &PATTERN_DELIMITER, &tok_saved);
 
     // Loop through the string to extract all other tokens
     // This variable also gives us info about how many elements are in the pattern
@@ -36,7 +37,7 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
         if (i > MD5_DIGEST_LENGTH - 1) break;
         // Converting token to number, clang suggests strtol() instead of atoi()
         pattern_tokenized[i] = (unsigned char) strtol(token, NULL, BASE_10_IDENTIFIER);
-        token = strtok(NULL, &PATTERN_DELIMITER);
+        token = strtok_r(NULL, &PATTERN_DELIMITER, &tok_saved);
         i++;
     }
 
