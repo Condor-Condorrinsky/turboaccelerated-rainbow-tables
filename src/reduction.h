@@ -14,11 +14,9 @@
  * digest - hash (in raw form, not string) to be reduced into another password
  * output - buffer to store the output of operation; minimum 17 bytes of length
  * reduction_pattern - string in the form described earlier
- * digest_len - length of digest array, must be equal to MD5_DIGEST_LENGTH = 16
  * output_len - length of output array, must be at least MD5_DIGEST_LENGTH + 1
  */
-void reduce(const unsigned char* digest, char* output, const char* reduction_pattern,
-            unsigned int digest_len, unsigned int output_len);
+void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len);
 
 /*
  * A helper function converting a small number (1 byte of hash) to a small letter of English alphabet

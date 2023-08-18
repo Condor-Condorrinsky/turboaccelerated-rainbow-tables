@@ -16,14 +16,10 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
     return written;
 }
 
-void convert_to_string(const unsigned char* input, char* output, unsigned int input_len, unsigned int output_len){
+void convert_to_string(const unsigned char* input, char* output, unsigned int output_len){
     // one byte -> 2 hex digits plus null terminator
     const int MAX_BYTE_TO_HEX_STR_LENGTH = 3;
 
-    if (input_len != MD5_DIGEST_LENGTH){
-        fprintf(stderr, "Incorrect input length");
-        exit(EXIT_FAILURE);
-    }
     if (output_len < 2 * MD5_DIGEST_LENGTH + 1){
         fprintf(stderr, "Output length buffer overflow");
         exit(EXIT_FAILURE);

@@ -1,7 +1,6 @@
 #include "reduction.h"
 
-void reduce(const unsigned char* digest, char* output, const char* reduction_pattern,
-            unsigned int digest_len, unsigned int output_len){
+void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len){
     const int BASE_10_IDENTIFIER = 10;
     const int MAX_DELIMITERS_IN_PATTERN = 15;
     const char PATTERN_DELIMITER = '_';
@@ -10,10 +9,6 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
     unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
     char* tok_saved;
 
-    if (digest_len != MD5_DIGEST_LENGTH){
-        fprintf(stderr, "Digest buffer is of wrong length");
-        exit(EXIT_FAILURE);
-    }
     if (output_len < MD5_DIGEST_LENGTH + 1){
         fprintf(stderr, "Output length buffer too small");
         exit(EXIT_FAILURE);
