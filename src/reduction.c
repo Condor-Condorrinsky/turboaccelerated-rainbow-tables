@@ -19,19 +19,14 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
         exit(EXIT_FAILURE);
     }
 
-    // Performing copy since strtok_r() modifies original string
     strncpy(pattern_copy, reduction_pattern, 2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN + 1);
     if (pattern_copy[sizeof(pattern_copy) - 1] != '\0') {
-        // We have overflow.
         fprintf(stderr, "Reduction pattern length buffer overflow");
         exit(EXIT_FAILURE);
     }
 
-    // Extract the first token
     char* token = strtok_r(pattern_copy, &PATTERN_DELIMITER, &tok_saved);
 
-    // Loop through the string to extract all other tokens
-    // This variable also gives us info about how many elements are in the pattern
     int i = 0;
     while (token != NULL){
         if (i > MD5_DIGEST_LENGTH - 1) break;
@@ -41,9 +36,7 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
         i++;
     }
 
-    // Final conversion from bytes of hash to letters
     for (int j = 0; j < i; j++){
-        // Safeguard if someone decided to tamper with our function
         if (pattern_tokenized[j] > MD5_DIGEST_LENGTH - 1) pattern_tokenized[j] = MD5_DIGEST_LENGTH - 1;
         output[j] = unsigned_char_to_ascii(digest[pattern_tokenized[j]]);
     }

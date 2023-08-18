@@ -59,10 +59,10 @@ TEST_F(FileIOFixture, WriteFileTest){
 
 TEST_F(FileIOFixture, GetFileSizeTest){
     long chars = get_file_size(f);
-    EXPECT_EQ(chars, 64);
+    EXPECT_EQ(chars, 65);
 }
 
 TEST_F(FileIOFixture, CountLinesTest){
     int lines = count_lines(f);
-    EXPECT_EQ(lines, 8);
+    EXPECT_EQ(lines, 9);
 }

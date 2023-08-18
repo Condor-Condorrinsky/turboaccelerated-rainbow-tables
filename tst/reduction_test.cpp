@@ -14,5 +14,6 @@ TEST(ReductionTest, ReduceTest){
            sizeof example_digest, sizeof output_buffer);
 
     int result = strcmp(output_buffer, "gvvxraux");
+    printf("%s\n", output_buffer);
     EXPECT_TRUE(result == 0) << "Reduction output not equal to expected value";
 }

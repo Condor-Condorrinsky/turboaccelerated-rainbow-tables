@@ -19,7 +19,7 @@ class TableGenFixture : public ::testing::Test{
             if (in == nullptr) {
                 FAIL() << "Couldn't open test file";
             }
-            out = fopen(outpath, "w+");
+            out = fopen(outpath, "wb+");
             if (out == nullptr){
                 FAIL() << "Couldn't open output file";
             }
@@ -35,9 +35,9 @@ class TableGenFixture : public ::testing::Test{
         };
 };
 
-// TODO: finish this test
 TEST_F(TableGenFixture, GenerateRainbowTableTest){
     generate_rainbow_table(in, out);
 
-    // EXPECT_EQ(count_lines(out), 9);
+    fseek(out, 0, SEEK_SET);
+    EXPECT_EQ(count_lines(out), 9);
 }
