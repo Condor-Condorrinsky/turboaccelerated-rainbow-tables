@@ -29,7 +29,6 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
  *
  * input - md5 digest
  * output - buffer to write to
- * input_length - length of the digest buffer, mandatory to be equal to MD5_DIGEST_LENGTH = 16
  * output_len - length of the output buffer, for MD5 MUST be at least 2 * MD5_DIGEST_LENGTH + 1 long
  */
 void convert_to_string(const unsigned char* input, char* output, unsigned int output_len);

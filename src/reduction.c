@@ -1,34 +1,23 @@
 #include "reduction.h"
 
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len){
-    const int BASE_10_IDENTIFIER = 10;
     const int MAX_DELIMITERS_IN_PATTERN = 15;
-    const char PATTERN_DELIMITER = '_';
     // Max 16 2-digit numbers plus 15 delimiters plus NULL
     char pattern_copy[2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN + 1];
     unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
-    char* tok_saved;
+    int i;
 
     if (output_len < MD5_DIGEST_LENGTH + 1){
         fprintf(stderr, "Output length buffer too small");
         exit(EXIT_FAILURE);
     }
 
-    strncpy(pattern_copy, reduction_pattern, 2 * MD5_DIGEST_LENGTH + MAX_DELIMITERS_IN_PATTERN + 1);
-    if (pattern_copy[sizeof(pattern_copy) - 1] != '\0') {
-        fprintf(stderr, "Reduction pattern length buffer overflow");
+    safe_strncpy(pattern_copy, reduction_pattern, sizeof pattern_copy);
+
+    i = split_by_underscores(pattern_copy, pattern_tokenized, sizeof pattern_tokenized);
+    if (i < 1){
+        fprintf(stderr, "Failed to split");
         exit(EXIT_FAILURE);
-    }
-
-    char* token = strtok_r(pattern_copy, &PATTERN_DELIMITER, &tok_saved);
-
-    int i = 0;
-    while (token != NULL){
-        if (i > MD5_DIGEST_LENGTH - 1) break;
-        // Converting token to number, clang suggests strtol() instead of atoi()
-        pattern_tokenized[i] = (unsigned char) strtol(token, NULL, BASE_10_IDENTIFIER);
-        token = strtok_r(NULL, &PATTERN_DELIMITER, &tok_saved);
-        i++;
     }
 
     for (int j = 0; j < i; j++){
@@ -36,6 +25,45 @@ void reduce(const unsigned char* digest, char* output, const char* reduction_pat
         output[j] = unsigned_char_to_ascii(digest[pattern_tokenized[j]]);
     }
     output[i] = '\0';
+}
+
+char* safe_strncpy(char* dest, const char* src, size_t n){
+    strncpy(dest, src, n);
+    dest += n - 1;
+    if (*dest != '\0') {
+        fprintf(stderr, "safe_strncpy detected overflow, swapping last byte to \\0");
+        *dest = '\0';
+    }
+    dest -= n - 1;
+    printf("Dest: %s\n", dest);
+    return dest;
+}
+
+int split_by_underscores(char* input, unsigned char* result, unsigned int result_len){
+    const int BASE_10_IDENTIFIER = 10;
+    const char PATTERN_DELIMITER = '_';
+    char* token;
+    char* strtok_saved;
+
+    if (result_len < MD5_DIGEST_LENGTH){
+        fprintf(stderr, "Too small output buffer to split");
+        return -1;
+    }
+
+    token = strtok_r(input, &PATTERN_DELIMITER, &strtok_saved);
+    printf("First token: %s\n", token);
+
+    int i = 0;
+    while (token != NULL){
+        if (i > MD5_DIGEST_LENGTH - 1) break;
+        // Converting token to number, clang suggests strtol() instead of atoi()
+        result[i] = (unsigned char) strtol(token, NULL, BASE_10_IDENTIFIER);
+        token = strtok_r(NULL, &PATTERN_DELIMITER, &strtok_saved);
+        printf("Found token: %s\n", token);
+        i++;
+    }
+
+    return i;
 }
 
 char unsigned_char_to_ascii(const unsigned char in){

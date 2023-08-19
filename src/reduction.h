@@ -18,6 +18,10 @@
  */
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len);
 
+char* safe_strncpy(char* dest, const char* src, size_t n);
+
+int split_by_underscores(char* input, unsigned char* result, unsigned int result_len);
+
 /*
  * A helper function converting a small number (1 byte of hash) to a small letter of English alphabet
  *
