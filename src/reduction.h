@@ -18,8 +18,20 @@
  */
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len);
 
-char* safe_strncpy(char* dest, const char* src, size_t n);
+/*
+ * A common idiomatic use of strncpy wrapped in a convenient function
+ *
+ * Args and return value the same as in original strncpy function
+ */
+char* safer_strncpy(char* dest, const char* src, size_t n);
 
+/*
+ * Splits the pattern string literal by '_' into unsigned char array
+ *
+ * input - pattern to split
+ * result - unsigned char array to write results to
+ * result_len - length of result array, minimum 16 chars
+ */
 int split_by_underscores(char* input, unsigned char* result, unsigned int result_len);
 
 /*

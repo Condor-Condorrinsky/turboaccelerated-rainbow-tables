@@ -1,3 +1,4 @@
 cmake-build-debug-build/*
 cmake-build-main-build/*
 .idea/*
+tst/out/generate_rainbow_table_test.txt

@@ -1,7 +1,7 @@
 #include "tablegen.h"
 
 void generate_rainbow_table(FILE* in, FILE* out){
-    const char DELIMITER = '\n';
+    const char* DELIMITER = "\n";
     long fsize;
     char* tok_saved;
     if ((fsize = get_file_size(in)) < 0){
@@ -14,20 +14,14 @@ void generate_rainbow_table(FILE* in, FILE* out){
 
     load_pass_dictionary(in, passes, sizeof passes);
     passes[fsize] = '\0';
+    safer_strncpy(passes_copy, passes, fsize + 1);
 
-    strncpy(passes_copy, passes, fsize + 1);
-    if (passes_copy[sizeof(passes_copy) - 1] != '\0') {
-        // We have overflow.
-        fprintf(stderr, "Reduction pattern length buffer overflow");
-        exit(EXIT_FAILURE);
-    }
-
-    char* token = strtok_r(passes_copy, &DELIMITER, &tok_saved);
+    char* token = strtok_r(passes_copy, DELIMITER, &tok_saved);
     while (token != NULL){
         generate_chain(token, pass_reduced,
                        sizeof passes_copy, sizeof pass_reduced, REDUCTION_PATTERNS_SIZE);
         write_line(out, token, pass_reduced);
-        token = strtok_r(NULL, &DELIMITER, &tok_saved);
+        token = strtok_r(NULL, DELIMITER, &tok_saved);
     }
 }
 
