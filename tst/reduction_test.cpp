@@ -16,7 +16,7 @@ TEST(ReductionTest, ReduceTest){
     EXPECT_TRUE(result == 0) << "Reduction output not equal to expected value";
 }
 
-TEST(ReductionTest, SafeStrncpyTest){
+TEST(ReductionTest, SaferStrncpyTest){
     const char* test = "abcdefghijklmnopqrstuwvxyz0123456789";
     unsigned int test_len = 26 + 10 + 1;
     char good_copy[test_len];

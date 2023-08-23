@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 OPTION(TESTS "Compile tests" OFF)
 
 if(TESTS)
-    add_executable(turboaccelerated_rainbow_tables
+    add_executable(trb
             # Test files
             tst/fileio_test.cpp
             tst/md5calc_test.cpp
@@ -23,7 +23,7 @@ if(TESTS)
             src/patternenum.h
             src/fileio.c
             src/fileio.h)
-    target_include_directories(turboaccelerated_rainbow_tables
+    target_include_directories(trb
             PUBLIC src
             PUBLIC tst
     )
@@ -33,11 +33,11 @@ if(TESTS)
     # GTest (Google Test)
     set(GTest_DIR .)
     find_package(GTest CONFIG REQUIRED)
-    target_link_libraries(turboaccelerated_rainbow_tables
+    target_link_libraries(trb
             GTest::gtest
             GTest::gtest_main)
 else ()
-    add_executable(turboaccelerated_rainbow_tables
+    add_executable(trb
             src/main.c
             src/md5calc.c
             src/md5calc.h
@@ -48,7 +48,7 @@ else ()
             src/patternenum.h
             src/fileio.c
             src/fileio.h)
-    target_include_directories(turboaccelerated_rainbow_tables
+    target_include_directories(trb
             PUBLIC src
     )
 endif()
@@ -58,7 +58,7 @@ set(ssl_DIR .)
 set(crypto_DIR .)
 find_package(ssl CONFIG REQUIRED)
 find_package(crypto CONFIG REQUIRED)
-target_link_libraries(turboaccelerated_rainbow_tables
+target_link_libraries(trb
         ssl)
-target_link_libraries(turboaccelerated_rainbow_tables
+target_link_libraries(trb
         crypto)
