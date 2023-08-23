@@ -27,6 +27,7 @@ char* safer_strncpy(char* dest, const char* src, size_t n);
 
 /*
  * Splits the pattern string literal by '_' into unsigned char array
+ * WARNING: destroys the original string (strtok_r is used on input)
  *
  * input - pattern to split
  * result - unsigned char array to write results to

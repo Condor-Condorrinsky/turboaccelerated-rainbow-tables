@@ -47,13 +47,14 @@ long get_file_size(FILE* file){
 }
 
 int count_lines(FILE* file) {
-    char buf[IO_BUFF_SIZE];
+    char* buf = malloc(sizeof(char) * IO_BUFF_SIZE);
     int counter = 1;
 
     for(;;) {
         size_t res = fread(buf, sizeof(char), IO_BUFF_SIZE, file);
         if (ferror(file)){
             fprintf(stderr, "Error encountered when counting lines");
+            free(buf);
             return IO_EXIT_FAILURE;
         }
 
@@ -64,7 +65,7 @@ int count_lines(FILE* file) {
         if (res == 0)
             break;
     }
-
+    free(buf);
     return counter;
 }
 

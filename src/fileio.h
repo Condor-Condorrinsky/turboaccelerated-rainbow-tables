@@ -8,8 +8,8 @@
 
 #define IO_BUFF_SIZE                    65536
 #define IO_EXIT_FAILURE                 (-1)
-// 24 characters + null terminator
-#define MAX_PASS_LENGTH                 25
+// 32 characters + null terminator
+#define MAX_PASS_LENGTH                 33
 
 #define RAINBOW_TABLE_SEPARATOR         '|'
 
