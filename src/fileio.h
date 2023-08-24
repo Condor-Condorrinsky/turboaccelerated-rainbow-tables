@@ -9,7 +9,7 @@
 #define IO_BUFF_SIZE                    65536
 #define IO_EXIT_FAILURE                 (-1)
 // 32 characters + null terminator
-#define MAX_PASS_LENGTH                 33
+#define MAX_REDUCED_PASS_LENGTH         33
 
 #define RAINBOW_TABLE_SEPARATOR         " -> "
 
@@ -26,7 +26,7 @@ int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len);
 
 /*
  * Writes a single line to a given plaintext in the format of (without quotes):
- * "*pass*|*reduced*\n"
+ * "*pass* -> *reduced*\n"
  * Designed to generate a nicely-looking rainbow table
  *
  * file - FILE handler to read file

@@ -12,7 +12,7 @@ TEST(ReductionTest, ReduceTest){
 
     reduce(example_digest, output_buffer, pattern, sizeof output_buffer);
 
-    int result = strcmp(output_buffer, "gvvxraux");
+    int result = strcmp(output_buffer, "22flLQ5C");
     EXPECT_TRUE(result == 0) << "Reduction output not equal to expected value";
 }
 

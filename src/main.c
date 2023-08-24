@@ -30,6 +30,7 @@ int main(int argc, char *argv[]){
         ext_stat = gen_table(argv[2], argv[3]);
     }
 
+    printf("Nothing to do\n");
     return ext_stat;
 }
 

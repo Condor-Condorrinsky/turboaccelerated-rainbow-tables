@@ -10,7 +10,7 @@ void generate_rainbow_table(FILE* in, FILE* out){
     }
     char* passes = malloc(sizeof(char) * (fsize + 1));
     char* passes_copy = malloc(sizeof(char) * (fsize + 1));
-    char pass_reduced[MAX_PASS_LENGTH];
+    char pass_reduced[MAX_REDUCED_PASS_LENGTH];
 
     load_pass_dictionary(in, passes, sizeof(char) * (fsize + 1));
     passes[fsize] = '\0';

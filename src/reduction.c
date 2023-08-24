@@ -65,8 +65,8 @@ int split_by_underscores(char* input, unsigned char* result, unsigned int result
 
 char unsigned_char_to_ascii(const unsigned char in){
     // These are small numerical values, not chars per se
-    const unsigned char LETTERS_IN_ENGLISH_ALPHABET = 26;
-    const unsigned char ASCII_LETTER_SMALL_A = 97;
+    const unsigned char ASCII_BEGINNING_UNPRINTABLE_CHARS = 33;
+    const unsigned char ASCII_PRINTABLE_CHARS_NO_SPACE = 93;
 
-    return (char) ((in % LETTERS_IN_ENGLISH_ALPHABET) + ASCII_LETTER_SMALL_A);
+    return (char) ((in % ASCII_PRINTABLE_CHARS_NO_SPACE) + ASCII_BEGINNING_UNPRINTABLE_CHARS);
 }
