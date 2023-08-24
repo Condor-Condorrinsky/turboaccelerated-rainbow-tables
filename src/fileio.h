@@ -11,7 +11,7 @@
 // 32 characters + null terminator
 #define MAX_PASS_LENGTH                 33
 
-#define RAINBOW_TABLE_SEPARATOR         '|'
+#define RAINBOW_TABLE_SEPARATOR         " -> "
 
 /*
  * Loads whole password database file into memory

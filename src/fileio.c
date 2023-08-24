@@ -25,7 +25,7 @@ int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len){
 }
 
 void write_line(FILE* file, const char* pass, const char* reduced){
-    fprintf(file, "%s%c%s\n", pass, RAINBOW_TABLE_SEPARATOR, reduced);
+    fprintf(file, "%s%s%s\n", pass, RAINBOW_TABLE_SEPARATOR, reduced);
 }
 
 long get_file_size(FILE* file){

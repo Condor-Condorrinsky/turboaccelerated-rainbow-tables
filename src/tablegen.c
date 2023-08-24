@@ -18,7 +18,7 @@ void generate_rainbow_table(FILE* in, FILE* out){
 
     char* token = strtok_r(passes_copy, DELIMITER, &tok_saved);
     while (token != NULL){
-        generate_chain(token, pass_reduced, sizeof(char) * (fsize + 1),
+        generate_chain(token, pass_reduced, strlen(token),
                        sizeof pass_reduced, REDUCTION_PATTERNS_SIZE);
         write_line(out, token, pass_reduced);
         token = strtok_r(NULL, DELIMITER, &tok_saved);

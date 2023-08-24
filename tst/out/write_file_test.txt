@@ -1,1 +1,1 @@
-message|qazwsxed
+message -> qazwsxed
