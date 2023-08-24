@@ -29,6 +29,9 @@ int main(int argc, char *argv[]){
     if (argc == 4 && strcmp(argv[1], "gen-table") == 0){
         ext_stat = gen_table(argv[2], argv[3]);
     }
+    if (argc == 4 && strcmp(argv[1], "look-up") == 0){
+        printf("Not implemented yet\n");
+    }
 
     printf("Nothing to do\n");
     return ext_stat;
