@@ -9,14 +9,12 @@ void generate_rainbow_table(FILE* in, FILE* out){
         exit(EXIT_FAILURE);
     }
     char* passes = malloc(sizeof(char) * (fsize + 1));
-    char* passes_copy = malloc(sizeof(char) * (fsize + 1));
     char pass_reduced[MAX_REDUCED_PASS_LENGTH];
 
     load_pass_dictionary(in, passes, sizeof(char) * (fsize + 1));
     passes[fsize] = '\0';
-    safer_strncpy(passes_copy, passes, sizeof(char) * (fsize + 1));
 
-    char* token = strtok_r(passes_copy, DELIMITER, &tok_saved);
+    char* token = strtok_r(passes, DELIMITER, &tok_saved);
     while (token != NULL){
         generate_chain(token, pass_reduced, strlen(token),
                        sizeof pass_reduced, REDUCTION_PATTERNS_SIZE);
@@ -24,7 +22,6 @@ void generate_rainbow_table(FILE* in, FILE* out){
         token = strtok_r(NULL, DELIMITER, &tok_saved);
     }
     free(passes);
-    free(passes_copy);
 }
 
 void generate_chain(const char* passwd, char* endrslt, unsigned int passwd_len, unsigned int endrslt_len,
