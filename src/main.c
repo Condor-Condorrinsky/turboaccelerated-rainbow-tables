@@ -10,14 +10,20 @@
 
 int gen_table(char* input_file, char* output_file);
 
-void help();
+int help();
 
 int main(int argc, char *argv[]){
     int ext_stat = 0;
 
-    if (argc == 1) help();
+    if (argc == 1){
+        ext_stat = help();
+        return ext_stat;
+    }
     for (int i = 0; i < argc; i++) {
-        if (strcmp(argv[i], "-h") == 0) help();
+        if (strcmp(argv[i], "-h") == 0){
+            ext_stat = help();
+            return ext_stat;
+        }
     }
 
     if (argc == 4 && strcmp(argv[1], "gen-table") == 0){
@@ -53,7 +59,7 @@ int gen_table(char* input_file, char* output_file){
     return 0;
 }
 
-void help(){
+int help(){
     printf("------------------------------TURBOACCELERATED RAINBOW TABLES------------------------------\n");
     printf("Small program to generate MD5 rainbow tables and perform password look-ups on them.\n");
     printf("Usage:\n");
@@ -67,5 +73,5 @@ void help(){
     printf("    PASSWORD    - password to look for in table\n");
     printf("Flags:\n");
     printf("    -h - show this help and exit; overwrites all other flags and options\n");
-    exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
