@@ -22,7 +22,9 @@ if(TESTS)
             src/tablegen.h
             src/patternenum.h
             src/fileio.c
-            src/fileio.h)
+            src/fileio.h
+            src/tablelookup.c
+            src/tablelookup.h)
     target_include_directories(trb
             PUBLIC src
             PUBLIC tst
@@ -47,7 +49,9 @@ else ()
             src/tablegen.h
             src/patternenum.h
             src/fileio.c
-            src/fileio.h)
+            src/fileio.h
+            src/tablelookup.c
+            src/tablelookup.h)
     target_include_directories(trb
             PUBLIC src
     )

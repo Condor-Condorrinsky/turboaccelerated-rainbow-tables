@@ -22,7 +22,7 @@
  *
  * Returns number of bytes read from the given FILE
  */
-int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len);
+int load_file(FILE* file, char* buffer, unsigned int buffer_len);
 
 /*
  * Writes a single line to a given plaintext in the format of (without quotes):

@@ -23,13 +23,13 @@ class FileIOFixture : public ::testing::Test{
         };
 };
 
-TEST_F(FileIOFixture, LoadPassDictionaryTest){
+TEST_F(FileIOFixture, LoadFileTest){
     long fsize = get_file_size(f);
     // variable-length array
     char buffer[fsize];
     int num_read;
 
-    num_read = load_pass_dictionary(f, buffer, sizeof buffer);
+    num_read = load_file(f, buffer, sizeof buffer);
     EXPECT_EQ(num_read, fsize);
     // Some random character checks
     EXPECT_EQ(buffer[8], '\n');

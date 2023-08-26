@@ -1,6 +1,6 @@
 #include "fileio.h"
 
-int load_pass_dictionary(FILE* file, char* buffer, unsigned int buffer_len){
+int load_file(FILE* file, char* buffer, unsigned int buffer_len){
     int bytes_read = 0;
 
     if (buffer_len < get_file_size(file)){
