@@ -1,7 +1,6 @@
 #include "tablegen.h"
 
 void generate_rainbow_table(FILE* in, FILE* out){
-    const char* DELIMITER = "\n";
     long fsize;
     char* tok_saved;
     if ((fsize = get_file_size(in)) < 0){
@@ -14,12 +13,12 @@ void generate_rainbow_table(FILE* in, FILE* out){
     load_file(in, passes, sizeof(char) * (fsize + 1));
     passes[fsize] = '\0';
 
-    char* token = strtok_r(passes, DELIMITER, &tok_saved);
+    char* token = strtok_r(passes, NEWLINE_STRING, &tok_saved);
     while (token != NULL){
         generate_chain(token, pass_reduced, strlen(token),
                        sizeof pass_reduced, REDUCTION_PATTERNS_SIZE);
         write_line(out, token, pass_reduced);
-        token = strtok_r(NULL, DELIMITER, &tok_saved);
+        token = strtok_r(NULL, NEWLINE_STRING, &tok_saved);
     }
     free(passes);
 }

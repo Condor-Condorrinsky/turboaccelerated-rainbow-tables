@@ -11,6 +11,8 @@
 #define MAX_REDUCED_PASS_LENGTH         33
 
 #define RAINBOW_TABLE_SEPARATOR         "|"
+#define NEWLINE_STRING                  "\n"
+#define NEWLINE_CHAR                    '\n'
 
 /*
  * Loads whole password database file into memory

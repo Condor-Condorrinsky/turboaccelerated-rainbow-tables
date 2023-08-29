@@ -59,7 +59,7 @@ int count_lines(FILE* file) {
         }
 
         for (int i = 0; i < res; i++)
-            if (buf[i] == '\n')
+            if (buf[i] == NEWLINE_CHAR)
                 counter++;
 
         if (res == 0)

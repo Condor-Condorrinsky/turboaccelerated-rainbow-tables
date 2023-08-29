@@ -11,15 +11,24 @@ void lookup(FILE* rainbow_file){
 
 }
 
-void extract_reduced_vals(char* rainbow_buf){
-    // const char* NEWLINE_DELIM = "\n";
-    // const char* RAINBOW_DELIM = RAINBOW_TABLE_SEPARATOR;
-    char DELIMITERS[6];
-    strcpy(DELIMITERS, "\n");
-    strcat(DELIMITERS, RAINBOW_TABLE_SEPARATOR);
-    char* line;
-    char* newline_saved;
-    char* rainbow_delim_saved;
+void extract_reduced_vals(char* complete_table, char* extracted_table){
+    char* token;
+    char* token_saved;
+    unsigned long counter = 3; // which token we're processing
 
-    line = strtok_r(rainbow_buf, DELIMITERS, &newline_saved);
+    // Initial setup
+    strtok_r(complete_table, LOOKUP_DELIMS, &token_saved);
+    token = strtok_r(NULL, LOOKUP_DELIMS, &token_saved);
+    safer_strncpy(extracted_table, token, strlen(token) + 1);
+    strcat(extracted_table, NEWLINE_STRING);
+
+    token = strtok_r(NULL, LOOKUP_DELIMS, &token_saved);
+    while (token != NULL){
+        if (counter % 2 == 0){
+            strcat(extracted_table, token);
+            strcat(extracted_table, NEWLINE_STRING);
+        }
+        token = strtok_r(NULL, LOOKUP_DELIMS, &token_saved);
+        counter++;
+    }
 }

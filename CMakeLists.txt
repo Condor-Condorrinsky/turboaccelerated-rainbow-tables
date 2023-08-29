@@ -13,6 +13,7 @@ if(TESTS)
             tst/md5calc_test.cpp
             tst/reduction_test.cpp
             tst/tablegen_test.cpp
+            tst/tablelookup_test.cpp
             # Src, without main
             src/md5calc.c
             src/md5calc.h
