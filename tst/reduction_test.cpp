@@ -46,3 +46,29 @@ TEST(ReductionTest, SplitByUnderscoresTest){
     EXPECT_EQ(pattern_tokenized[6], 8);
     EXPECT_EQ(pattern_tokenized[7], 1);
 }
+
+TEST(ReductionTest, UnsignedCharToAsciiTest){
+    unsigned char backspace = 8;
+    unsigned char space = 32;
+    unsigned char four = 52;
+    unsigned char capital_k = 75;
+    unsigned char left_square_bracket = 91;
+    unsigned char del = 127;
+    unsigned char random_val = 213;
+
+    char backspace_converted = unsigned_char_to_ascii(backspace);
+    char space_converted = unsigned_char_to_ascii(space);
+    char four_converted = unsigned_char_to_ascii(four);
+    char capital_k_converted = unsigned_char_to_ascii(capital_k);
+    char left_square_bracket_converted = unsigned_char_to_ascii(left_square_bracket);
+    char del_converted = unsigned_char_to_ascii(del);
+    char random_val_converted = unsigned_char_to_ascii(random_val);
+
+    EXPECT_EQ(backspace_converted, 41);
+    EXPECT_EQ(space_converted, 65);
+    EXPECT_EQ(four_converted, 85);
+    EXPECT_EQ(capital_k_converted, 108);
+    EXPECT_EQ(left_square_bracket_converted, 33);
+    EXPECT_EQ(del_converted, 67);
+    EXPECT_EQ(random_val_converted, 60);
+}
