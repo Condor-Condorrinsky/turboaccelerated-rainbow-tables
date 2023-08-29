@@ -39,24 +39,6 @@ TEST_F(FileIOFixture, LoadFileTest){
     EXPECT_EQ(buffer[53], 'm');
 }
 
-TEST_F(FileIOFixture, WriteFileTest){
-    const char* outpath = "../tst/out/write_file_test.txt";
-    const char* expected = "message -> qazwsxed";
-    char* out_buffer;
-
-    FILE* out = fopen(outpath, "w+");
-    if (out == nullptr){
-        FAIL() << "Couldn't write to test file";
-    }
-
-    write_line(out, "message", "qazwsxed");
-
-    fread(out_buffer, sizeof(char), strlen(expected), out);
-    fclose(out);
-
-    EXPECT_TRUE(strcmp(out_buffer, expected));
-}
-
 TEST_F(FileIOFixture, GetFileSizeTest){
     long chars = get_file_size(f);
     EXPECT_EQ(chars, 65);

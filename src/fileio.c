@@ -68,11 +68,3 @@ int count_lines(FILE* file) {
     free(buf);
     return counter;
 }
-
-struct tm get_curr_datetime(){
-    time_t t = time(NULL);
-    struct tm curr_time = *localtime(&t);
-    // printf("now: %d-%02d-%02d %02d:%02d:%02d\n",
-    //      tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-    return curr_time;
-}

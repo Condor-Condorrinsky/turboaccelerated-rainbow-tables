@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <sys/stat.h>
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H
@@ -26,7 +25,7 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len);
 
 /*
  * Writes a single line to a given plaintext in the format of (without quotes):
- * "*pass* -> *reduced*\n"
+ * "*pass*|*reduced*\n"
  * Designed to generate a nicely-looking rainbow table
  *
  * file - FILE handler to read file
