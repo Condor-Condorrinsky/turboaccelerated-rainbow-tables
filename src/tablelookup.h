@@ -1,11 +1,11 @@
 #include <string.h>
 #include "fileio.h"
+#include "patternenum.h"
 #include "reduction.h"
+#include "tablegen.h"
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H
 #define TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H
-
-#define MAX_RAINBOW_TABLE_LINE_LEN                256
 
 #define LOOKUP_DELIMS                             "|\n"
 
