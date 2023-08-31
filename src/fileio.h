@@ -7,15 +7,14 @@
 
 #define IO_BUFF_SIZE                    65536
 #define IO_EXIT_FAILURE                 (-1)
-// 32 characters + null terminator
-#define MAX_REDUCED_PASS_LENGTH         33
 
 #define RAINBOW_TABLE_SEPARATOR         "|"
 #define NEWLINE_STRING                  "\n"
 #define NEWLINE_CHAR                    '\n'
 
 /*
- * Loads whole password database file into memory
+ * Loads whole password database file into memory.
+ * Does not terminate the data loaded to buffer with NULL.
  *
  * file - FILE handler to read file
  * buffer - buffer to store the contents into

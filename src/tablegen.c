@@ -39,6 +39,14 @@ void hash_and_reduce(const char* input, char* output, unsigned int input_len, un
     reduce(digest, output, reduction_pattern, output_len);
 }
 
+void reduce_and_hash(const unsigned char input[MD5_DIGEST_LENGTH], unsigned char output[MD5_DIGEST_LENGTH],
+                     unsigned int input_len, unsigned int output_len, const char* reduction_pattern){
+    char reduced[MAX_REDUCED_PASS_LENGTH];
+
+    reduce(input, reduced, reduction_pattern, output_len);
+    compute_md5(reduced, output, sizeof reduced, output_len);
+}
+
 void hash(const char* input, unsigned char* digest, unsigned int input_len, unsigned int digest_len){
     compute_md5(input, digest, input_len, digest_len);
 }

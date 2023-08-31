@@ -4,6 +4,9 @@
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 #define TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 
+// 32 characters + null terminator
+#define MAX_REDUCED_PASS_LENGTH                  33
+
 /*
  * Reduction function used to convert hashes into possible plaintext passwords for rainbow table hash chain generation.
  * Accepts a reduction pattern in the form of "A_B_C_D_E_F..." where letters are numbers from 0 to 15 inclusive.
