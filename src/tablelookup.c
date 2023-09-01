@@ -1,11 +1,11 @@
 #include "tablelookup.h"
 
-void lookup(FILE* rainbow_file){
+void lookup(FILE* rainbow_file, const char* hash){
     const long EXTRACTED_SIZE_COEFFICIENT = 2;
     const long EXTRACTED_SAFETY_BUFFER = 1024 * 10;
     long rainbow_size;
     char* rainbow_table;
-    char* extracted_reduced_hashes;
+    char* extracted_hashes;
     char* token;
     char* token_saved;
 
@@ -14,21 +14,24 @@ void lookup(FILE* rainbow_file){
     load_file(rainbow_file, rainbow_table, rainbow_size);
     rainbow_table[rainbow_size] = '\0';
 
-    extracted_reduced_hashes =
+    extracted_hashes =
             malloc(((sizeof(char) * rainbow_size) / EXTRACTED_SIZE_COEFFICIENT) + EXTRACTED_SAFETY_BUFFER);
-    extract_reduced_vals(rainbow_table, extracted_reduced_hashes);
+    extract_hashed_vals(rainbow_table, extracted_hashes);
 
-    token = strtok_r(extracted_reduced_hashes, NEWLINE_STRING, &token_saved);
+    token = strtok_r(extracted_hashes, NEWLINE_STRING, &token_saved);
     while (token != NULL){
-
+        if (perform_chain_lookup(token, hash) == HASH_FOUND) {
+            free(rainbow_table);
+            free(extracted_hashes);
+            return;
+        }
         token = strtok_r(NULL, NEWLINE_STRING, &token_saved);
     }
-
     free(rainbow_table);
-    free(extracted_reduced_hashes);
+    free(extracted_hashes);
 }
 
-void extract_reduced_vals(char* complete_table, char* extracted_table){
+void extract_hashed_vals(char* complete_table, char* extracted_table){
     char* token;
     char* token_saved;
     unsigned long counter = 3; // which token we're processing
@@ -51,25 +54,25 @@ void extract_reduced_vals(char* complete_table, char* extracted_table){
     }
 }
 
-void perform_chain_lookup(char* loaded_reduced, unsigned char md5hash[MD5_DIGEST_LENGTH]){
-    char intermediate[MAX_REDUCED_PASS_LENGTH];
+int perform_chain_lookup(const char* loaded_hash, const char* md5hash){
     unsigned char hash_result[MD5_DIGEST_LENGTH];
+    char hash_string[HASH_STRING_MIN_LEN];
+    char reduced[MAX_REDUCED_PASS_LENGTH];
 
-    memcpy(hash_result, md5hash, MD5_DIGEST_LENGTH);
+    convert_string_to_md5(md5hash, hash_result, sizeof hash_result);
 
     for (int i = (int) (REDUCTION_PATTERNS_SIZE - 1); i > (-1); i--) {
-        for (int j = i; j < REDUCTION_PATTERNS_SIZE - 1; j++) {
-            reduce_and_hash(hash_result, hash_result,
-                            sizeof hash_result, sizeof hash_result,
-                            REDUCTION_PATTERN_VALUES[j]);
-        }
-        reduce_hash(hash_result, intermediate,
-                    REDUCTION_PATTERN_VALUES[REDUCTION_PATTERNS_SIZE - 1],
-                    sizeof intermediate);
-
-        if (strcmp(intermediate, loaded_reduced) == 0) {
-            printf("Found hash at iteration i: %d for chain ending with %s\n", i, loaded_reduced);
-            return;
+        for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++) {
+            reduce_hash(hash_result, reduced,
+                        REDUCTION_PATTERN_VALUES[j], sizeof reduced);
+            hash(reduced, hash_result, sizeof reduced, sizeof hash_result);
+            convert_md5_to_string(hash_result, hash_string, sizeof hash_string);
+            if (strcmp(hash_string, loaded_hash) == 0) {
+                printf("Found hash at iteration i=%d, j=%d for password=%s in chain ending with %s\n",
+                       i, j, reduced, loaded_hash);
+                return HASH_FOUND;
+            }
         }
     }
+    return HASH_NOT_FOUND;
 }

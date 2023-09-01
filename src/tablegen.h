@@ -23,7 +23,7 @@ void generate_rainbow_table(FILE* in, FILE* out);
  * endrslt_len - length of the buffer we are writing to
  * iterations - how many links of chain to generate, current maximum is equal to the sizeof REDUCTION_PATTERN_VALUES
  */
-void generate_chain(const char* passwd, char* endrslt, unsigned int passwd_len, unsigned int endrslt_len,
+void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int passwd_len, unsigned int endrslt_len,
                     unsigned int iterations);
 
 /*
@@ -44,12 +44,11 @@ void hash_and_reduce(const char* input, char* output, unsigned int input_len, un
  *
  * input - hash to be reduced and hashed
  * output - buffer to store the result of the operation
- * input_len - size of the input buffer, 16 at minimum
  * output_len - size of the output buffer, 16 at minimum
  * reduction_pattern - pattern to reduce the hash with; for more info see reduce function in reduction.h
  */
 void reduce_and_hash(const unsigned char input[MD5_DIGEST_LENGTH], unsigned char output[MD5_DIGEST_LENGTH],
-                     unsigned int input_len, unsigned int output_len, const char* reduction_pattern);
+                     unsigned int output_len, const char* reduction_pattern);
 
 /*
  * A wrapper for compute_md5 function; for more info see md5calc.h
