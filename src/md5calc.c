@@ -16,17 +16,20 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
     return written;
 }
 
-void convert_to_string(const unsigned char* input, char* output, unsigned int output_len){
+void convert_md5_to_string(const unsigned char* input, char* output, unsigned int output_len){
     // one byte -> 2 hex digits plus null terminator
     const int MAX_BYTE_TO_HEX_STR_LENGTH = 3;
+    const int HASH_START_PRINTING = 2;
 
-    if (output_len < 2 * MD5_DIGEST_LENGTH + 1){
+    if (output_len < HASH_STRING_MIN_LEN){
         fprintf(stderr, "Output length buffer overflow");
         exit(EXIT_FAILURE);
     }
 
-    char* ptr = &output[0];
+    snprintf(output, MAX_BYTE_TO_HEX_STR_LENGTH, "0x");
+
+    char* ptr = &output[HASH_START_PRINTING];
     for (int i = 0; i < MD5_DIGEST_LENGTH; i++){
-        ptr += snprintf(ptr, MAX_BYTE_TO_HEX_STR_LENGTH, "%02x", input[i]);
+        ptr += snprintf(ptr, MAX_BYTE_TO_HEX_STR_LENGTH, "%02X", input[i]);
     }
 }

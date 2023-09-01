@@ -7,6 +7,8 @@
 #define TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
 
 #define MD5_DIGEST_LENGTH           16
+// "0x" plus 32 letters each representing 4 bits plus null
+#define HASH_STRING_MIN_LEN         35
 
 /*
  * Computes the MD5 hash of the given string
@@ -29,8 +31,8 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
  *
  * input - md5 digest
  * output - buffer to write to
- * output_len - length of the output buffer, for MD5 MUST be at least 2 * MD5_DIGEST_LENGTH + 1 long
+ * output_len - length of the output buffer, for MD5 MUST be at least HASH_STRING_MIN_LEN long
  */
-void convert_to_string(const unsigned char* input, char* output, unsigned int output_len);
+void convert_md5_to_string(const unsigned char* input, char* output, unsigned int output_len);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_MD5_CALC_H
