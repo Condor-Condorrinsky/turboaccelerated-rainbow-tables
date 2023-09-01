@@ -17,9 +17,6 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
 }
 
 void convert_md5_to_string(const unsigned char* input, char* output, unsigned int output_len){
-    // one byte -> 2 hex digits plus null terminator
-    const int MAX_BYTE_TO_HEX_STR_LENGTH = 3;
-    const int HASH_START_PRINTING = 2;
 
     if (output_len < HASH_STRING_MIN_LEN){
         fprintf(stderr, "Output length buffer overflow");
@@ -28,8 +25,27 @@ void convert_md5_to_string(const unsigned char* input, char* output, unsigned in
 
     snprintf(output, MAX_BYTE_TO_HEX_STR_LENGTH, "0x");
 
-    char* ptr = &output[HASH_START_PRINTING];
+    char* ptr = &output[HASH_START];
     for (int i = 0; i < MD5_DIGEST_LENGTH; i++){
         ptr += snprintf(ptr, MAX_BYTE_TO_HEX_STR_LENGTH, "%02X", input[i]);
+    }
+}
+
+void convert_string_to_md5(const char* input, unsigned char* output, unsigned int output_len){
+    const int HEX_BASE = 16;
+    const int BYTE_LEN = 2;
+    char* ptr = (char*) input + HASH_START;
+    char byte_buf[MAX_BYTE_TO_HEX_STR_LENGTH];
+
+    if (output_len < MD5_DIGEST_LENGTH){
+        fprintf(stderr, "Output length buffer overflow");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
+        memcpy(byte_buf, ptr, BYTE_LEN);
+        byte_buf[MAX_BYTE_TO_HEX_STR_LENGTH - 1] = '\0';
+        output[i] = (unsigned char) strtol(byte_buf, NULL, HEX_BASE);
+        ptr += BYTE_LEN;
     }
 }
