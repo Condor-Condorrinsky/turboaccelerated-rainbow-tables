@@ -28,8 +28,15 @@ TEST_F(TableLookUpFixture, LookupTest){
 }
 
 TEST_F(TableLookUpFixture, ExtractHashedValsTest){
-    char* expected =
-            (char*) "#]>6n=G3\n?hb}x',R\nYGvm{DeP\nJwZ^BJAf\n&Tfs5ky8\nN{jdaMSH\n.{qP1-JA\n7IY?:K7_\n";
+    char* expected = (char*)
+            "0x83335D91BD32DF9EC3EB862764339A30\n"
+            "0x91908F9B721CCFE45F80F9F8E52DEC6D\n"
+            "0xFE25C6864F5F51E5812A7B1DFBB3C714\n"
+            "0xC7BBECE84749D315B23E321767E73650\n"
+            "0xDF91830460596056D67F1D0AB33C0826\n"
+            "0x6B43A3A51B7B80B6EA146601804FA018\n"
+            "0xF710B0F25A61290806C2C83CDBFCE2B6\n"
+            "0x95984C556491D71D95CEB3934C9A23F1\n";
     char* table = (char*) malloc(1024 * sizeof(char));
     char* extracted = (char*) malloc(512 * sizeof(char));
 
@@ -43,5 +50,6 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
 }
 
 TEST_F(TableLookUpFixture, PerformChainLookupTest){
-
+    const char* loaded_hash = "";
+    const char* md5hash = "";
 }
