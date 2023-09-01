@@ -14,6 +14,7 @@
 // "0x" plus 32 letters each representing 4 bits plus null
 #define HASH_STRING_MIN_LEN         35
 
+// TODO: remove unnecessary args
 /*
  * Computes the MD5 hash of the given string
  *
