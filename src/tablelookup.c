@@ -59,19 +59,17 @@ int perform_chain_lookup(const char* loaded_hash, const char* md5hash){
     char hash_string[HASH_STRING_MIN_LEN];
     char reduced[MAX_REDUCED_PASS_LENGTH];
 
-    convert_string_to_md5(md5hash, hash_result, sizeof hash_result);
-
     for (int i = (int) (REDUCTION_PATTERNS_SIZE - 1); i > (-1); i--) {
+        convert_string_to_md5(md5hash, hash_result, sizeof hash_result);
         for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++) {
-            reduce_hash(hash_result, reduced,
-                        REDUCTION_PATTERN_VALUES[j], sizeof reduced);
-            hash(reduced, hash_result, sizeof reduced, sizeof hash_result);
-            convert_md5_to_string(hash_result, hash_string, sizeof hash_string);
-            if (strcmp(hash_string, loaded_hash) == 0) {
-                printf("Found hash at iteration i=%d, j=%d for password=%s in chain ending with %s\n",
-                       i, j, reduced, loaded_hash);
-                return HASH_FOUND;
-            }
+            reduce_hash(hash_result, reduced, REDUCTION_PATTERN_VALUES[j], sizeof reduced);
+            hash(reduced, hash_result, sizeof hash_result);
+        }
+        convert_md5_to_string(hash_result, hash_string, sizeof hash_string);
+        if (strcmp(hash_string, loaded_hash) == 0) {
+            printf("Found hash at iteration i = %d for password = %s in chain ending with %s\n",
+                   i, reduced, loaded_hash);
+            return HASH_FOUND;
         }
     }
     return HASH_NOT_FOUND;
