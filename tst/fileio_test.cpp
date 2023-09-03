@@ -26,7 +26,7 @@ class FileIOFixture : public ::testing::Test{
 TEST_F(FileIOFixture, LoadFileTest){
     long fsize = get_file_size(f);
     // variable-length array
-    char buffer[fsize];
+    char buffer[fsize + 1];
     int num_read;
 
     num_read = load_file(f, buffer, sizeof buffer);

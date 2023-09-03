@@ -2,6 +2,7 @@
 
 int load_file(FILE* file, char* buffer, unsigned int buffer_len){
     int bytes_read = 0;
+    char* end = buffer;
 
     if (buffer_len < get_file_size(file)){
         fprintf(stderr, "Too small buffer to read into");
@@ -20,6 +21,9 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
 
         buffer += IO_BUFF_SIZE;
     }
+
+    end += bytes_read;
+    *end = '\0';
 
     return bytes_read;
 }
