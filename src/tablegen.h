@@ -19,11 +19,10 @@ void generate_rainbow_table(FILE* in, FILE* out);
  *
  * passwd - C string to generate chain from
  * endrslt - buffer to write a final reduced hash to
- * passwd_len - length of passwd string, without null terminator
  * endrslt_len - length of the buffer we are writing to
  * iterations - how many links of chain to generate, current maximum is equal to the sizeof REDUCTION_PATTERN_VALUES
  */
-void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int passwd_len, unsigned int endrslt_len,
+void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);
 
 /*
@@ -32,11 +31,10 @@ void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int pas
  *
  * input - password (C string) to be hashed and reduced
  * output - buffer to store the reduced hash
- * input_len - length of the input, without null terminator
  * output_len - length of the output buffer
  * reduction_pattern - pattern to reduce the hash with; for more info see reduce function in reduction.h
  */
-void hash_and_reduce(const char* input, char* output, unsigned int input_len, unsigned int output_len,
+void hash_and_reduce(const char* input, char* output, unsigned int output_len,
                      const char* reduction_pattern);
 
 /*
@@ -53,7 +51,7 @@ void reduce_and_hash(const unsigned char input[MD5_DIGEST_LENGTH], unsigned char
 /*
  * A wrapper for compute_md5 function; for more info see md5calc.h
  */
-void hash(const char* input, unsigned char* digest, unsigned int input_len, unsigned int digest_len);
+void hash(const char* input, unsigned char* digest, unsigned int digest_len);
 
 /*
  * A wrapper for reduce function; for more info see reduction.h

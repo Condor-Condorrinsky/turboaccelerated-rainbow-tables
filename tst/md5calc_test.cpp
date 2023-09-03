@@ -6,11 +6,10 @@ extern "C" {
 TEST(MD5CalcTest, ComputeMD5Test){
     // "Hello"
     const char* s = "0x8B1A9953C4611296A827ABF8C47804D7";
-    const int hello_length = 5;
     unsigned char digest[MD5_DIGEST_LENGTH];
     char string_digest[HASH_STRING_MIN_LEN];
 
-    unsigned int hash = compute_md5("Hello", digest, hello_length, sizeof digest);
+    unsigned int hash = compute_md5("Hello", digest, sizeof digest);
     EXPECT_EQ(hash, MD5_DIGEST_LENGTH) << "Digest length nr 1 not equal" << std::endl;
 
     convert_md5_to_string(digest, string_digest, sizeof string_digest);

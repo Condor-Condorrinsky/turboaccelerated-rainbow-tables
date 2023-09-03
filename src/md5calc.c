@@ -1,6 +1,6 @@
 #include "md5calc.h"
 
-unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int input_len, unsigned int digest_len){
+unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int digest_len){
     unsigned int written;
 
     if (digest_len < MD5_DIGEST_LENGTH){
@@ -10,7 +10,7 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
 
     EVP_MD_CTX* md5ctx = EVP_MD_CTX_new();
     EVP_DigestInit(md5ctx, EVP_md5());
-    EVP_DigestUpdate(md5ctx, input, input_len);
+    EVP_DigestUpdate(md5ctx, input, strlen(input));
     EVP_DigestFinal_ex(md5ctx, digest, &written);
     EVP_MD_CTX_free(md5ctx);
     return written;

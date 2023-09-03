@@ -14,19 +14,17 @@
 // "0x" plus 32 letters each representing 4 bits plus null
 #define HASH_STRING_MIN_LEN         35
 
-// TODO: remove unnecessary args
 /*
  * Computes the MD5 hash of the given string
  *
- * input - the string to be hashed
+ * input - the string to be hashed, null-terminated
  * digest - buffer where the end result will be stored, MUST be at least 16 chars long, it is NOT a null-terminated
  * C string
- * input_len - length of hashed string, without null terminator
  * digest_len - length of the buffer we are writing to, values of 15 or lower cause program to exit
  *
  * Returns the number of bytes written - the length of the digest
  */
-unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int input_len, unsigned int digest_len);
+unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int digest_len);
 
 /*
  * razz's answer
