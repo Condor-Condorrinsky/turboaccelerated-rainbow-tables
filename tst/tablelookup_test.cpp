@@ -23,8 +23,15 @@ protected:
     };
 };
 
+/*
+ * Just a function to check whether the program crashes or not.
+ * It's hard to write tests for full table look up because, well,
+ * I'd have to reverse one of the hashes in the example file myself...
+ */
 TEST_F(TableLookUpFixture, LookupTest){
+    const char* hash_to_find = (char*) "0xA1B9A93535A93CC9496DA9E47F52CBE8";
 
+    lookup(in, hash_to_find);
 }
 
 TEST_F(TableLookUpFixture, ExtractHashedValsTest){
@@ -41,9 +48,7 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
     char* extracted = (char*) malloc(512 * sizeof(char));
 
     load_file(in, table, 1024 * sizeof(char));
-    printf("%s\n", table);
     extract_hashed_vals(table, extracted);
-    printf("%s\n", extracted);
 
     EXPECT_TRUE(strcmp(extracted, expected) == 0);
 
@@ -52,9 +57,9 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
 }
 
 TEST_F(TableLookUpFixture, PerformChainLookupTest){
-    const char* loaded_hash = "0x98DE76FE2E547FCB587D3F997D311DCC";
+    const char* loaded_hash = "0x50863FE6EA62B8BD8931D1B1D655D69E";
     const char* md5hash_absent = "0xF710B0F25A61290806C2C83CDBFCE2B6";
-    const char* md5hash_present = "0xA1B9A93535A9#CC9496DA9E47F52CBE8";
+    const char* md5hash_present = "0xA1B9A93535A93CC9496DA9E47F52CBE8";
 
     int absent = perform_chain_lookup(loaded_hash, md5hash_absent);
     EXPECT_EQ(absent, HASH_NOT_FOUND);
