@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stddef.h>
 #include "tablegen.h"
+#include "tablelookup.h"
 
 /* Error codes */
 #define ERR_OPEN_INPUT          (-1)
 #define ERR_OPEN_OUTPUT         (-2)
 #define ERR_CLOSE_INPUT         (-3)
 #define ERR_CLOSE_OUTPUT        (-4)
+
+int find_in_table(char* input_file, const char* hash);
 
 int gen_table(char* input_file, char* output_file);
 
@@ -30,11 +33,26 @@ int main(int argc, char *argv[]){
         ext_stat = gen_table(argv[2], argv[3]);
     }
     if (argc == 4 && strcmp(argv[1], "look-up") == 0){
-        printf("Not implemented yet\n");
+        ext_stat = find_in_table(argv[2], argv[3]);
     }
 
     printf("Nothing to do\n");
     return ext_stat;
+}
+
+int find_in_table(char* input_file, const char* hash){
+    printf("Performing look up, please wait...\n");
+    FILE* in = fopen(input_file, "r");
+    if (in == NULL){
+        fprintf(stderr, "Couldn't open input file\n");
+        return ERR_OPEN_INPUT;
+    }
+    lookup(in, hash);
+    if (fclose(in)){
+        fprintf(stderr, "Couldn't close input file\n");
+        return ERR_CLOSE_INPUT;
+    }
+    return EXIT_SUCCESS;
 }
 
 int gen_table(char* input_file, char* output_file){

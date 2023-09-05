@@ -4,19 +4,23 @@ void lookup(FILE* rainbow_file, const char* hash){
     const long EXTRACTED_SIZE_COEFFICIENT = 2;
     const long EXTRACTED_SAFETY_BUFFER = 1024 * 10;
     long rainbow_size;
+    unsigned long long counter = 0;
     char* rainbow_table;
     char* extracted_hashes;
     char* token;
     char* token_saved;
 
     rainbow_size = get_file_size(rainbow_file);
+    printf("Got file size...\n");
     rainbow_table = malloc(sizeof(char) * (rainbow_size + 1));
     load_file(rainbow_file, rainbow_table, rainbow_size);
     rainbow_table[rainbow_size] = '\0';
+    printf("Loaded file into memory...\n");
 
     extracted_hashes =
             malloc(((sizeof(char) * rainbow_size) / EXTRACTED_SIZE_COEFFICIENT) + EXTRACTED_SAFETY_BUFFER);
     extract_hashed_vals(rainbow_table, extracted_hashes);
+    printf("Extracted hashes from the rainbow table...\n");
 
     token = strtok_r(extracted_hashes, NEWLINE_STRING, &token_saved);
     while (token != NULL){
@@ -25,6 +29,8 @@ void lookup(FILE* rainbow_file, const char* hash){
             free(extracted_hashes);
             return;
         }
+        counter++;
+        printf("Looked up %llu hashes\n", counter * REDUCTION_PATTERNS_SIZE);
         token = strtok_r(NULL, NEWLINE_STRING, &token_saved);
     }
     free(rainbow_table);
