@@ -1,5 +1,6 @@
 #include <string.h>
 #include "fileio.h"
+#include "PassHashChain.h"
 #include "patternenum.h"
 #include "reduction.h"
 #include "tablegen.h"
@@ -9,8 +10,6 @@
 
 #define HASH_FOUND                                  0
 #define HASH_NOT_FOUND                              1
-
-#define LOOKUP_DELIMS                           "|\n"
 
 /*
  * Performs hash look up in a given rainbow table
@@ -31,16 +30,8 @@ void lookup(FILE* rainbow_file, const char* hash);
  * extracted table - buffer to store the extracted reduced hashes, output is newline-separated
  * and null-terminated
  */
-void extract_hashed_vals(char* complete_table, char* extracted_table);
+void extract_hashed_vals(char* complete_table, PassHashChain** extracted_table);
 
-/*
- * Looks for a given hash in a single chain in the rainbow table
- *
- * loaded_hash - hash loaded form rainbow table which we are comparing against
- * md5hash - hash we are trying to find in the chain
- *
- * Returns HASH_FOUND on success, HASH_NOT_FOUND otherwise
- */
-int perform_chain_lookup(const char* loaded_hash, const char* md5hash);
+PassHashChain* line_to_PassHashChain(char* line);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H

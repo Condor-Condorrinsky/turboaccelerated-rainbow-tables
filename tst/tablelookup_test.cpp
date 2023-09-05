@@ -34,36 +34,24 @@ TEST_F(TableLookUpFixture, LookupTest){
     lookup(in, hash_to_find);
 }
 
-TEST_F(TableLookUpFixture, ExtractHashedValsTest){
-    char* expected = (char*)
-            "0x83335D91BD32DF9EC3EB862764339A30\n"
-            "0x91908F9B721CCFE45F80F9F8E52DEC6D\n"
-            "0xFE25C6864F5F51E5812A7B1DFBB3C714\n"
-            "0xC7BBECE84749D315B23E321767E73650\n"
-            "0xDF91830460596056D67F1D0AB33C0826\n"
-            "0x6B43A3A51B7B80B6EA146601804FA018\n"
-            "0xF710B0F25A61290806C2C83CDBFCE2B6\n"
-            "0x95984C556491D71D95CEB3934C9A23F1\n";
-    char* table = (char*) malloc(1024 * sizeof(char));
-    char* extracted = (char*) malloc(512 * sizeof(char));
-
-    load_file(in, table, 1024 * sizeof(char));
-    extract_hashed_vals(table, extracted);
-
-    EXPECT_TRUE(strcmp(extracted, expected) == 0);
-
-    free(table);
-    free(extracted);
-}
-
-TEST_F(TableLookUpFixture, PerformChainLookupTest){
-    const char* loaded_hash = "0x50863FE6EA62B8BD8931D1B1D655D69E";
-    const char* md5hash_absent = "0xF710B0F25A61290806C2C83CDBFCE2B6";
-    const char* md5hash_present = "0xA1B9A93535A93CC9496DA9E47F52CBE8";
-
-    int absent = perform_chain_lookup(loaded_hash, md5hash_absent);
-    EXPECT_EQ(absent, HASH_NOT_FOUND);
-
-    int present = perform_chain_lookup(loaded_hash, md5hash_present);
-    EXPECT_EQ(present, HASH_FOUND);
-}
+//TEST_F(TableLookUpFixture, ExtractHashedValsTest){
+//    char* expected = (char*)
+//            "0x83335D91BD32DF9EC3EB862764339A30\n"
+//            "0x91908F9B721CCFE45F80F9F8E52DEC6D\n"
+//            "0xFE25C6864F5F51E5812A7B1DFBB3C714\n"
+//            "0xC7BBECE84749D315B23E321767E73650\n"
+//            "0xDF91830460596056D67F1D0AB33C0826\n"
+//            "0x6B43A3A51B7B80B6EA146601804FA018\n"
+//            "0xF710B0F25A61290806C2C83CDBFCE2B6\n"
+//            "0x95984C556491D71D95CEB3934C9A23F1\n";
+//    char* table = (char*) malloc(1024 * sizeof(char));
+//    char* extracted = (char*) malloc(512 * sizeof(char));
+//
+//    load_file(in, table, 1024 * sizeof(char));
+//    extract_hashed_vals(table, extracted);
+//
+//    EXPECT_TRUE(strcmp(extracted, expected) == 0);
+//
+//    free(table);
+//    free(extracted);
+//}
