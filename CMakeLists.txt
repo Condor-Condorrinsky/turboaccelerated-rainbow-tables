@@ -17,6 +17,8 @@ if(TESTS)
             # Src, without main
             src/md5calc.c
             src/md5calc.h
+            src/PassHashChain.c
+            src/PassHashChain.h
             src/reduction.c
             src/reduction.h
             src/tablegen.c
@@ -44,6 +46,8 @@ else ()
             src/main.c
             src/md5calc.c
             src/md5calc.h
+            src/PassHashChain.c
+            src/PassHashChain.h
             src/reduction.c
             src/reduction.h
             src/tablegen.c
