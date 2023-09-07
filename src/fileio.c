@@ -9,6 +9,8 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
         return IO_EXIT_FAILURE;
     }
 
+    rewind(file);
+
     for(;;) {
         size_t res = fread(buffer, sizeof(char), IO_BUFF_SIZE, file);
         bytes_read += (int) res;
@@ -53,6 +55,8 @@ long get_file_size(FILE* file){
 int count_lines(FILE* file) {
     char* buf = malloc(sizeof(char) * IO_BUFF_SIZE);
     int counter = 1;
+
+    rewind(file);
 
     for(;;) {
         size_t res = fread(buf, sizeof(char), IO_BUFF_SIZE, file);
