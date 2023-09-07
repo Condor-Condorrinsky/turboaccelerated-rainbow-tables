@@ -31,7 +31,7 @@ char* safer_strncpy(char* dest, const char* src, size_t n){
     strncpy(dest, src, n);
     dest += n - 1;
     if (*dest != '\0') {
-        fprintf(stderr, "safer_strncpy detected overflow, swapping last byte to \\0");
+        fprintf(stderr, "safer_strncpy detected overflow for string %s, swapping last byte to \\0\n", src);
         *dest = '\0';
     }
     dest -= n - 1;
