@@ -34,24 +34,45 @@ TEST_F(TableLookUpFixture, LookupTest){
     lookup(in, hash_to_find);
 }
 
-//TEST_F(TableLookUpFixture, ExtractHashedValsTest){
-//    char* expected = (char*)
-//            "0x83335D91BD32DF9EC3EB862764339A30\n"
-//            "0x91908F9B721CCFE45F80F9F8E52DEC6D\n"
-//            "0xFE25C6864F5F51E5812A7B1DFBB3C714\n"
-//            "0xC7BBECE84749D315B23E321767E73650\n"
-//            "0xDF91830460596056D67F1D0AB33C0826\n"
-//            "0x6B43A3A51B7B80B6EA146601804FA018\n"
-//            "0xF710B0F25A61290806C2C83CDBFCE2B6\n"
-//            "0x95984C556491D71D95CEB3934C9A23F1\n";
-//    char* table = (char*) malloc(1024 * sizeof(char));
-//    char* extracted = (char*) malloc(512 * sizeof(char));
-//
-//    load_file(in, table, 1024 * sizeof(char));
-//    extract_hashed_vals(table, extracted);
-//
-//    EXPECT_TRUE(strcmp(extracted, expected) == 0);
-//
-//    free(table);
-//    free(extracted);
-//}
+TEST_F(TableLookUpFixture, ExtractHashedValsTest){
+    char* table = (char*) malloc(1024 * sizeof(char));
+    int entries = count_lines(in);
+    // static_cast<...> is required by C++, in C a simple malloc call suffices
+    PassHashChain **chains = static_cast<PassHashChain **>(malloc(entries * sizeof chains));
+
+    for (int i = 0; i < entries - 1; i++) {
+        chains[i] = newChain();
+    }
+
+    load_file(in, table, 1024 * sizeof(char));
+    extract_hashed_vals(table, chains);
+
+    // Some random checks
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[0]), "password") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[1]), "0x91908F9B721CCFE45F80F9F8E52DEC6D") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[2]), "iloveyou") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[3]), "0xC7BBECE84749D315B23E321767E73650") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[4]), "sunshine") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x6B43A3A51B7B80B6EA146601804FA018") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[6]), "letmein") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0x95984C556491D71D95CEB3934C9A23F1") == 0);
+
+    for (int i = 0; i < entries - 1; ++i) {
+        deleteChain(chains[i]);
+    }
+
+    free(table);
+    free(chains);
+}
+
+TEST_F(TableLookUpFixture, LineToPassHashChainTest){
+    const char* line = "football|0xC6285C18FCF1C6322242CAD79460425E";
+    char line_copy[100];
+
+    safer_strncpy(line_copy, line, 100);
+    PassHashChain* c = newChain();
+    line_to_PassHashChain(line_copy, c);
+
+    EXPECT_TRUE(strcmp(getChainPasswd(c), "football") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(c), "0xC6285C18FCF1C6322242CAD79460425E") == 0);
+}

@@ -12,13 +12,13 @@
 #define HASH_NOT_FOUND                              1
 
 /*
- * Performs hash look up in a given rainbow table
+ * Performs looked_hash look up in a given rainbow table
  *
  * rainbow_file - a file descriptor with pre-generated rainbow table (read-only)
- * hash - C string representing MD5 hash we are looking for, in the form of
+ * looked_hash - C string representing MD5 looked_hash we are looking for, in the form of
  * "0xABCDEF0123456789ABCDEF0123456789"
  */
-void lookup(FILE* rainbow_file, const char* hash);
+void lookup(FILE* rainbow_file, const char* looked_hash);
 
 /*
  * Extracts all reduced values from pre-generated table and places the result
@@ -32,6 +32,8 @@ void lookup(FILE* rainbow_file, const char* hash);
  */
 void extract_hashed_vals(char* complete_table, PassHashChain** extracted_table);
 
-PassHashChain* line_to_PassHashChain(char* line);
+void line_to_PassHashChain(char* line, PassHashChain* c);
+
+void find_hash(PassHashChain** table, int entries, const char* looked_hash);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H
