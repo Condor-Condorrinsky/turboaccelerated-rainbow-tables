@@ -52,9 +52,9 @@ long get_file_size(FILE* file){
     return fsize;
 }
 
-int count_lines(FILE* file) {
+unsigned int count_lines(FILE* file) {
     char* buf = malloc(sizeof(char) * IO_BUFF_SIZE);
-    int counter = 1;
+    unsigned int counter = 1;
 
     rewind(file);
 

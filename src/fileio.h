@@ -51,6 +51,6 @@ long get_file_size(FILE * file);
  *
  * Returns number of line breaks in file, negative value in case of an error
  */
-int count_lines(FILE* file);
+unsigned int count_lines(FILE* file);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H

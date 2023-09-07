@@ -45,6 +45,6 @@ TEST_F(FileIOFixture, GetFileSizeTest){
 }
 
 TEST_F(FileIOFixture, CountLinesTest){
-    int lines = count_lines(f);
+    unsigned int lines = count_lines(f);
     EXPECT_EQ(lines, 9);
 }
