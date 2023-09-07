@@ -38,8 +38,8 @@ void setChainHash(PassHashChain* c, char* new_hash){
 
 void deleteChain(PassHashChain* c){
     if (c != NULL){
-        if (c->passwd != NULL) free(c->passwd);
-        if (c->hash != NULL) free(c->hash);
+        free(c->passwd);
+        free(c->hash);
         free(c);
     }
 }
