@@ -28,28 +28,15 @@ void generate_rainbow_table(FILE* in, FILE* out){
 void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations){
     char rslt[MAX_REDUCED_PASS_LENGTH];
-
-    for (int i = REDUCTION_PATTERN0; i < iterations; i++) {
-        hash_and_reduce(passwd, rslt, sizeof rslt,
-                        REDUCTION_PATTERN_VALUES[i]);
-    }
-    hash(rslt, endrslt, endrslt_len);
-}
-
-void hash_and_reduce(const char* input, char* output, unsigned int output_len,
-                     const char* reduction_pattern){
     unsigned char digest[MD5_DIGEST_LENGTH];
 
-    compute_md5(input, digest, sizeof digest);
-    reduce(digest, output, reduction_pattern, output_len);
-}
+    safer_strncpy(rslt, passwd, sizeof rslt);
 
-void reduce_and_hash(const unsigned char input[MD5_DIGEST_LENGTH], unsigned char output[MD5_DIGEST_LENGTH],
-                     unsigned int output_len, const char* reduction_pattern){
-    char reduced[MAX_REDUCED_PASS_LENGTH];
-
-    reduce(input, reduced, reduction_pattern, output_len);
-    compute_md5(reduced, output, output_len);
+    for (int i = REDUCTION_PATTERN0; i < iterations; i++) {
+        hash(rslt, digest, sizeof digest);
+        reduce_hash(digest, rslt, REDUCTION_PATTERN_VALUES[i], sizeof rslt);
+    }
+    hash(rslt, endrslt, endrslt_len);
 }
 
 void hash(const char* input, unsigned char* digest, unsigned int digest_len){
