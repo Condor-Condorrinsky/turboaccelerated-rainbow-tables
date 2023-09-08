@@ -74,3 +74,10 @@ char unsigned_char_to_ascii(const unsigned char in){
 
     return ret;
 }
+
+char unsigned_char_to_small_letter(const unsigned char in){
+    const unsigned char LETTERS_IN_ENGLISH_ALPHABET = 26;
+    const unsigned char ASCII_LETTER_SMALL_A = 97;
+
+    return (char) ((in % LETTERS_IN_ENGLISH_ALPHABET) + ASCII_LETTER_SMALL_A);
+}

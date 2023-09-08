@@ -39,12 +39,22 @@ char* safer_strncpy(char* dest, const char* src, size_t n);
 int split_by_underscores(char* input, unsigned char* result, unsigned int result_len);
 
 /*
+ * A helper function converting a small number (1 byte of hash) to a non-white printable ASCII character,
+ * excluding '|'
+ *
+ * in - byte of hash to be converted
+ *
+ * Returns a char with a value from 33 to 126 excluding 124
+ */
+char unsigned_char_to_ascii(unsigned char in);
+
+/*
  * A helper function converting a small number (1 byte of hash) to a small letter of English alphabet
  *
  * in - byte of hash to be converted
  *
  * Returns a char with a value from 97 to 122 - ascii values for small letters of English alphabet
  */
-char unsigned_char_to_ascii(unsigned char in);
+char unsigned_char_to_small_letter(unsigned char in);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
