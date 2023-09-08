@@ -9,7 +9,10 @@
 #define TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H
 
 #define HASH_FOUND                                  0
+// Found appropriate chain, but for some reason chain look up failed
 #define HASH_NOT_FOUND                              1
+// Hash is not present in the rainbow table
+#define HASH_NOT_PRESENT                            2
 
 /*
  * Performs looked_hash look up in a given rainbow table
@@ -18,7 +21,7 @@
  * looked_hash - C string representing MD5 looked_hash we are looking for, in the form of
  * "0xABCDEF0123456789ABCDEF0123456789"
  */
-void lookup(FILE* rainbow_file, const char* looked_hash);
+int lookup(FILE* rainbow_file, const char* looked_hash);
 
 /*
  * Extracts all reduced values from pre-generated table and places the result
@@ -34,6 +37,8 @@ void extract_hashed_vals(char* complete_table, PassHashChain** extracted_table);
 
 void line_to_PassHashChain(char* line, PassHashChain* c);
 
-void find_hash(PassHashChain** table, int entries, const char* looked_hash);
+int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash);
+
+int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H

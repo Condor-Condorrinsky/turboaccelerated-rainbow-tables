@@ -30,17 +30,18 @@ protected:
  */
 TEST_F(TableLookUpFixture, LookupTest){
     const char* hash_to_find = (char*) "0xA1B9A93535A93CC9496DA9E47F52CBE8";
+    int ret;
 
-    lookup(in, hash_to_find);
+    ret = lookup(in, hash_to_find);
 }
 
 TEST_F(TableLookUpFixture, ExtractHashedValsTest){
     char* table = (char*) malloc(1024 * sizeof(char));
-    int entries = count_lines(in);
+    unsigned int entries = count_lines(in);
     // static_cast<...> is required by C++, in C a simple malloc call suffices
     PassHashChain **chains = static_cast<PassHashChain **>(malloc(entries * sizeof chains));
 
-    for (int i = 0; i < entries - 1; i++) {
+    for (int i = 0; i < entries; i++) {
         chains[i] = newChain();
     }
 
@@ -49,15 +50,15 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
 
     // Some random checks
     EXPECT_TRUE(strcmp(getChainPasswd(chains[0]), "password") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[1]), "0x91908F9B721CCFE45F80F9F8E52DEC6D") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[1]), "0xFFE594140401B03240C5660038A6F109") == 0);
     EXPECT_TRUE(strcmp(getChainPasswd(chains[2]), "iloveyou") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[3]), "0xC7BBECE84749D315B23E321767E73650") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[3]), "0xD4F5BA191EF3CF22F64D4FA492D07346") == 0);
     EXPECT_TRUE(strcmp(getChainPasswd(chains[4]), "sunshine") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x6B43A3A51B7B80B6EA146601804FA018") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x0D971616ECE66D0247B7738F31D5AFA1") == 0);
     EXPECT_TRUE(strcmp(getChainPasswd(chains[6]), "letmein") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0x95984C556491D71D95CEB3934C9A23F1") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0xDA9A4E2F57E49EAC7D921C9ED08DD280") == 0);
 
-    for (int i = 0; i < entries - 1; ++i) {
+    for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);
     }
 
@@ -75,4 +76,45 @@ TEST_F(TableLookUpFixture, LineToPassHashChainTest){
 
     EXPECT_TRUE(strcmp(getChainPasswd(c), "football") == 0);
     EXPECT_TRUE(strcmp(getChainHash(c), "0xC6285C18FCF1C6322242CAD79460425E") == 0);
+
+    deleteChain(c);
+}
+
+TEST_F(TableLookUpFixture, FindHashTest){
+    const char* looked = (char*) "0x37B4E2D82900D5E94B8DA524FBEB33C0";
+    char* table = (char*) malloc(1024 * sizeof(char));
+    unsigned int entries = count_lines(in);
+    // static_cast<...> is required by C++, in C a simple malloc call suffices
+    PassHashChain **chains = static_cast<PassHashChain **>(malloc(entries * sizeof chains));
+
+    for (int i = 0; i < entries; i++) {
+        chains[i] = newChain();
+    }
+
+    load_file(in, table, 1024 * sizeof(char));
+    extract_hashed_vals(table, chains);
+
+    find_hash(chains, entries, looked);
+
+    for (int i = 0; i < entries; i++) {
+        deleteChain(chains[i]);
+    }
+
+    free(table);
+    free(chains);
+}
+
+TEST_F(TableLookUpFixture, FindHashInChainTest){
+    char* passwd = (char*) "football";
+    char* chain_hash = (char*) "0x8C90875D218107A4C1AE1C4EB3B926CF";
+    char* hash_to_look = (char*) "0x37B4E2D82900D5E94B8DA524FBEB33C0";
+    PassHashChain* c = newChain();
+    setChainPasswd(c, passwd);
+    setChainHash(c, chain_hash);
+
+    int result = find_hash_in_chain(c, hash_to_look);
+
+    EXPECT_EQ(result, HASH_FOUND);
+
+    deleteChain(c);
 }

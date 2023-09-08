@@ -1,31 +1,43 @@
 #include "tablelookup.h"
 
-void lookup(FILE* rainbow_file, const char* looked_hash){
-    long rainbow_size;
-    unsigned long long counter = 0;
+int lookup(FILE* rainbow_file, const char* looked_hash){
+    long size;
     char* rainbow_table;
-    int rainbow_lines;
-    PassHashChain* extracted_hashes;
-    PassHashChain* extracted_copy;
+    unsigned int entries;
+    PassHashChain** extracted_hashes;
+    int result;
 
-    rainbow_size = get_file_size(rainbow_file);
+    size = get_file_size(rainbow_file);
     printf("Got file size...\n");
-    rainbow_table = malloc(sizeof(char) * (rainbow_size + 1));
-    load_file(rainbow_file, rainbow_table, rainbow_size);
-    rainbow_table[rainbow_size] = '\0';
+
+    rainbow_table = malloc(sizeof(char) * (size + 1));
+    load_file(rainbow_file, rainbow_table, size);
+    rainbow_table[size] = '\0';
     printf("Loaded file into memory...\n");
 
-    rainbow_lines = count_lines(rainbow_file);
+    entries = count_lines(rainbow_file);
+    printf("Found %u entries...\n", entries);
+
     // https://stackoverflow.com/questions/15397728/c-pointer-to-array-of-pointers-to-structures-allocation-deallocation-issues
-    extracted_hashes = malloc(rainbow_lines * sizeof(PassHashChain));
-    extracted_copy = extracted_hashes;
-    extract_hashed_vals(rainbow_table, &extracted_hashes);
+    extracted_hashes = malloc(entries * sizeof extracted_hashes);
+    for (int i = 0; i < entries; i++) {
+        extracted_hashes[i] = newChain();
+    }
+    extract_hashed_vals(rainbow_table, extracted_hashes);
     printf("Extracted hashes from the rainbow table...\n");
 
-    find_hash(&extracted_hashes, rainbow_lines, looked_hash);
+    result = find_hash(extracted_hashes, entries, looked_hash);
+    printf("Look up finished\n");
+    if (result == 1) printf("Hash look up encountered an error, the table may be malformed\n");
+    if (result == 2) printf("Hash not found in the table\n");
 
+    for (int i = 0; i < entries; i++) {
+        deleteChain(extracted_hashes[i]);
+    }
     free(rainbow_table);
     free(extracted_hashes);
+
+    return result;
 }
 
 void extract_hashed_vals(char* complete_table, PassHashChain** extracted_table){
@@ -58,39 +70,61 @@ void line_to_PassHashChain(char* line, PassHashChain* c){
     setChainHash(c, hash);
 }
 
-void find_hash(PassHashChain** table, int entries, const char* looked_hash){
-    unsigned char raw_hash[MD5_DIGEST_LENGTH];
-    char raw_hash_reduced[MAX_REDUCED_PASS_LENGTH];
-    char looked_hash_copy[HASH_STRING_MIN_LEN];
+int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash){
     unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
-    PassHashChain** table_ptr_copy = table;
-    int pattern_counter = 0;
+    char looked_hash_working_copy[HASH_STRING_MIN_LEN];
+    char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
+    int found = HASH_NOT_PRESENT;
 
-    safer_strncpy(looked_hash_copy, looked_hash, sizeof looked_hash_copy);
     convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
+    safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
 
-    for (int i = 0; i < REDUCTION_PATTERNS_SIZE; i++) {
+    for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
         for (int j = 0; j < entries; j++) {
-            if (strcmp(looked_hash_copy, getChainHash(*table_ptr_copy)) == 0){
-                printf("Found looked_hash in chain ending with %s\n", getChainHash(*table_ptr_copy));
-                hash(getChainPasswd(*table_ptr_copy), raw_hash, sizeof raw_hash);
-                reduce_hash(raw_hash, raw_hash_reduced,
-                            REDUCTION_PATTERN_VALUES[pattern_counter], sizeof raw_hash_reduced);
-                pattern_counter++;
-                while (strcmp(raw_hash_reduced, looked_hash) != 0){
-                    hash(raw_hash_reduced, raw_hash, sizeof raw_hash);
-                    reduce_hash(raw_hash, raw_hash_reduced,
-                                REDUCTION_PATTERN_VALUES[pattern_counter], sizeof raw_hash_reduced);
-                    pattern_counter++;
-                }
-                printf("Password: %s\n", raw_hash_reduced);
-                return;
+            if (strcmp(getChainHash(table[j]), looked_hash_working_copy) == 0){
+                found = find_hash_in_chain(table[j], looked_hash);
             }
-            table_ptr_copy++;
         }
-        reduce_and_hash(looked_hash_raw_copy, looked_hash_raw_copy,
-                        sizeof looked_hash_raw_copy, REDUCTION_PATTERN_VALUES[i]);
-        convert_md5_to_string(looked_hash_raw_copy, looked_hash_copy, sizeof looked_hash_copy);
-        table_ptr_copy = table;
+        reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
+                    REDUCTION_PATTERN_VALUES[i], sizeof looked_hash_reduced);
+        hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_reduced);
+        convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
+                              sizeof looked_hash_working_copy);
     }
+
+    for (int k = 0; k < entries; k++) {
+        if (strcmp(getChainHash(table[k]), looked_hash_working_copy) == 0){
+            found = find_hash_in_chain(table[k], looked_hash);
+        }
+    }
+
+    return found;
+}
+
+int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
+    char reduced[MAX_REDUCED_PASS_LENGTH];
+    unsigned char raw_hash[MD5_DIGEST_LENGTH];
+    char hash_string[HASH_STRING_MIN_LEN];
+
+    safer_strncpy(reduced, getChainPasswd(c), sizeof reduced);
+
+    for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
+        hash(reduced, raw_hash, sizeof raw_hash);
+        convert_md5_to_string(raw_hash, hash_string, sizeof hash_string);
+        if (strcmp(hash_string, hash_to_find) == 0){
+            printf("------------------------------Password: %s------------------------------\n", reduced);
+            return HASH_FOUND;
+        }
+        reduce_hash(raw_hash, reduced,
+                    REDUCTION_PATTERN_VALUES[i], sizeof hash_string);
+    }
+
+    hash(reduced, raw_hash, sizeof raw_hash);
+    convert_md5_to_string(raw_hash, hash_string, sizeof hash_string);
+    if (strcmp(hash_string, hash_to_find) == 0){
+        printf("------------------------------Password: %s------------------------------\n", reduced);
+        return HASH_FOUND;
+    }
+
+    return HASH_NOT_FOUND;
 }
