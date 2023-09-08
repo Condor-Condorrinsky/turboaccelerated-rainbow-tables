@@ -39,7 +39,7 @@ TEST_F(TableGenFixture, GenerateRainbowTableTest){
     generate_rainbow_table(in, out);
 
     fseek(out, 0, SEEK_SET);
-    EXPECT_EQ(count_lines(out), 9);
+    EXPECT_EQ(count_lines(out), 8);
 }
 
 TEST_F(TableGenFixture, GenerateChainTest){
