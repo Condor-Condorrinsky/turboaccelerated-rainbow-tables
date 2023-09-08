@@ -45,7 +45,7 @@ TEST_F(TableGenFixture, GenerateRainbowTableTest){
 TEST_F(TableGenFixture, GenerateChainTest){
     const char* passwd = "football";
     // Beginning pass - football, chain end hash - value of football
-    const char* football = "0xC6285C18FCF1C6322242CAD79460425E";
+    const char* football = "0x8C90875D218107A4C1AE1C4EB3B926CF";
     unsigned char result[MD5_DIGEST_LENGTH];
     char result_string[HASH_STRING_MIN_LEN];
 

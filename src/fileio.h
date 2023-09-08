@@ -45,11 +45,11 @@ void write_line(FILE* file, const char* pass, const char* reduced);
 long get_file_size(FILE * file);
 
 /*
- * Counts line in given plaintext file
+ * Counts non-empty lines in given plaintext file. All input files are expected to be newline-terminated.
  *
  * file - FILE handler to read file
  *
- * Returns number of line breaks in file, negative value in case of an error
+ * Returns number of line breaks decremented by 1 in file, negative value in case of an error
  */
 unsigned int count_lines(FILE* file);
 
