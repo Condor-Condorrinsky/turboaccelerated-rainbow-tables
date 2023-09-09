@@ -4,33 +4,30 @@ import string
 import random
 import sys
 
-WORD_MIN_LEN = 4
-FILE_ENTRIES = 10_000_000
-
 
 def rnd_small_letter() -> str:
     return random.choice(string.ascii_lowercase)
 
 
-def build_word(max_len: int) -> str:
+def build_word(word_len: int) -> str:
     word = ''
-    length = random.randint(WORD_MIN_LEN, max_len)
-    for i in range(length):
+    for i in range(word_len):
         word += rnd_small_letter()
     return word
 
 
-def gen_file(max_word_len: int) -> None:
-    with open('random_passes_10_000_000.txt', 'wt') as f:
-        for i in range(FILE_ENTRIES):
-            entry = build_word(max_word_len) + '\n'
+def gen_file(word_len: int, entries: int) -> None:
+    with open(f'random_{entries}_passes_len_{word_len}.txt', 'wt') as f:
+        for i in range(entries):
+            entry = build_word(word_len) + '\n'
             f.write(entry)
             print(f'Generated entry nr {i}\n')
 
 
 def main():
-    word_max_len = int(sys.argv[1])
-    gen_file(word_max_len)
+    word_len = int(sys.argv[1])
+    entries = int(sys.argv[2])
+    gen_file(word_len, entries)
 
 
 if __name__ == '__main__':

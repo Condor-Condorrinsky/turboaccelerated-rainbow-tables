@@ -1,6 +1,6 @@
 cmake-build-debug-build/
 cmake-build-main-build/
 venv/
-.idea/*
-src/rsrc/scripts/random_passes_10_000_000.txt
+.idea/
+src/rsrc/scripts/random_*.txt
 tst/out/generate_rainbow_table_test.txt
