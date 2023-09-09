@@ -17,6 +17,7 @@ int help();
 
 int main(int argc, char *argv[]){
     int ext_stat = 0;
+    char hash_upper[HASH_STRING_MIN_LEN];
 
     if (argc == 1){
         ext_stat = help();
@@ -33,7 +34,8 @@ int main(int argc, char *argv[]){
         ext_stat = gen_table(argv[2], argv[3]);
     }
     if (argc == 4 && strcmp(argv[1], "look-up") == 0){
-        ext_stat = find_in_table(argv[2], argv[3]);
+        str_to_uppercase(argv[3], hash_upper, sizeof hash_upper);
+        ext_stat = find_in_table(argv[2], hash_upper);
     }
 
     printf("Nothing to do\n");
@@ -83,16 +85,15 @@ int gen_table(char* input_file, char* output_file){
 
 int help(){
     printf("------------------------------TURBOACCELERATED RAINBOW TABLES------------------------------\n");
-    printf("Small program to generate MD5 rainbow tables and perform password look-ups on them.\n");
+    printf("Small program to generate MD5 rainbow tables and perform hash look up on them.\n");
     printf("Usage:\n");
     printf("    ./trb gen-table INPUT_FILE OUTPUT_FILE - generating table from list of passwords\n");
-    printf("    ./trb look-up TABLE_FILE PASSWORD      - performing password look-up on generated table\n");
+    printf("    ./trb look-up TABLE_FILE HASH          - performing hash look-up on generated table\n");
     printf("Where:\n");
-    printf("    INPUT_FILE  - file with passes to generate rainbow table from; newline separated with trailing newline\n"
-            );
+    printf("    INPUT_FILE  - file with passes to generate rainbow table from; newline separated with trailing newline\n");
     printf("    OUTPUT_FILE - file to store generated rainbow table; if not exists, will be created\n");
     printf("    TABLE_FILE  - file with pre-generated rainbow table\n");
-    printf("    PASSWORD    - password to look for in table\n");
+    printf("    HASH        - hash to look for in table\n");
     printf("Flags:\n");
     printf("    -h - show this help and exit; overwrites all other flags and options\n");
     return EXIT_SUCCESS;

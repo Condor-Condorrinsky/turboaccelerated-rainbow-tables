@@ -104,6 +104,7 @@ TEST_F(TableLookUpFixture, FindHashTest){
     free(chains);
 }
 
+// TODO: Still appears to not find hash in chain when it should
 TEST_F(TableLookUpFixture, FindHashInChainTest){
     char* passwd = (char*) "football";
     char* chain_hash = (char*) "0x8C90875D218107A4C1AE1C4EB3B926CF";

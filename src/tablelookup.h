@@ -1,4 +1,5 @@
 #include <string.h>
+#include <ctype.h>
 #include "fileio.h"
 #include "PassHashChain.h"
 #include "patternenum.h"
@@ -40,5 +41,7 @@ void line_to_PassHashChain(char* line, PassHashChain* c);
 int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash);
 
 int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find);
+
+int str_to_uppercase(const char* input, char* output, unsigned int output_len);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLELOOKUP_H
