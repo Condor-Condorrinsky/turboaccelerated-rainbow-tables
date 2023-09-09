@@ -86,7 +86,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
             }
         }
         reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
-                    REDUCTION_PATTERN_VALUES[i], sizeof looked_hash_reduced);
+                    REDUCTION_PATTERN_VALUES[i], sizeof looked_hash_reduced, GEN_TABLE_PASS_LEN);
         hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_reduced);
         convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
                               sizeof looked_hash_working_copy);
@@ -116,7 +116,7 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
             return HASH_FOUND;
         }
         reduce_hash(raw_hash, reduced,
-                    REDUCTION_PATTERN_VALUES[i], sizeof hash_string);
+                    REDUCTION_PATTERN_VALUES[i], sizeof hash_string, GEN_TABLE_PASS_LEN);
     }
 
     hash(reduced, raw_hash, sizeof raw_hash);

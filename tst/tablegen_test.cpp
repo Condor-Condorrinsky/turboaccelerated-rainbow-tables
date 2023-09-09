@@ -43,13 +43,13 @@ TEST_F(TableGenFixture, GenerateRainbowTableTest){
 }
 
 TEST_F(TableGenFixture, GenerateChainTest){
-    const char* passwd = "football";
-    // Beginning pass - football, chain end hash - value of football
-    const char* football = "0x8C90875D218107A4C1AE1C4EB3B926CF";
+    const char* passwd = "piesek";
+    // Beginning pass - expected_hash, chain end hash - value of expected_hash
+    const char* expected_hash = "0x7B39E66B371B6E14CBEC97BF22633A6E";
     unsigned char result[MD5_DIGEST_LENGTH];
     char result_string[HASH_STRING_MIN_LEN];
 
     generate_chain(passwd, result, sizeof result, REDUCTION_PATTERNS_SIZE);
     convert_md5_to_string(result, result_string, sizeof result_string);
-    EXPECT_TRUE(strcmp(result_string, football) == 0);
+    EXPECT_TRUE(strcmp(result_string, expected_hash) == 0);
 }

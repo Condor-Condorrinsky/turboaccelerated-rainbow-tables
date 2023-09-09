@@ -33,6 +33,7 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len);
 /*
  * A wrapper for reduce function; for more info see reduction.h
  */
-void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len);
+void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
+                 unsigned int reduced_pass_len);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H

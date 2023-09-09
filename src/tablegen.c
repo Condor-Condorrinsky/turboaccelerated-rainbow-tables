@@ -34,7 +34,7 @@ void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int end
 
     for (int i = REDUCTION_PATTERN0; i < iterations; i++) {
         hash(rslt, digest, sizeof digest);
-        reduce_hash(digest, rslt, REDUCTION_PATTERN_VALUES[i], sizeof rslt);
+        reduce_hash(digest, rslt, REDUCTION_PATTERN_VALUES[i], sizeof rslt, GEN_TABLE_PASS_LEN);
     }
     hash(rslt, endrslt, endrslt_len);
 }
@@ -43,6 +43,7 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len){
     compute_md5(input, digest, digest_len);
 }
 
-void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len){
-    reduce(digest, output, reduction_pattern, output_len);
+void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
+                 unsigned int reduced_pass_len){
+    reduce(digest, output, reduction_pattern, output_len, reduced_pass_len);
 }

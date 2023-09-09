@@ -56,7 +56,7 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
     EXPECT_TRUE(strcmp(getChainPasswd(chains[4]), "sunshine") == 0);
     EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x0D971616ECE66D0247B7738F31D5AFA1") == 0);
     EXPECT_TRUE(strcmp(getChainPasswd(chains[6]), "letmein") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0xDA9A4E2F57E49EAC7D921C9ED08DD280") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0x8C90875D218107A4C1AE1C4EB3B926CF") == 0);
 
     for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);

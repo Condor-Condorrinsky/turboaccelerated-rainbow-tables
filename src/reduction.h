@@ -4,8 +4,8 @@
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 #define TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 
-// 48 characters + null terminator
-#define MAX_REDUCED_PASS_LENGTH                  49
+// 16 characters + null terminator
+#define MAX_REDUCED_PASS_LENGTH                  17
 
 /*
  * Reduction function used to convert hashes into possible plaintext passwords for rainbow table hash chain generation.
@@ -17,9 +17,11 @@
  * digest - hash (in raw form, not string) to be reduced into another password
  * output - buffer to store the output of operation; minimum 17 bytes of length
  * reduction_pattern - string in the form described earlier
- * output_len - length of output array, must be at least MD5_DIGEST_LENGTH + 1
+ * output_len - length of output array, must be at least MAX_REDUCED_PASS_LENGTH
+ * reduced_pass_len - length of the reduced password we are generating
  */
-void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len);
+void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
+            unsigned int reduced_pass_len);
 
 /*
  * A common idiomatic use of strncpy wrapped in a convenient function
