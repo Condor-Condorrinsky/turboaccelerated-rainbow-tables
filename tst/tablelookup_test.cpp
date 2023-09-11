@@ -106,9 +106,9 @@ TEST_F(TableLookUpFixture, FindHashTest){
 
 // TODO: Still appears to not find hash in chain when it should
 TEST_F(TableLookUpFixture, FindHashInChainTest){
-    char* passwd = (char*) "football";
-    char* chain_hash = (char*) "0x8C90875D218107A4C1AE1C4EB3B926CF";
-    char* hash_to_look = (char*) "0x37B4E2D82900D5E94B8DA524FBEB33C0";
+    char* passwd = (char*) "qwerty";
+    char* chain_hash = (char*) "0x6552A9BAD80DC542814207DAAB2053F8";
+    char* hash_to_look = (char*) "0xD8578EDF8458CE06FBC5BB76A58C5CA4";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
     setChainHash(c, chain_hash);

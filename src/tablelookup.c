@@ -28,8 +28,8 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
 
     result = find_hash(extracted_hashes, entries, looked_hash);
     printf("Look up finished\n");
-    if (result == 1) printf("Hash look up encountered an error, the table may be malformed\n");
-    if (result == 2) printf("Hash not found in the table\n");
+    if (result == HASH_NOT_FOUND) printf("There appears to be a collision in table, sorry :(\n");
+    if (result == HASH_NOT_PRESENT) printf("Hash not found in the table\n");
 
     for (int i = 0; i < entries; i++) {
         deleteChain(extracted_hashes[i]);
@@ -82,6 +82,10 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
         for (int j = 0; j < entries; j++) {
             if (strcmp(getChainHash(table[j]), looked_hash_working_copy) == 0){
+                printf("Looked hash: %s\n", looked_hash);
+                printf("Chain hash: %s\n", getChainHash(table[j]));
+                printf("Looked hash working copy: %s\n", looked_hash_working_copy);
+                printf("i: %d, j: %d\n", i, j);
                 found = find_hash_in_chain(table[j], looked_hash);
             }
         }
@@ -94,6 +98,10 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
 
     for (int k = 0; k < entries; k++) {
         if (strcmp(getChainHash(table[k]), looked_hash_working_copy) == 0){
+            printf("Looked hash: %s\n", looked_hash);
+            printf("Chain hash: %s\n", getChainHash(table[k]));
+            printf("Looked hash working copy: %s\n", looked_hash_working_copy);
+            printf("k: %d\n", k);
             found = find_hash_in_chain(table[k], looked_hash);
         }
     }
@@ -107,6 +115,8 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
     char hash_string[HASH_STRING_MIN_LEN];
 
     safer_strncpy(reduced, getChainPasswd(c), sizeof reduced);
+//    printf("Beginning pass: %s\n", getChainPasswd(c));
+//    printf("Chain hash: %s\n", getChainHash(c));
 
     for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
         hash(reduced, raw_hash, sizeof raw_hash);
