@@ -1,8 +1,8 @@
-password
+passwd
 qwerty
-iloveyou
+ilovey
 dragon
-sunshine
-princess
-letmein
+sunsun
+prince
+trains
 monkey

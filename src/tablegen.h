@@ -25,6 +25,9 @@ void generate_rainbow_table(FILE* in, FILE* out);
 void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);
 
+void generate_chain_verbose(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
+                    unsigned int iterations);
+
 /*
  * A wrapper for compute_md5 function; for more info see md5calc.h
  */

@@ -73,3 +73,29 @@ TEST(ReductionTest, UnsignedCharToAsciiTest){
     EXPECT_EQ(del_converted, 67);
     EXPECT_EQ(random_val_converted, 60);
 }
+
+TEST(ReductionTest, UnsignedCharToSmallLetterTest){
+    unsigned char backspace = 8;
+    unsigned char space = 32;
+    unsigned char four = 52;
+    unsigned char capital_k = 75;
+    unsigned char left_square_bracket = 91;
+    unsigned char del = 127;
+    unsigned char random_val = 213;
+
+    char backspace_converted = unsigned_char_to_small_letter(backspace);
+    char space_converted = unsigned_char_to_small_letter(space);
+    char four_converted = unsigned_char_to_small_letter(four);
+    char capital_k_converted = unsigned_char_to_small_letter(capital_k);
+    char left_square_bracket_converted = unsigned_char_to_small_letter(left_square_bracket);
+    char del_converted = unsigned_char_to_small_letter(del);
+    char random_val_converted = unsigned_char_to_small_letter(random_val);
+
+    EXPECT_EQ(backspace_converted, 105);
+    EXPECT_EQ(space_converted, 103);
+    EXPECT_EQ(four_converted, 97);
+    EXPECT_EQ(capital_k_converted, 120);
+    EXPECT_EQ(left_square_bracket_converted, 110);
+    EXPECT_EQ(del_converted, 120);
+    EXPECT_EQ(random_val_converted, 102);
+}

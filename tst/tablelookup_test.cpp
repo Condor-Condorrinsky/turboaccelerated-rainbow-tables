@@ -49,14 +49,14 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
     extract_hashed_vals(table, chains);
 
     // Some random checks
-    EXPECT_TRUE(strcmp(getChainPasswd(chains[0]), "password") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[1]), "0xFFE594140401B03240C5660038A6F109") == 0);
-    EXPECT_TRUE(strcmp(getChainPasswd(chains[2]), "iloveyou") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[3]), "0xD4F5BA191EF3CF22F64D4FA492D07346") == 0);
-    EXPECT_TRUE(strcmp(getChainPasswd(chains[4]), "sunshine") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x0D971616ECE66D0247B7738F31D5AFA1") == 0);
-    EXPECT_TRUE(strcmp(getChainPasswd(chains[6]), "letmein") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0x8C90875D218107A4C1AE1C4EB3B926CF") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[0]), "passwd") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[1]), "0x6552A9BAD80DC542814207DAAB2053F8") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[2]), "ilovey") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[3]), "0x4EB1347DCDBE1138B223D86A14C34A93") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[4]), "sunsun") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[5]), "0x7035F9D5AA9ACF8F4C277B73DC17F88C") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(chains[6]), "trains") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(chains[7]), "0xA8EF4084FE17272B7DAB9492CFCB6703") == 0);
 
     for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);
@@ -67,15 +67,15 @@ TEST_F(TableLookUpFixture, ExtractHashedValsTest){
 }
 
 TEST_F(TableLookUpFixture, LineToPassHashChainTest){
-    const char* line = "football|0xC6285C18FCF1C6322242CAD79460425E";
+    const char* line = "passwd|0xE6AB903BDD7A391A7E3E3B1588033676";
     char line_copy[100];
 
     safer_strncpy(line_copy, line, 100);
     PassHashChain* c = newChain();
     line_to_PassHashChain(line_copy, c);
 
-    EXPECT_TRUE(strcmp(getChainPasswd(c), "football") == 0);
-    EXPECT_TRUE(strcmp(getChainHash(c), "0xC6285C18FCF1C6322242CAD79460425E") == 0);
+    EXPECT_TRUE(strcmp(getChainPasswd(c), "passwd") == 0);
+    EXPECT_TRUE(strcmp(getChainHash(c), "0xE6AB903BDD7A391A7E3E3B1588033676") == 0);
 
     deleteChain(c);
 }
@@ -118,4 +118,13 @@ TEST_F(TableLookUpFixture, FindHashInChainTest){
     EXPECT_EQ(result, HASH_FOUND);
 
     deleteChain(c);
+}
+
+TEST_F(TableLookUpFixture, StrToUppercaseTest){
+    const char* input = "p@s5wd";
+    char output[7];
+
+    str_to_uppercase(input, output, sizeof output);
+
+    EXPECT_TRUE(strcmp(output, "P@S5WD") == 0);
 }
