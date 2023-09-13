@@ -1,5 +1,42 @@
 #include "reduction.h"
 
+// https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
+void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration){
+    // 26^6 - all combinations of 6-letter passwords created from small letters of English alphabet
+    const char* SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE = "308 915 776";
+    char digest_str[HASH_STRING_MIN_LEN];
+    unsigned int ret_string_len = strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE) + 1;
+    char ret_string[ret_string_len];
+    mpz_t ret;
+    mpz_t SEARCH_SET_SIZE;
+    mpz_t iteration;
+
+    convert_md5_to_string(digest, digest_str, sizeof digest_str);
+    // 0 means that function will discover base based on beginning of the string - 0x
+    if (mpz_init_set_str(ret, digest_str, 0)){
+        fprintf(stderr, "Failed to init mpz hash");
+        exit(EXIT_FAILURE);
+    }
+
+    if (mpz_init_set_str(SEARCH_SET_SIZE, SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE, 10)){
+        fprintf(stderr, "Failed to init mpz SET_SIZE");
+        exit(EXIT_FAILURE);
+    }
+    if (mpz_init_set_str(iteration, reduction_iteration, 10)){
+        fprintf(stderr, "Failed to init mpz iteration");
+        exit(EXIT_FAILURE);
+    }
+
+    mpz_mod(ret, ret, SEARCH_SET_SIZE);
+    mpz_add(ret, ret, iteration);
+
+    gmp_snprintf(ret_string, ret_string_len, "%d", ret);
+
+    mpz_clear(ret);
+    mpz_clear(SEARCH_SET_SIZE);
+    mpz_clear(iteration);
+}
+
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
             unsigned int reduced_pass_len){
     const int MAX_DELIMITERS_IN_PATTERN = 15;

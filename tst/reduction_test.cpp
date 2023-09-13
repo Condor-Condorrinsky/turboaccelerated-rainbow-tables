@@ -1,7 +1,17 @@
 #include <gtest/gtest.h>
 extern "C" {
+    #include <gmp.h>
     #include "../src/reduction.h"
     #include "../src/patternenum.h"
+}
+
+TEST(ReductionTest, RTest){
+    const unsigned char example_digest[MD5_DIGEST_LENGTH] =
+            {234, 127, 200, 43, 89, 55, 190, 255,
+             20, 167, 203, 39, 75, 150, 183, 110};
+    char output_buffer[MAX_REDUCED_PASS_LENGTH];
+
+    R(example_digest, output_buffer, sizeof output_buffer, (char*) "2");
 }
 
 TEST(ReductionTest, ReduceTest){

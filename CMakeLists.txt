@@ -71,3 +71,8 @@ target_link_libraries(trb
         ssl)
 target_link_libraries(trb
         crypto)
+# GMP - GNU Multiple Precision Arithmetic Library
+set(gmp_DIR .)
+find_package(gmp CONFIG REQUIRED)
+target_link_libraries(trb
+        gmp)

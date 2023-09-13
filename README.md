@@ -4,6 +4,7 @@ A proof-of-concept application generating rainbow tables for MD5 hash function w
 
 ##### Dependencies
 - OpenSSL (*libssl* and *libcrypto*)
+- GNU Multiple Precision Arithmetic Library (*lgmp*)
 - GoogleTest (*libgtest*; only necessary if you need to compile tests)
 
 ##### Authors

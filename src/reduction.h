@@ -1,4 +1,5 @@
 #include <string.h>
+#include <gmp.h>
 #include "md5calc.h"
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
@@ -6,6 +7,8 @@
 
 // 16 characters + null terminator
 #define MAX_REDUCED_PASS_LENGTH                  17
+
+void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration);
 
 /*
  * Reduction function used to convert hashes into possible plaintext passwords for rainbow table hash chain generation.
