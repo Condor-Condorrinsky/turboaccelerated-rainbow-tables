@@ -4,7 +4,7 @@ void generate_rainbow_table(FILE* in, FILE* out){
     long fsize;
     char* tok_saved;
     if ((fsize = get_file_size(in)) < 0){
-        fprintf(stderr, "Can't open input file, aborting");
+        fprintf(stderr, "Can't open input file, aborting\n");
         exit(EXIT_FAILURE);
     }
     char* passes = malloc(sizeof(char) * (fsize + 1));

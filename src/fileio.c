@@ -5,7 +5,7 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
     char* end = buffer;
 
     if (buffer_len < get_file_size(file)){
-        fprintf(stderr, "Too small buffer to read into");
+        fprintf(stderr, "Too small buffer to read into\n");
         return IO_EXIT_FAILURE;
     }
 
@@ -15,7 +15,7 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
         size_t res = fread(buffer, sizeof(char), IO_BUFF_SIZE, file);
         bytes_read += (int) res;
         if (ferror(file)) {
-            fprintf(stderr, "IO generic error");
+            fprintf(stderr, "IO generic error\n");
             return IO_EXIT_FAILURE;
         }
         if (res == 0)
@@ -40,11 +40,11 @@ long get_file_size(FILE* file){
     int fd;
 
     if ((fd = fileno(file)) < 0){
-        fprintf(stderr, "Couldn't open file descriptor for size estimation");
+        fprintf(stderr, "Couldn't open file descriptor for size estimation\n");
         return -1;
     }
     if ((fstat(fd, &s))){
-        fprintf(stderr, "Couldn't get file info for size estimation");
+        fprintf(stderr, "Couldn't get file info for size estimation\n");
         return -2;
     }
     fsize = s.st_size;
@@ -61,7 +61,7 @@ unsigned int count_lines(FILE* file) {
     for(;;) {
         size_t res = fread(buf, sizeof(char), IO_BUFF_SIZE, file);
         if (ferror(file)){
-            fprintf(stderr, "Error encountered when counting lines");
+            fprintf(stderr, "Error encountered when counting lines\n");
             free(buf);
             return IO_EXIT_FAILURE;
         }

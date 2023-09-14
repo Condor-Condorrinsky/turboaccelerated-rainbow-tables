@@ -1,11 +1,12 @@
-#include <gtest/gtest.h>
-extern "C" {
-    #include <gmp.h>
-    #include "../src/reduction.h"
-    #include "../src/patternenum.h"
-}
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <setjmp.h>
+#include <cmocka.h>
+#include "../src/patternenum.h"
+#include "../src/reduction.h"
 
-TEST(ReductionTest, RTest){
+static void R_test(void** state){
     const unsigned char example_digest[MD5_DIGEST_LENGTH] =
             {234, 127, 200, 43, 89, 55, 190, 255,
              20, 167, 203, 39, 75, 150, 183, 110};
@@ -14,7 +15,7 @@ TEST(ReductionTest, RTest){
     R(example_digest, output_buffer, sizeof output_buffer, (char*) "2");
 }
 
-TEST(ReductionTest, ReduceTest){
+static void reduce_test(void** state){
     const unsigned char example_digest[MD5_DIGEST_LENGTH] =
             {234, 127, 200, 43, 89, 55, 190, 255,
              20, 167, 203, 39, 75, 150, 183, 110};
@@ -22,25 +23,23 @@ TEST(ReductionTest, ReduceTest){
     const char* pattern = "15_10_7_12_3_0_8_1";
 
     reduce(example_digest, output_buffer, pattern, sizeof output_buffer, GEN_TABLE_PASS_LEN);
-
-    int result = strcmp(output_buffer, "gvvxra");
-    EXPECT_TRUE(result == 0) << "Reduction output not equal to expected value";
+    assert_true(strcmp(output_buffer, "gvvxra") == 0);
 }
 
-TEST(ReductionTest, SaferStrncpyTest){
+static void safer_strncpy_test(void** state){
     const char* test = "abcdefghijklmnopqrstuwvxyz0123456789";
     unsigned int test_len = 26 + 10 + 1;
     char good_copy[test_len];
     // char bad_copy[test_len - 5];
 
     safer_strncpy(good_copy, test, sizeof good_copy);
-    EXPECT_TRUE(strcmp(good_copy, test) == 0);
+    assert_true(strcmp(good_copy, test) == 0);
 
     // safe_strncpy(bad_copy, test, sizeof bad_copy);
-    // EXPECT_EQ(bad_copy[test_len - 5 - 1], '\0');
+    // assert_int_equal((int) bad_copy[test_len - 5 - 1], (int) '\0');
 }
 
-TEST(ReductionTest, SplitByUnderscoresTest){
+static void split_by_underscores_test(void** state){
     const char* pattern = "15_10_7_12_3_0_8_1";
     char pattern_copy[48];
     unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
@@ -48,17 +47,17 @@ TEST(ReductionTest, SplitByUnderscoresTest){
     safer_strncpy(pattern_copy, pattern, sizeof pattern_copy);
     split_by_underscores(pattern_copy, pattern_tokenized, sizeof pattern_tokenized);
 
-    EXPECT_EQ(pattern_tokenized[0], 15);
-    EXPECT_EQ(pattern_tokenized[1], 10);
-    EXPECT_EQ(pattern_tokenized[2], 7);
-    EXPECT_EQ(pattern_tokenized[3], 12);
-    EXPECT_EQ(pattern_tokenized[4], 3);
-    EXPECT_EQ(pattern_tokenized[5], 0);
-    EXPECT_EQ(pattern_tokenized[6], 8);
-    EXPECT_EQ(pattern_tokenized[7], 1);
+    assert_int_equal((int) pattern_tokenized[0], 15);
+    assert_int_equal((int) pattern_tokenized[1], 10);
+    assert_int_equal((int) pattern_tokenized[2], 7);
+    assert_int_equal((int) pattern_tokenized[3], 12);
+    assert_int_equal((int) pattern_tokenized[4], 3);
+    assert_int_equal((int) pattern_tokenized[5], 0);
+    assert_int_equal((int) pattern_tokenized[6], 8);
+    assert_int_equal((int) pattern_tokenized[7], 1);
 }
 
-TEST(ReductionTest, UnsignedCharToAsciiTest){
+static void unsigned_char_to_ascii_test(void** state){
     unsigned char backspace = 8;
     unsigned char space = 32;
     unsigned char four = 52;
@@ -75,16 +74,16 @@ TEST(ReductionTest, UnsignedCharToAsciiTest){
     char del_converted = unsigned_char_to_ascii(del);
     char random_val_converted = unsigned_char_to_ascii(random_val);
 
-    EXPECT_EQ(backspace_converted, 41);
-    EXPECT_EQ(space_converted, 65);
-    EXPECT_EQ(four_converted, 85);
-    EXPECT_EQ(capital_k_converted, 108);
-    EXPECT_EQ(left_square_bracket_converted, 33);
-    EXPECT_EQ(del_converted, 67);
-    EXPECT_EQ(random_val_converted, 60);
+    assert_int_equal((int) backspace_converted, 41);
+    assert_int_equal((int) space_converted, 65);
+    assert_int_equal((int) four_converted, 85);
+    assert_int_equal((int) capital_k_converted, 108);
+    assert_int_equal((int) left_square_bracket_converted, 33);
+    assert_int_equal((int) del_converted, 67);
+    assert_int_equal((int) random_val_converted, 60);
 }
 
-TEST(ReductionTest, UnsignedCharToSmallLetterTest){
+static void unsigned_char_to_small_letter_test(void** state){
     unsigned char backspace = 8;
     unsigned char space = 32;
     unsigned char four = 52;
@@ -101,11 +100,11 @@ TEST(ReductionTest, UnsignedCharToSmallLetterTest){
     char del_converted = unsigned_char_to_small_letter(del);
     char random_val_converted = unsigned_char_to_small_letter(random_val);
 
-    EXPECT_EQ(backspace_converted, 105);
-    EXPECT_EQ(space_converted, 103);
-    EXPECT_EQ(four_converted, 97);
-    EXPECT_EQ(capital_k_converted, 120);
-    EXPECT_EQ(left_square_bracket_converted, 110);
-    EXPECT_EQ(del_converted, 120);
-    EXPECT_EQ(random_val_converted, 102);
+    assert_int_equal((int) backspace_converted, 105);
+    assert_int_equal((int) space_converted, 103);
+    assert_int_equal((int) four_converted, 97);
+    assert_int_equal((int) capital_k_converted, 120);
+    assert_int_equal((int) left_square_bracket_converted, 110);
+    assert_int_equal((int) del_converted, 120);
+    assert_int_equal((int) random_val_converted, 102);
 }
