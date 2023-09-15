@@ -12,7 +12,7 @@ typedef struct TABLELOOKUP_TEST_STRUCT{
 static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in = NULL};
 
 static int tablelookup_setup(void** state){
-    const char* path = "../tst/rsrc/example_rainbow_table.txt";
+    const char* path = "tst/rsrc/example_rainbow_table.txt";
 
     FILE* f = fopen(path, "r");
     if (f == NULL) {

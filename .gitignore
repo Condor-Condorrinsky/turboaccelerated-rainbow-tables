@@ -1,6 +1,8 @@
-cmake-build-debug-build/
-cmake-build-main-build/
+cmake-build-debug/
+cmake-build-main/
+cmake-build-singletest/
 venv/
 .idea/
+tst/cmocka_main_single_test.c
 src/rsrc/scripts/random_*.txt
 tst/out/generate_rainbow_table_test.txt

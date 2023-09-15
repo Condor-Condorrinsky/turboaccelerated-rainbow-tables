@@ -12,7 +12,7 @@ typedef struct FILEIO_TEST_STRUCT{
 static FILEIO_TEST_STRUCT fileioTestStruct = {.in = NULL};
 
 static int fileio_setup(void** state){
-    const char* path = "../tst/rsrc/commonpasses.txt";
+    const char* path = "tst/rsrc/commonpasses.txt";
 
     FILE* f = fopen(path, "r");
     if (f == NULL) {

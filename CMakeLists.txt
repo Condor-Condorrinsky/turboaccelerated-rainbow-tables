@@ -4,6 +4,7 @@ project(turboaccelerated_rainbow_tables C)
 set(CMAKE_C_STANDARD 11)
 
 OPTION(TESTS "Compile tests" OFF)
+OPTION(SINGLE_TEST "Compile single test" OFF)
 
 if(TESTS)
     add_executable(trb
@@ -41,7 +42,43 @@ if(TESTS)
     find_package(cmocka CONFIG REQUIRED)
     target_link_libraries(trb
             cmocka)
-else ()
+elseif(SINGLE_TEST)
+    add_executable(trb
+            # Src, without main
+            src/md5calc.c
+            src/md5calc.h
+            src/PassHashChain.c
+            src/PassHashChain.h
+            src/reduction.c
+            src/reduction.h
+            src/tablegen.c
+            src/tablegen.h
+            src/patternenum.h
+            src/fileio.c
+            src/fileio.h
+            src/tablelookup.c
+            src/tablelookup.h
+            # CMocka tests
+            tst/cmocka_main_single_test.c
+            tst/fileio_test.c
+            tst/md5calc_test.c
+            tst/reduction_test.c
+            tst/tablegen_test.c
+            tst/tablelookup_test.c
+    )
+    target_include_directories(trb
+            PUBLIC src
+            PUBLIC tst
+    )
+
+    enable_testing()
+
+    # CMocka - C Unit testing framework
+    set(cmocka_DIR .)
+    find_package(cmocka CONFIG REQUIRED)
+    target_link_libraries(trb
+            cmocka)
+else()
     add_executable(trb
             src/main.c
             src/md5calc.c

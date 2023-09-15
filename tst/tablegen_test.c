@@ -13,8 +13,8 @@ typedef struct TABLEGEN_TEST_STRUCT{
 static TABLEGEN_TEST_STRUCT tablegenTestStruct = {.in = NULL, .out = NULL};
 
 static int tablegen_setup(void** state){
-    const char* inpath = "../tst/rsrc/commonpasses.txt";
-    const char* outpath = "../tst/out/generate_rainbow_table_test.txt";
+    const char* inpath = "tst/rsrc/commonpasses.txt";
+    const char* outpath = "tst/out/generate_rainbow_table_test.txt";
 
     tablegenTestStruct.in = fopen(inpath, "r+b");
     if (tablegenTestStruct.in == NULL) {
