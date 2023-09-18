@@ -8,7 +8,16 @@
 // 16 characters + null terminator
 #define MAX_REDUCED_PASS_LENGTH                  17
 
+const static char* SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR = "308915776";
+
 void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration);
+
+void encode(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len);
+
+/*
+ * https://stackoverflow.com/questions/276827/string-padding-in-c
+ */
+void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len);
 
 /*
  * Reduction function used to convert hashes into possible plaintext passwords for rainbow table hash chain generation.

@@ -3,9 +3,8 @@
 // https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
 void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration){
     // 26^6 - all combinations of 6-letter passwords created from small letters of English alphabet
-    const char* SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE = "308 915 776";
     char digest_str[HASH_STRING_MIN_LEN];
-    unsigned int ret_string_len = strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE) + 1;
+    unsigned int ret_string_len = strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR) + 1;
     char ret_string[ret_string_len];
     mpz_t ret;
     mpz_t SEARCH_SET_SIZE;
@@ -18,7 +17,7 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, char*
         exit(EXIT_FAILURE);
     }
 
-    if (mpz_init_set_str(SEARCH_SET_SIZE, SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE, 10)){
+    if (mpz_init_set_str(SEARCH_SET_SIZE, SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR, 10)){
         fprintf(stderr, "Failed to init mpz SET_SIZE");
         exit(EXIT_FAILURE);
     }
@@ -30,11 +29,64 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, char*
     mpz_mod(ret, ret, SEARCH_SET_SIZE);
     mpz_add(ret, ret, iteration);
 
-    gmp_snprintf(ret_string, ret_string_len, "%d", ret);
+    gmp_snprintf(ret_string, ret_string_len, "%Zd", ret);
 
     mpz_clear(ret);
     mpz_clear(SEARCH_SET_SIZE);
     mpz_clear(iteration);
+}
+
+void encode(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
+    char letter[MAX_BYTE_TO_HEX_STR_LENGTH];
+    char num_padded[strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR) + 1];
+    unsigned char letter_num;
+    unsigned long num_len;
+    int counter = 0;
+
+    letter[MAX_BYTE_TO_HEX_STR_LENGTH - 1] = '\0';
+    pad_str_leading_zeroes(number, strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR),
+                           num_padded, sizeof num_padded);
+    num_len = strlen(num_padded);
+
+    while (counter <= desired_len) {
+        for (int i = 0; i < num_len - 1; i += MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
+            if (counter >= output_len || counter > desired_len) break;
+            memcpy(letter, &num_padded[i], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
+            letter_num = (unsigned char) strtol(letter, NULL, 10);
+            output_buf[counter] = unsigned_char_to_small_letter(letter_num);
+            counter++;
+        }
+        for (int j = (int) num_len - 1; j > 0; j -= MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
+            if (counter >= output_len || counter > desired_len) break;
+            memcpy(letter, &num_padded[j - 1], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
+            letter_num = (unsigned char) strtol(letter, NULL, 10);
+            output_buf[counter] = unsigned_char_to_small_letter(letter_num);
+            counter++;
+        }
+    }
+
+    output_buf[counter-1] = '\0';
+}
+
+void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
+    const char *PADDING = "0000000000000000000000000000000000000000000000000000000000000000";
+    unsigned int num_len = strlen(number);
+
+    if (output_len < desired_len + 1){
+        fprintf(stderr,
+                "Output buffer is too small for desired length, padding was not performed\n");
+        exit(EXIT_FAILURE);
+    }
+    if (num_len + 1 > output_len){
+        fprintf(stderr,
+                "Specified buffer is too small for given number, padding was skipped\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int pad_len = (int) (desired_len - num_len);
+    if (pad_len < 0) pad_len = 0; // Avoid negative length
+
+    snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number);
 }
 
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
