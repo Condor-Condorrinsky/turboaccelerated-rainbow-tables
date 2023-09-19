@@ -42,16 +42,16 @@ static void load_file_test(void** state){
     num_read = load_file(fileioTestStruct.in, buffer, sizeof buffer);
     assert_int_equal(num_read, fsize);
     // Some random character checks
-    assert_int_equal((int) buffer[6], (int) '\n');
-    assert_int_equal((int) buffer[12], (int) 'y');
-    assert_int_equal((int) buffer[21], (int) 'd');
-    assert_int_equal((int) buffer[37], (int) 'i');
-    assert_int_equal((int) buffer[53], (int) 'e');
+    assert_int_equal((int) buffer[8], (int) '\n');
+    assert_int_equal((int) buffer[13], (int) '4');
+    assert_int_equal((int) buffer[23], (int) '2');
+    assert_int_equal((int) buffer[38], (int) '5');
+    assert_int_equal((int) buffer[54], (int) '0');
 }
 
 static void get_file_size_test(void** state){
     long chars = get_file_size(fileioTestStruct.in);
-    assert_int_equal((int) chars, 56);
+    assert_int_equal((int) chars, 72);
 }
 
 static void count_lines_test(void** state){

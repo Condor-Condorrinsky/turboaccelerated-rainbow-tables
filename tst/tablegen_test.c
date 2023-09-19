@@ -61,6 +61,6 @@ static void generate_chain_test(void** state){
     //convert_md5_to_string(result, result_string, sizeof result_string);
     //assert_true(strcmp(result_string, expected_hash) == 0);
 
-    const char* passwd2 = "gyhgsu";
+    const char* passwd2 = "10000000";
     generate_chain_verbose(passwd2, result, sizeof result, REDUCTION_PATTERNS_SIZE);
 }

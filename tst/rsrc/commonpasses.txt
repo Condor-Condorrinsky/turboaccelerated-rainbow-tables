@@ -1,8 +1,8 @@
-passwd
-qwerty
-ilovey
-dragon
-sunsun
-prince
-trains
-monkey
+12345678
+87654321
+24680246
+08642086
+13579135
+97531975
+00000001
+10000000
