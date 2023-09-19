@@ -10,7 +10,7 @@
 
 const static char* SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR = "308915776";
 
-void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration);
+void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration);
 
 void encode(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len);
 

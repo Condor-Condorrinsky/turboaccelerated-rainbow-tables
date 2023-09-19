@@ -21,6 +21,8 @@ int main(void) {
             cmocka_unit_test(convert_string_to_md5_test),
             // reduction_test.c
             cmocka_unit_test(R_test),
+            cmocka_unit_test(encode_test),
+            cmocka_unit_test(pad_str_leading_zeroes_test),
             cmocka_unit_test(reduce_test),
             cmocka_unit_test(safer_strncpy_test),
             cmocka_unit_test(split_by_underscores_test),

@@ -13,6 +13,8 @@ static void R_test(void** state){
     char output_buffer[MAX_REDUCED_PASS_LENGTH];
 
     R(example_digest, output_buffer, sizeof output_buffer, (char*) "2");
+
+    assert_string_equal(output_buffer, "wetouj");
 }
 
 static void encode_test(void** state){

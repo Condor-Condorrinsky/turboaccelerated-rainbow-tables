@@ -66,5 +66,5 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len){
 
 void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
                  unsigned int reduced_pass_len){
-    reduce(digest, output, reduction_pattern, output_len, reduced_pass_len);
+    R(digest, output, output_len, reduction_pattern);
 }

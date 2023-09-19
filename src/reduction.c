@@ -1,7 +1,8 @@
 #include "reduction.h"
 
 // https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
-void R(const unsigned char* digest, char* output, unsigned int output_len, char* reduction_iteration){
+void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration){
+    const int DESIRED_PASS_LEN = 6;
     // 26^6 - all combinations of 6-letter passwords created from small letters of English alphabet
     char digest_str[HASH_STRING_MIN_LEN];
     unsigned int ret_string_len = strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR) + 1;
@@ -30,6 +31,8 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, char*
     mpz_add(ret, ret, iteration);
 
     gmp_snprintf(ret_string, ret_string_len, "%Zd", ret);
+
+    encode(ret_string, DESIRED_PASS_LEN, output, output_len);
 
     mpz_clear(ret);
     mpz_clear(SEARCH_SET_SIZE);
