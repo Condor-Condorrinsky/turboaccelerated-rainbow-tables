@@ -14,7 +14,7 @@ static void R_test(void** state){
 
     R(example_digest, output_buffer, sizeof output_buffer, (char*) "2");
 
-    assert_string_equal(output_buffer, "wetouj");
+    assert_string_equal(output_buffer, "00838512");
 }
 
 static void encode_test(void** state){

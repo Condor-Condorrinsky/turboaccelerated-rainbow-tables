@@ -2,10 +2,9 @@
 
 // https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration){
-    const int DESIRED_PASS_LEN = 6;
-    // 26^6 - all combinations of 6-letter passwords created from small letters of English alphabet
+    const int DESIRED_PASS_LEN = 8;
     char digest_str[HASH_STRING_MIN_LEN];
-    unsigned int ret_string_len = strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR) + 1;
+    unsigned int ret_string_len = strlen(EIGHT_DIGIT_PINS_SET_SIZE_STR) + 1;
     char ret_string[ret_string_len];
     mpz_t ret;
     mpz_t SEARCH_SET_SIZE;
@@ -18,7 +17,7 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
         exit(EXIT_FAILURE);
     }
 
-    if (mpz_init_set_str(SEARCH_SET_SIZE, SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR, 10)){
+    if (mpz_init_set_str(SEARCH_SET_SIZE, EIGHT_DIGIT_PINS_SET_SIZE_STR, 10)){
         fprintf(stderr, "Failed to init mpz SET_SIZE");
         exit(EXIT_FAILURE);
     }
@@ -27,12 +26,12 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
         exit(EXIT_FAILURE);
     }
 
-    mpz_mod(ret, ret, SEARCH_SET_SIZE);
     mpz_add(ret, ret, iteration);
+    mpz_mod(ret, ret, SEARCH_SET_SIZE);
 
     gmp_snprintf(ret_string, ret_string_len, "%Zd", ret);
 
-    encode(ret_string, DESIRED_PASS_LEN, output, output_len);
+    pad_str_leading_zeroes(ret_string, DESIRED_PASS_LEN, output, output_len);
 
     mpz_clear(ret);
     mpz_clear(SEARCH_SET_SIZE);
@@ -74,6 +73,7 @@ void encode(char* number, unsigned int desired_len, char* output_buf, unsigned i
 void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
     const char *PADDING = "0000000000000000000000000000000000000000000000000000000000000000";
     unsigned int num_len = strlen(number);
+    char number_copy[num_len + 1];
 
     if (output_len < desired_len + 1){
         fprintf(stderr,
@@ -86,10 +86,12 @@ void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output
         exit(EXIT_FAILURE);
     }
 
+    safer_strncpy(number_copy, number, num_len + 1);
+
     int pad_len = (int) (desired_len - num_len);
     if (pad_len < 0) pad_len = 0; // Avoid negative length
 
-    snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number);
+    snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number_copy);
 }
 
 void reduce(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
