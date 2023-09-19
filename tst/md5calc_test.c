@@ -10,12 +10,20 @@ static void compute_md5_test(void** state){
     const char* s = "0x8B1A9953C4611296A827ABF8C47804D7";
     unsigned char digest[MD5_DIGEST_LENGTH];
     char string_digest[HASH_STRING_MIN_LEN];
+    // "55555555"
+    const char* s2 = "0xF638F4354FF089323D1A5F78FD8F63CA";
+    unsigned char digest2[MD5_DIGEST_LENGTH];
+    char string_digest2[HASH_STRING_MIN_LEN];
 
     unsigned int hash = compute_md5("Hello", digest, sizeof digest);
     assert_int_equal((int) hash, MD5_DIGEST_LENGTH);
+    unsigned int hash2 = compute_md5("55555555", digest2, sizeof digest2);
+    assert_int_equal((int) hash2, MD5_DIGEST_LENGTH);
 
     convert_md5_to_string(digest, string_digest, sizeof string_digest);
-    assert_true(strcmp(string_digest, s) == 0);
+    assert_string_equal(string_digest, s);
+    convert_md5_to_string(digest2, string_digest2, sizeof string_digest2);
+    assert_string_equal(string_digest2, s2);
 }
 
 static void convert_md5_to_string_test(void** state){
