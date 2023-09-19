@@ -35,7 +35,6 @@ void write_line(FILE* file, const char* pass, const char* reduced){
 }
 
 long get_file_size(FILE* file){
-    long fsize;
     struct stat s;
     int fd;
 
@@ -47,9 +46,8 @@ long get_file_size(FILE* file){
         fprintf(stderr, "Couldn't get file info for size estimation\n");
         return -2;
     }
-    fsize = s.st_size;
 
-    return fsize;
+    return s.st_size;
 }
 
 unsigned int count_lines(FILE* file) {

@@ -26,12 +26,12 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len);
 
 /*
  * Writes a single line to a given plaintext in the format of (without quotes):
- * "*pass*|*reduced*\n"
+ * "*pass*|*final_hash*\n"
  * Designed to generate a nicely-looking rainbow table
  *
  * file - FILE handler to read file
  * pass - password which eventually reduces to reduced parameter
- * reduced - pass after whole chain generation
+ * reduced - hash after whole chain generation
  */
 void write_line(FILE* file, const char* pass, const char* reduced);
 
