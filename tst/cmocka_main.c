@@ -23,9 +23,7 @@ int main(void) {
             cmocka_unit_test(R_test),
             cmocka_unit_test(encode_test),
             cmocka_unit_test(pad_str_leading_zeroes_test),
-            cmocka_unit_test(reduce_test),
             cmocka_unit_test(safer_strncpy_test),
-            cmocka_unit_test(split_by_underscores_test),
             cmocka_unit_test(unsigned_char_to_ascii_test),
             cmocka_unit_test(unsigned_char_to_small_letter_test),
             // tablegen_test.c

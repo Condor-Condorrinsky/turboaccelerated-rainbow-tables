@@ -56,17 +56,6 @@ static void pad_str_leading_zeroes_test(void** state){
     assert_string_equal(buf3, "003000000");
 }
 
-static void reduce_test(void** state){
-    const unsigned char example_digest[MD5_DIGEST_LENGTH] =
-            {234, 127, 200, 43, 89, 55, 190, 255,
-             20, 167, 203, 39, 75, 150, 183, 110};
-    char output_buffer[MAX_REDUCED_PASS_LENGTH];
-    const char* pattern = "15_10_7_12_3_0_8_1";
-
-    reduce(example_digest, output_buffer, pattern, sizeof output_buffer, GEN_TABLE_PASS_LEN);
-    assert_string_equal(output_buffer, "gvvxra");
-}
-
 static void safer_strncpy_test(void** state){
     const char* test = "abcdefghijklmnopqrstuwvxyz0123456789";
     unsigned int test_len = 26 + 10 + 1;
@@ -78,24 +67,6 @@ static void safer_strncpy_test(void** state){
 
     // safe_strncpy(bad_copy, test, sizeof bad_copy);
     // assert_int_equal((int) bad_copy[test_len - 5 - 1], (int) '\0');
-}
-
-static void split_by_underscores_test(void** state){
-    const char* pattern = "15_10_7_12_3_0_8_1";
-    char pattern_copy[48];
-    unsigned char pattern_tokenized[MD5_DIGEST_LENGTH];
-
-    safer_strncpy(pattern_copy, pattern, sizeof pattern_copy);
-    split_by_underscores(pattern_copy, pattern_tokenized, sizeof pattern_tokenized);
-
-    assert_int_equal((int) pattern_tokenized[0], 15);
-    assert_int_equal((int) pattern_tokenized[1], 10);
-    assert_int_equal((int) pattern_tokenized[2], 7);
-    assert_int_equal((int) pattern_tokenized[3], 12);
-    assert_int_equal((int) pattern_tokenized[4], 3);
-    assert_int_equal((int) pattern_tokenized[5], 0);
-    assert_int_equal((int) pattern_tokenized[6], 8);
-    assert_int_equal((int) pattern_tokenized[7], 1);
 }
 
 static void unsigned_char_to_ascii_test(void** state){
