@@ -40,20 +40,20 @@ static void encode_test(void** state){
 }
 
 static void pad_str_leading_zeroes_test(void** state){
-    char* num1 = "123456789";
+    char* num1 = "12345678";
     char* num2 = "1";
-    char* num3 = "03000000";
+    char* num3 = "0315926";
     char buf1[10];
     char buf2[10];
     char buf3[10];
 
-    pad_str_leading_zeroes(num1, 9, buf1, sizeof buf1);
-    pad_str_leading_zeroes(num2, 9, buf2, sizeof buf2);
-    pad_str_leading_zeroes(num3, 9, buf3, sizeof buf3);
+    pad_str_leading_zeroes(num1, 8, buf1, sizeof buf1);
+    pad_str_leading_zeroes(num2, 8, buf2, sizeof buf2);
+    pad_str_leading_zeroes(num3, 8, buf3, sizeof buf3);
 
-    assert_string_equal(buf1, "123456789");
-    assert_string_equal(buf2, "000000001");
-    assert_string_equal(buf3, "003000000");
+    assert_string_equal(buf1, "12345678");
+    assert_string_equal(buf2, "00000001");
+    assert_string_equal(buf3, "00315926");
 }
 
 static void safer_strncpy_test(void** state){
@@ -65,7 +65,7 @@ static void safer_strncpy_test(void** state){
     safer_strncpy(good_copy, test, sizeof good_copy);
     assert_string_equal(good_copy, test);
 
-    // safe_strncpy(bad_copy, test, sizeof bad_copy);
+    // safer_strncpy(bad_copy, test, sizeof bad_copy);
     // assert_int_equal((int) bad_copy[test_len - 5 - 1], (int) '\0');
 }
 

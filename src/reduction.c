@@ -1,6 +1,5 @@
 #include "reduction.h"
 
-// https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration){
     const int DESIRED_PASS_LEN = 8;
     char digest_str[HASH_STRING_MIN_LEN];
