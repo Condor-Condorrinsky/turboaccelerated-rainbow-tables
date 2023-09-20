@@ -74,6 +74,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
     char looked_hash_working_copy[HASH_STRING_MIN_LEN];
     char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
+
     int found = HASH_NOT_PRESENT;
 
     convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);

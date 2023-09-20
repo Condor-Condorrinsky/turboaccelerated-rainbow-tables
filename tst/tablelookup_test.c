@@ -107,18 +107,20 @@ static void find_hash_test(void** state){
     free(chains);
 }
 
-// TODO: Still appears to not find hash in chain when it should
 static void find_hash_in_chain_test(void** state){
-    char* passwd = (char*) "qwerty";
-    char* chain_hash = (char*) "0x6552A9BAD80DC542814207DAAB2053F8";
-    char* hash_to_look = (char*) "0xD8578EDF8458CE06FBC5BB76A58C5CA4";
+    char* passwd = "10000000";
+    char* chain_hash = "0x649C916E1E8C4DFF35F43A11CB73C718";
+    char* hash_to_look = "0x028103CE07C48D40EC37AC0DB4CFD140";
+    char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
     setChainHash(c, chain_hash);
 
     int result = find_hash_in_chain(c, hash_to_look);
+    int result2 = find_hash_in_chain(c, hash_to_look_not_present);
 
     assert_int_equal(result, HASH_FOUND);
+    assert_int_equal(result2, HASH_NOT_FOUND);
 
     deleteChain(c);
 }
