@@ -35,6 +35,7 @@ int main(int argc, char *argv[]){
     }
     if (argc == 4 && strcmp(argv[1], "look-up") == 0){
         str_to_uppercase(argv[3], hash_upper, sizeof hash_upper);
+        hash_upper[1] = 'x';
         ext_stat = find_in_table(argv[2], hash_upper);
     }
 

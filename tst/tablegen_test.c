@@ -65,6 +65,6 @@ static void generate_chain_test(void** state){
     //generate_chain_verbose(passwd2, result, sizeof result, REDUCTION_PATTERNS_SIZE);
 
     //const char* passwd3 = "84260879";
-    const char* passwd3 = "85686845";
+    const char* passwd3 = "93750856";
     generate_chain_verbose(passwd3, result, sizeof result, REDUCTION_PATTERNS_SIZE);
 }

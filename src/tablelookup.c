@@ -28,8 +28,10 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
 
     result = find_hash(extracted_hashes, entries, looked_hash);
     printf("Look up finished\n");
-    if (result == HASH_NOT_FOUND) printf("There appears to be a collision in table, sorry :(\n");
-    if (result == HASH_NOT_PRESENT) printf("Hash not found in the table\n");
+    if (result == HASH_NOT_FOUND)
+        printf("There appears to be a collision in table, sorry :(\n");
+    if (result == HASH_NOT_PRESENT)
+        printf("Hash not found in the table\n");
 
     for (int i = 0; i < entries; i++) {
         deleteChain(extracted_hashes[i]);
@@ -71,40 +73,46 @@ void line_to_PassHashChain(char* line, PassHashChain* c){
 }
 
 int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash){
+    int found = HASH_NOT_FOUND;
+
+    for (int i = 0; i < entries; i++) {
+        printf("Testing chain nr %d\n", i);
+        found = test_chain(table[i], looked_hash);
+        if (found == HASH_FOUND) return found;
+    }
+
+    return found;
+}
+
+// TODO: doesn't find the last hash written in table
+int test_chain(const PassHashChain* const c, const char* looked_hash){
     unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
     char looked_hash_working_copy[HASH_STRING_MIN_LEN];
     char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
-
-    int found = HASH_NOT_PRESENT;
+    int found = HASH_NOT_FOUND;
 
     convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
     safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
 
-    for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
-        for (int j = 0; j < entries; j++) {
-            if (strcmp(getChainHash(table[j]), looked_hash_working_copy) == 0){
-                printf("Looked hash: %s\n", looked_hash);
-                printf("Chain hash: %s\n", getChainHash(table[j]));
-                printf("Looked hash working copy: %s\n", looked_hash_working_copy);
-                printf("i: %d, j: %d\n", i, j);
-                found = find_hash_in_chain(table[j], looked_hash);
-            }
-        }
-        reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
-                    REDUCTION_PATTERN_VALUES[i], sizeof looked_hash_reduced, GEN_TABLE_PASS_LEN);
-        hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_reduced);
-        convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
-                              sizeof looked_hash_working_copy);
-    }
 
-    for (int k = 0; k < entries; k++) {
-        if (strcmp(getChainHash(table[k]), looked_hash_working_copy) == 0){
-            printf("Looked hash: %s\n", looked_hash);
-            printf("Chain hash: %s\n", getChainHash(table[k]));
-            printf("Looked hash working copy: %s\n", looked_hash_working_copy);
-            printf("k: %d\n", k);
-            found = find_hash_in_chain(table[k], looked_hash);
+    for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
+        for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
+            reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
+                        REDUCTION_PATTERN_VALUES[j],
+                        sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
+            hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
+            convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
+                                  sizeof looked_hash_working_copy);
         }
+//        printf("Looked_hash_reduced: %s\n", looked_hash_reduced);
+//        printf("Looked_hash_working_copy: %s\n", looked_hash_working_copy);
+        if (strcmp(looked_hash_working_copy, getChainHash(c)) == 0){
+            printf("Found possible match...\n");
+            found = find_hash_in_chain(c, looked_hash);
+            if (found == HASH_FOUND) return found;
+        }
+        convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
+        safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
     }
 
     return found;
@@ -116,8 +124,6 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
     char hash_string[HASH_STRING_MIN_LEN];
 
     safer_strncpy(reduced, getChainPasswd(c), sizeof reduced);
-//    printf("Beginning pass: %s\n", getChainPasswd(c));
-//    printf("Chain hash: %s\n", getChainHash(c));
 
     for (int i = REDUCTION_PATTERN0; i < REDUCTION_PATTERNS_SIZE; i++) {
         hash(reduced, raw_hash, sizeof raw_hash);

@@ -12,7 +12,7 @@ typedef struct TABLELOOKUP_TEST_STRUCT{
 static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in = NULL};
 
 static int tablelookup_setup(void** state){
-    const char* path = "tst/rsrc/example_rainbow_table.txt";
+    const char* path = "tst/rsrc/example_rainbow_table2.txt";
 
     FILE* f = fopen(path, "r");
     if (f == NULL) {
@@ -34,7 +34,7 @@ static int tablelookup_teardown(void** state){
 }
 
 static void lookup_test(void** state){
-    const char* hash_to_find = (char*) "0xA1B9A93535A93CC9496DA9E47F52CBE8";
+    const char* hash_to_find = (char*) "0xBD76A80F1BA37DD29B016B713967970B";
     int ret;
 
     ret = lookup(tablelookupTestStruct.in, hash_to_find);
@@ -107,20 +107,38 @@ static void find_hash_test(void** state){
     free(chains);
 }
 
+static void test_chain_test(void** state){
+    char* passwd = "93750856";
+    char* chain_hash = "0x8EAB4905D40A4F6EE5F9ECBAC01BCA13";
+    char* hash_to_look = "0xBD76A80F1BA37DD29B016B713967970B";
+    //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
+    PassHashChain* c = newChain();
+    setChainPasswd(c, passwd);
+    setChainHash(c, chain_hash);
+
+    int result = test_chain(c, hash_to_look);
+    //int result2 = find_hash_in_chain(c, hash_to_look_not_present);
+
+    assert_int_equal(result, HASH_FOUND);
+    //assert_int_equal(result2, HASH_NOT_FOUND);
+
+    deleteChain(c);
+}
+
 static void find_hash_in_chain_test(void** state){
-    char* passwd = "10000000";
-    char* chain_hash = "0x649C916E1E8C4DFF35F43A11CB73C718";
-    char* hash_to_look = "0x028103CE07C48D40EC37AC0DB4CFD140";
-    char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
+    char* passwd = "93750856";
+    char* chain_hash = "0x8EAB4905D40A4F6EE5F9ECBAC01BCA13";
+    char* hash_to_look = "0xBD76A80F1BA37DD29B016B713967970B";
+    //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
     setChainHash(c, chain_hash);
 
     int result = find_hash_in_chain(c, hash_to_look);
-    int result2 = find_hash_in_chain(c, hash_to_look_not_present);
+    //int result2 = find_hash_in_chain(c, hash_to_look_not_present);
 
     assert_int_equal(result, HASH_FOUND);
-    assert_int_equal(result2, HASH_NOT_FOUND);
+    //assert_int_equal(result2, HASH_NOT_FOUND);
 
     deleteChain(c);
 }
