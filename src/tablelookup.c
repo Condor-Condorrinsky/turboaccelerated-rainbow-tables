@@ -73,12 +73,32 @@ void line_to_PassHashChain(char* line, PassHashChain* c){
 }
 
 int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash){
+    unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
+    char looked_hash_working_copy[HASH_STRING_MIN_LEN];
+    char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
     int found = HASH_NOT_FOUND;
+    PassHashChain *p;
 
-    for (int i = 0; i < entries; i++) {
-        printf("Testing chain nr %d\n", i);
-        found = test_chain(table[i], looked_hash);
-        if (found == HASH_FOUND) return found;
+    for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
+        for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
+            reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
+                        REDUCTION_PATTERN_VALUES[j],
+                        sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
+            hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
+            convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
+                                  sizeof looked_hash_working_copy);
+        }
+        for (int k = 0; k < entries; k++) {
+            p = table[k];
+            if (strcmp(looked_hash_working_copy, getChainHash(p)) == 0){
+                printf("Found possible match in chain nr i=%d, k=%d\n", i, k);
+                found = find_hash_in_chain(p, looked_hash);
+                if (found == HASH_FOUND)
+                    return found;
+            }
+        }
+        convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
+        safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
     }
 
     return found;
@@ -94,15 +114,16 @@ int test_chain(const PassHashChain* const c, const char* looked_hash){
     convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
     safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
 
-
     for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
         for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
+            //printf("%d\n", i);
             reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
                         REDUCTION_PATTERN_VALUES[j],
                         sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
             hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
             convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
                                   sizeof looked_hash_working_copy);
+            //printf("Hash: %s\n", looked_hash_working_copy);
         }
 //        printf("Looked_hash_reduced: %s\n", looked_hash_reduced);
 //        printf("Looked_hash_working_copy: %s\n", looked_hash_working_copy);
