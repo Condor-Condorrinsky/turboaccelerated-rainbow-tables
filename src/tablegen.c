@@ -8,24 +8,25 @@ void generate_rainbow_table(FILE* in, FILE* out){
         exit(EXIT_FAILURE);
     }
     char* passes = malloc(sizeof(char) * (fsize + 1));
-    unsigned char final_hash[MD5_DIGEST_LENGTH];
-    char hash_string[HASH_STRING_MIN_LEN];
+    char final[MAX_REDUCED_PASS_LENGTH];
+    unsigned int cntr = 0;
 
     load_file(in, passes, sizeof(char) * (fsize + 1));
     passes[fsize] = '\0';
 
     char* token = strtok_r(passes, NEWLINE_STRING, &tok_saved);
     while (token != NULL){
-        generate_chain(token, final_hash,
-                       sizeof final_hash, REDUCTION_PATTERNS_SIZE);
-        convert_md5_to_string(final_hash, hash_string, sizeof hash_string);
-        write_line(out, token, hash_string);
+        generate_chain(token, final,
+                       sizeof final, REDUCTION_PATTERNS_SIZE);
+        write_line(out, token, final);
         token = strtok_r(NULL, NEWLINE_STRING, &tok_saved);
+        cntr++;
+        printf("Generated chain nr %u\n", cntr);
     }
     free(passes);
 }
 
-void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
+void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations){
     char rslt[MAX_REDUCED_PASS_LENGTH];
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -36,10 +37,10 @@ void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int end
         hash(rslt, digest, sizeof digest);
         reduce_hash(digest, rslt, REDUCTION_PATTERN_VALUES[i], sizeof rslt, GEN_TABLE_PASS_LEN);
     }
-    hash(rslt, endrslt, endrslt_len);
+    safer_strncpy(endrslt, rslt, endrslt_len);
 }
 
-void generate_chain_verbose(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
+void generate_chain_verbose(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations){
     char rslt[MAX_REDUCED_PASS_LENGTH];
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -55,9 +56,8 @@ void generate_chain_verbose(const char* passwd, unsigned char* endrslt, unsigned
         reduce_hash(digest, rslt, REDUCTION_PATTERN_VALUES[i], sizeof rslt, GEN_TABLE_PASS_LEN);
         printf("Reduced: %s\n", rslt);
     }
-    hash(rslt, endrslt, endrslt_len);
-    convert_md5_to_string(endrslt, digest_string, sizeof digest_string);
-    printf("Final hash: %s\n", digest_string);
+    safer_strncpy(endrslt, rslt, endrslt_len);
+    printf("Final reduced: %s\n", endrslt);
 }
 
 void hash(const char* input, unsigned char* digest, unsigned int digest_len){

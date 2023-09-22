@@ -22,10 +22,10 @@ void generate_rainbow_table(FILE* in, FILE* out);
  * endrslt_len - length of the buffer we are writing to
  * iterations - how many links of chain to generate, current maximum is equal to the sizeof REDUCTION_PATTERN_VALUES
  */
-void generate_chain(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
+void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);
 
-void generate_chain_verbose(const char* passwd, unsigned char* endrslt, unsigned int endrslt_len,
+void generate_chain_verbose(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);
 
 /*

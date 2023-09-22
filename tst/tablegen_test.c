@@ -54,7 +54,7 @@ static void generate_rainbow_table_test(void** state){
 static void generate_chain_test(void** state){
     const char* passwd = "piesek";
     const char* expected_hash = "0x7B39E66B371B6E14CBEC97BF22633A6E";
-    unsigned char result[MD5_DIGEST_LENGTH];
+    char result[MAX_REDUCED_PASS_LENGTH];
     char result_string[HASH_STRING_MIN_LEN];
 
     //generate_chain_verbose(passwd, result, sizeof result, REDUCTION_PATTERNS_SIZE);
@@ -65,6 +65,6 @@ static void generate_chain_test(void** state){
     //generate_chain_verbose(passwd2, result, sizeof result, REDUCTION_PATTERNS_SIZE);
 
     //const char* passwd3 = "84260879";
-    const char* passwd3 = "93750856";
+    const char* passwd3 = "35710714";
     generate_chain_verbose(passwd3, result, sizeof result, REDUCTION_PATTERNS_SIZE);
 }

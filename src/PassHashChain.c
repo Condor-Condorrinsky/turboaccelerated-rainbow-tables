@@ -10,8 +10,8 @@ PassHashChain* newChain(){
         return NULL;
     }
 
-    c->hash = malloc(sizeof(char) * HASH_STRING_MIN_LEN);
-    if (c->hash == NULL){
+    c->end = malloc(sizeof(char) * MAX_REDUCED_PASS_LENGTH);
+    if (c->end == NULL){
         free(c->passwd);
         free(c);
         return NULL;
@@ -28,18 +28,18 @@ void setChainPasswd(PassHashChain* c, char* new_pass){
     safer_strncpy(c->passwd, new_pass, MAX_REDUCED_PASS_LENGTH);
 }
 
-char* getChainHash(const PassHashChain* c){
-    return c->hash;
+char* getChainEnd(const PassHashChain* c){
+    return c->end;
 }
 
-void setChainHash(PassHashChain* c, char* new_hash){
-    safer_strncpy(c->hash, new_hash, HASH_STRING_MIN_LEN);
+void setChainEnd(PassHashChain* c, char* new_end){
+    safer_strncpy(c->end, new_end, MAX_REDUCED_PASS_LENGTH);
 }
 
 void deleteChain(PassHashChain* c){
     if (c != NULL){
         free(c->passwd);
-        free(c->hash);
+        free(c->end);
         free(c);
     }
 }

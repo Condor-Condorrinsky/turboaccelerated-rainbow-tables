@@ -54,13 +54,13 @@ static void extract_hashed_vals_test(void** state){
 
     // Some random checks
     assert_true(strcmp(getChainPasswd(chains[0]), "passwd") == 0);
-    assert_true(strcmp(getChainHash(chains[1]), "0x6552A9BAD80DC542814207DAAB2053F8") == 0);
+    assert_true(strcmp(getChainEnd(chains[1]), "0x6552A9BAD80DC542814207DAAB2053F8") == 0);
     assert_true(strcmp(getChainPasswd(chains[2]), "ilovey") == 0);
-    assert_true(strcmp(getChainHash(chains[3]), "0x4EB1347DCDBE1138B223D86A14C34A93") == 0);
+    assert_true(strcmp(getChainEnd(chains[3]), "0x4EB1347DCDBE1138B223D86A14C34A93") == 0);
     assert_true(strcmp(getChainPasswd(chains[4]), "sunsun") == 0);
-    assert_true(strcmp(getChainHash(chains[5]), "0x7035F9D5AA9ACF8F4C277B73DC17F88C") == 0);
+    assert_true(strcmp(getChainEnd(chains[5]), "0x7035F9D5AA9ACF8F4C277B73DC17F88C") == 0);
     assert_true(strcmp(getChainPasswd(chains[6]), "trains") == 0);
-    assert_true(strcmp(getChainHash(chains[7]), "0xA8EF4084FE17272B7DAB9492CFCB6703") == 0);
+    assert_true(strcmp(getChainEnd(chains[7]), "0xA8EF4084FE17272B7DAB9492CFCB6703") == 0);
 
     for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);
@@ -79,13 +79,13 @@ static void line_to_PassHashChain_test(void** state){
     line_to_PassHashChain(line_copy, c);
 
     assert_true(strcmp(getChainPasswd(c), "passwd") == 0);
-    assert_true(strcmp(getChainHash(c), "0xE6AB903BDD7A391A7E3E3B1588033676") == 0);
+    assert_true(strcmp(getChainEnd(c), "0xE6AB903BDD7A391A7E3E3B1588033676") == 0);
 
     deleteChain(c);
 }
 
 static void find_hash_test(void** state){
-    const char* looked = (char*) "0x37B4E2D82900D5E94B8DA524FBEB33C0";
+    const char* looked = (char*) "0x96555EED1E5E6F72A6F77ED5D96E09D0";
     char* table = (char*) malloc(1024 * sizeof(char));
     unsigned int entries = count_lines(tablelookupTestStruct.in);
     PassHashChain **chains = malloc(entries * sizeof chains);
@@ -114,7 +114,7 @@ static void test_chain_test(void** state){
     //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
-    setChainHash(c, chain_hash);
+    setChainEnd(c, chain_hash);
 
     int result = test_chain(c, hash_to_look);
     //int result2 = find_hash_in_chain(c, hash_to_look_not_present);
@@ -132,7 +132,7 @@ static void find_hash_in_chain_test(void** state){
     //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
-    setChainHash(c, chain_hash);
+    setChainEnd(c, chain_hash);
 
     int result = find_hash_in_chain(c, hash_to_look);
     //int result2 = find_hash_in_chain(c, hash_to_look_not_present);

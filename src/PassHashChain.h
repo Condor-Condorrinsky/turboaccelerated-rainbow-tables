@@ -11,7 +11,7 @@
  */
 typedef struct PassHashChain{
     char* passwd;
-    char* hash;
+    char* end;
 } PassHashChain;
 
 PassHashChain* newChain();
@@ -20,9 +20,9 @@ char* getChainPasswd(const PassHashChain* c);
 
 void setChainPasswd(PassHashChain* c, char* new_pass);
 
-char* getChainHash(const PassHashChain* c);
+char* getChainEnd(const PassHashChain* c);
 
-void setChainHash(PassHashChain* c, char* new_hash);
+void setChainEnd(PassHashChain* c, char* new_end);
 
 void deleteChain(PassHashChain* c);
 

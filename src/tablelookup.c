@@ -69,7 +69,7 @@ void line_to_PassHashChain(char* line, PassHashChain* c){
     password = strtok_r(line, RAINBOW_TABLE_SEPARATOR, &tok_saved);
     hash = strtok_r(NULL, RAINBOW_TABLE_SEPARATOR, &tok_saved);
     setChainPasswd(c, password);
-    setChainHash(c, hash);
+    setChainEnd(c, hash);
 }
 
 int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash){
@@ -77,22 +77,25 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     char looked_hash_working_copy[HASH_STRING_MIN_LEN];
     char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
     int found = HASH_NOT_FOUND;
-    PassHashChain *p;
 
     for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
+        //printf("Looked hash: %s\n", looked_hash);
         for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
             reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
                         REDUCTION_PATTERN_VALUES[j],
                         sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
+            //printf("Reduced: %s\n", looked_hash_reduced);
             hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
             convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
                                   sizeof looked_hash_working_copy);
+            //printf("Hashes: %s\n", looked_hash_working_copy);
         }
+        //printf("------------------------------\n");
         for (int k = 0; k < entries; k++) {
-            p = table[k];
-            if (strcmp(looked_hash_working_copy, getChainHash(p)) == 0){
+            if (strcmp(looked_hash_reduced, getChainEnd(table[k])) == 0){
                 printf("Found possible match in chain nr i=%d, k=%d\n", i, k);
-                found = find_hash_in_chain(p, looked_hash);
+                printf("Chain pass: %s, chain end: %s\n", getChainPasswd(table[k]), getChainEnd(table[k]));
+                found = find_hash_in_chain(table[k], looked_hash);
                 if (found == HASH_FOUND)
                     return found;
             }
@@ -127,7 +130,7 @@ int test_chain(const PassHashChain* const c, const char* looked_hash){
         }
 //        printf("Looked_hash_reduced: %s\n", looked_hash_reduced);
 //        printf("Looked_hash_working_copy: %s\n", looked_hash_working_copy);
-        if (strcmp(looked_hash_working_copy, getChainHash(c)) == 0){
+        if (strcmp(looked_hash_working_copy, getChainEnd(c)) == 0){
             printf("Found possible match...\n");
             found = find_hash_in_chain(c, looked_hash);
             if (found == HASH_FOUND) return found;
