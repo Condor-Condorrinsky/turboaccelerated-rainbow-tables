@@ -26,16 +26,6 @@ const static char* EIGHT_DIGIT_PINS_SET_SIZE_STR = "100000000";
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration);
 
 /*
- * Encodes given number represented as string to a password consisting of small letters of English alphabet
- *
- * number - number to encode
- * desired_len - length of the password to generate
- * output_buf - output buffer
- * output_len - length of the output buffer
- */
-void encode(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len);
-
-/*
  * https://stackoverflow.com/questions/276827/string-padding-in-c
  *
  * Pads the given string with leading zeroes to the desired length

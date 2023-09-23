@@ -12,7 +12,7 @@ typedef struct TABLELOOKUP_TEST_STRUCT{
 static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in = NULL};
 
 static int tablelookup_setup(void** state){
-    const char* path = "tst/rsrc/example_rainbow_table2.txt";
+    const char* path = "tst/rsrc/example_rainbow_table.txt";
 
     FILE* f = fopen(path, "r");
     if (f == NULL) {
@@ -34,10 +34,11 @@ static int tablelookup_teardown(void** state){
 }
 
 static void lookup_test(void** state){
-    const char* hash_to_find = (char*) "0xBD76A80F1BA37DD29B016B713967970B";
-    int ret;
+    const char* hash_to_find = (char*) "0xBE874F841F54C94EE7D128C429DA112F";
 
-    ret = lookup(tablelookupTestStruct.in, hash_to_find);
+    int ret = lookup(tablelookupTestStruct.in, hash_to_find);
+
+    assert_int_equal(ret, HASH_FOUND);
 }
 
 static void extract_hashed_vals_test(void** state){
@@ -53,14 +54,14 @@ static void extract_hashed_vals_test(void** state){
     extract_hashed_vals(table, chains);
 
     // Some random checks
-    assert_true(strcmp(getChainPasswd(chains[0]), "passwd") == 0);
-    assert_true(strcmp(getChainEnd(chains[1]), "0x6552A9BAD80DC542814207DAAB2053F8") == 0);
-    assert_true(strcmp(getChainPasswd(chains[2]), "ilovey") == 0);
-    assert_true(strcmp(getChainEnd(chains[3]), "0x4EB1347DCDBE1138B223D86A14C34A93") == 0);
-    assert_true(strcmp(getChainPasswd(chains[4]), "sunsun") == 0);
-    assert_true(strcmp(getChainEnd(chains[5]), "0x7035F9D5AA9ACF8F4C277B73DC17F88C") == 0);
-    assert_true(strcmp(getChainPasswd(chains[6]), "trains") == 0);
-    assert_true(strcmp(getChainEnd(chains[7]), "0xA8EF4084FE17272B7DAB9492CFCB6703") == 0);
+    assert_string_equal(getChainPasswd(chains[0]), "12345678");
+    assert_string_equal(getChainEnd(chains[1]), "57891609");
+    assert_string_equal(getChainPasswd(chains[2]), "24680246");
+    assert_string_equal(getChainEnd(chains[3]), "26528654");
+    assert_string_equal(getChainPasswd(chains[4]), "13579135");
+    assert_string_equal(getChainEnd(chains[5]), "61678808");
+    assert_string_equal(getChainPasswd(chains[6]), "00000001");
+    assert_string_equal(getChainEnd(chains[7]), "35719766");
 
     for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);
@@ -71,21 +72,21 @@ static void extract_hashed_vals_test(void** state){
 }
 
 static void line_to_PassHashChain_test(void** state){
-    const char* line = "passwd|0xE6AB903BDD7A391A7E3E3B1588033676";
+    const char* line = "10000000|35719766";
     char line_copy[100];
 
     safer_strncpy(line_copy, line, 100);
     PassHashChain* c = newChain();
     line_to_PassHashChain(line_copy, c);
 
-    assert_true(strcmp(getChainPasswd(c), "passwd") == 0);
-    assert_true(strcmp(getChainEnd(c), "0xE6AB903BDD7A391A7E3E3B1588033676") == 0);
+    assert_string_equal(getChainPasswd(c), "10000000");
+    assert_string_equal(getChainEnd(c), "35719766");
 
     deleteChain(c);
 }
 
 static void find_hash_test(void** state){
-    const char* looked = (char*) "0x96555EED1E5E6F72A6F77ED5D96E09D0";
+    const char* looked = (char*) "0xBE874F841F54C94EE7D128C429DA112F";
     char* table = (char*) malloc(1024 * sizeof(char));
     unsigned int entries = count_lines(tablelookupTestStruct.in);
     PassHashChain **chains = malloc(entries * sizeof chains);
@@ -97,7 +98,9 @@ static void find_hash_test(void** state){
     load_file(tablelookupTestStruct.in, table, 1024 * sizeof(char));
     extract_hashed_vals(table, chains);
 
-    find_hash(chains, entries, looked);
+    int ret = find_hash(chains, entries, looked);
+
+    assert_int_equal(ret, HASH_FOUND);
 
     for (int i = 0; i < entries; i++) {
         deleteChain(chains[i]);
@@ -107,38 +110,20 @@ static void find_hash_test(void** state){
     free(chains);
 }
 
-static void test_chain_test(void** state){
-    char* passwd = "93750856";
-    char* chain_hash = "0x8EAB4905D40A4F6EE5F9ECBAC01BCA13";
-    char* hash_to_look = "0xBD76A80F1BA37DD29B016B713967970B";
-    //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
-    PassHashChain* c = newChain();
-    setChainPasswd(c, passwd);
-    setChainEnd(c, chain_hash);
-
-    int result = test_chain(c, hash_to_look);
-    //int result2 = find_hash_in_chain(c, hash_to_look_not_present);
-
-    assert_int_equal(result, HASH_FOUND);
-    //assert_int_equal(result2, HASH_NOT_FOUND);
-
-    deleteChain(c);
-}
-
 static void find_hash_in_chain_test(void** state){
-    char* passwd = "93750856";
-    char* chain_hash = "0x8EAB4905D40A4F6EE5F9ECBAC01BCA13";
-    char* hash_to_look = "0xBD76A80F1BA37DD29B016B713967970B";
-    //char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
+    char* passwd = "97531975";
+    char* chain_hash = "61678808";
+    char* hash_to_look = "0xBE874F841F54C94EE7D128C429DA112F";
+    char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
     setChainEnd(c, chain_hash);
 
     int result = find_hash_in_chain(c, hash_to_look);
-    //int result2 = find_hash_in_chain(c, hash_to_look_not_present);
+    int result2 = find_hash_in_chain(c, hash_to_look_not_present);
 
     assert_int_equal(result, HASH_FOUND);
-    //assert_int_equal(result2, HASH_NOT_FOUND);
+    assert_int_equal(result2, HASH_NOT_FOUND);
 
     deleteChain(c);
 }
@@ -149,5 +134,5 @@ static void str_to_uppercase_test(void** state){
 
     str_to_uppercase(input, output, sizeof output);
 
-    assert_true(strcmp(output, "P@S5WD") == 0);
+    assert_string_equal(output, "P@S5WD");
 }

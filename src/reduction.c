@@ -37,38 +37,6 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
     mpz_clear(iteration);
 }
 
-void encode(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
-    char letter[MAX_BYTE_TO_HEX_STR_LENGTH];
-    char num_padded[strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR) + 1];
-    unsigned char letter_num;
-    unsigned long num_len;
-    int counter = 0;
-
-    letter[MAX_BYTE_TO_HEX_STR_LENGTH - 1] = '\0';
-    pad_str_leading_zeroes(number, strlen(SIX_LETTER_PASSES_SMALL_LETTERS_SET_SIZE_STR),
-                           num_padded, sizeof num_padded);
-    num_len = strlen(num_padded);
-
-    while (counter <= desired_len) {
-        for (int i = 0; i < num_len - 1; i += MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
-            if (counter >= output_len || counter > desired_len) break;
-            memcpy(letter, &num_padded[i], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
-            letter_num = (unsigned char) strtol(letter, NULL, 10);
-            output_buf[counter] = unsigned_char_to_small_letter(letter_num);
-            counter++;
-        }
-        for (int j = (int) num_len - 1; j > 0; j -= MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
-            if (counter >= output_len || counter > desired_len) break;
-            memcpy(letter, &num_padded[j - 1], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
-            letter_num = (unsigned char) strtol(letter, NULL, 10);
-            output_buf[counter] = unsigned_char_to_small_letter(letter_num);
-            counter++;
-        }
-    }
-
-    output_buf[counter-1] = '\0';
-}
-
 void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
     const char *PADDING = "0000000000000000000000000000000000000000000000000000000000000000";
     unsigned int num_len = strlen(number);

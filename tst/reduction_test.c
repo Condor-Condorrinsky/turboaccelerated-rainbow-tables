@@ -17,28 +17,6 @@ static void R_test(void** state){
     assert_string_equal(output_buffer, "00838512");
 }
 
-static void encode_test(void** state){
-    char* num = "305674123";
-    unsigned int des_len = 8;
-    char output[8+1];
-
-    char* num2 = "1";
-    unsigned int des_len2 = 10;
-    char output2[10+1];
-
-    char* num3 = "45097";
-    unsigned int des_len3 = 4;
-    char output3[4+1];
-
-    encode(num, des_len, output, sizeof output);
-    encode(num2, des_len2, output2, sizeof output2);
-    encode(num3, des_len3, output3, sizeof output3);
-
-    assert_string_equal(output, "eewmxppf");
-    assert_string_equal(output2, "aaaabaaaaa");
-    assert_string_equal(output3, "aatj");
-}
-
 static void pad_str_leading_zeroes_test(void** state){
     char* num1 = "12345678";
     char* num2 = "1";

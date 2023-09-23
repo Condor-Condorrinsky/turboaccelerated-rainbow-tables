@@ -107,41 +107,6 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     return found;
 }
 
-// TODO: doesn't find the last hash written in table
-int test_chain(const PassHashChain* const c, const char* looked_hash){
-    unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
-    char looked_hash_working_copy[HASH_STRING_MIN_LEN];
-    char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
-    int found = HASH_NOT_FOUND;
-
-    convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
-    safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
-
-    for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
-        for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
-            //printf("%d\n", i);
-            reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
-                        REDUCTION_PATTERN_VALUES[j],
-                        sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
-            hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
-            convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
-                                  sizeof looked_hash_working_copy);
-            //printf("Hash: %s\n", looked_hash_working_copy);
-        }
-//        printf("Looked_hash_reduced: %s\n", looked_hash_reduced);
-//        printf("Looked_hash_working_copy: %s\n", looked_hash_working_copy);
-        if (strcmp(looked_hash_working_copy, getChainEnd(c)) == 0){
-            printf("Found possible match...\n");
-            found = find_hash_in_chain(c, looked_hash);
-            if (found == HASH_FOUND) return found;
-        }
-        convert_string_to_md5(looked_hash, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
-        safer_strncpy(looked_hash_working_copy, looked_hash, sizeof looked_hash_working_copy);
-    }
-
-    return found;
-}
-
 int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
     char reduced[MAX_REDUCED_PASS_LENGTH];
     unsigned char raw_hash[MD5_DIGEST_LENGTH];
