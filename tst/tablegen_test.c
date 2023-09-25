@@ -47,7 +47,7 @@ static int tablegen_teardown(void** state){
 static void generate_rainbow_table_test(void** state){
     generate_rainbow_table(tablegenTestStruct.in, tablegenTestStruct.out);
 
-    fseek(tablegenTestStruct.out, 0, SEEK_SET);
+    rewind(tablegenTestStruct.out);
     assert_int_equal((int) count_lines(tablegenTestStruct.out), 8);
 }
 

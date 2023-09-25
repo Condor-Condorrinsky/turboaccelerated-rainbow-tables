@@ -4,7 +4,7 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
     unsigned int written;
 
     if (digest_len < MD5_DIGEST_LENGTH){
-        fprintf(stderr, "Digest length buffer overflow");
+        fprintf(stderr, "Digest length buffer overflow\n");
         exit(EXIT_FAILURE);
     }
 
@@ -19,7 +19,7 @@ unsigned int compute_md5(const char* input, unsigned char* digest, unsigned int 
 void convert_md5_to_string(const unsigned char* input, char* output, unsigned int output_len){
 
     if (output_len < HASH_STRING_MIN_LEN){
-        fprintf(stderr, "Output length buffer overflow");
+        fprintf(stderr, "Output length buffer overflow\n");
         exit(EXIT_FAILURE);
     }
 
@@ -38,7 +38,7 @@ void convert_string_to_md5(const char* input, unsigned char* output, unsigned in
     char byte_buf[MAX_BYTE_TO_HEX_STR_LENGTH];
 
     if (output_len < MD5_DIGEST_LENGTH){
-        fprintf(stderr, "Output length buffer overflow");
+        fprintf(stderr, "Output length buffer overflow\n");
         exit(EXIT_FAILURE);
     }
 

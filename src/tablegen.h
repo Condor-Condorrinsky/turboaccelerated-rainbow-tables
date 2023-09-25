@@ -20,7 +20,7 @@ void generate_rainbow_table(FILE* in, FILE* out);
  * passwd - C string to generate chain from
  * endrslt - buffer to write a final reduced hash to
  * endrslt_len - length of the buffer we are writing to
- * iterations - how many links of chain to generate, current maximum is equal to the sizeof REDUCTION_PATTERN_VALUES
+ * iterations - how many links of chain to generate, current maximum is equal to REDUCTION_PATTERNS_SIZE
  */
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);
@@ -35,6 +35,8 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len);
 
 /*
  * A wrapper for reduce function; for more info see reduction.h
+ *
+ * reduced_pass_len is currently unused
  */
 void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
                  unsigned int reduced_pass_len);

@@ -12,16 +12,16 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
     convert_md5_to_string(digest, digest_str, sizeof digest_str);
     // 0 means that function will discover base based on beginning of the string - 0x
     if (mpz_init_set_str(ret, digest_str, 0)){
-        fprintf(stderr, "Failed to init mpz hash");
+        fprintf(stderr, "Failed to init mpz hash\n");
         exit(EXIT_FAILURE);
     }
 
     if (mpz_init_set_str(SEARCH_SET_SIZE, EIGHT_DIGIT_PINS_SET_SIZE_STR, 10)){
-        fprintf(stderr, "Failed to init mpz SET_SIZE");
+        fprintf(stderr, "Failed to init mpz SET_SIZE\n");
         exit(EXIT_FAILURE);
     }
     if (mpz_init_set_str(iteration, reduction_iteration, 10)){
-        fprintf(stderr, "Failed to init mpz iteration");
+        fprintf(stderr, "Failed to init mpz iteration\n");
         exit(EXIT_FAILURE);
     }
 

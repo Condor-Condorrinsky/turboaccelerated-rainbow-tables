@@ -29,7 +29,7 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
     result = find_hash(extracted_hashes, entries, looked_hash);
     printf("Look up finished\n");
     if (result == HASH_NOT_FOUND)
-        printf("There appears to be a collision in table, sorry :(\n");
+        printf("There appears to be too many collisions in table, hash couldn't be found\n");
     if (result == HASH_NOT_PRESENT)
         printf("Hash not found in the table\n");
 
@@ -79,23 +79,19 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     int found = HASH_NOT_FOUND;
 
     for (int i = (int) REDUCTION_PATTERNS_SIZE - 1; i > -1 ; i--) {
-        //printf("Looked hash: %s\n", looked_hash);
         for (int j = i; j < REDUCTION_PATTERNS_SIZE; j++){
             reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
                         REDUCTION_PATTERN_VALUES[j],
                         sizeof looked_hash_raw_copy, GEN_TABLE_PASS_LEN);
-            //printf("Reduced: %s\n", looked_hash_reduced);
             hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
             convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
                                   sizeof looked_hash_working_copy);
-            //printf("Hashes: %s\n", looked_hash_working_copy);
         }
-        //printf("------------------------------\n");
-        for (int k = 0; k < entries; k++) {
-            if (strcmp(looked_hash_reduced, getChainEnd(table[k])) == 0){
-                printf("Found possible match in chain nr i=%d, k=%d\n", i, k);
-                printf("Chain pass: %s, chain end: %s\n", getChainPasswd(table[k]), getChainEnd(table[k]));
-                found = find_hash_in_chain(table[k], looked_hash);
+        for (int j = 0; j < entries; j++) {
+            if (strcmp(looked_hash_reduced, getChainEnd(table[j])) == 0){
+                printf("Found possible match in chain nr i=%d, j=%d\n", i, j);
+                printf("Chain password: %s, chain end: %s\n", getChainPasswd(table[j]), getChainEnd(table[j]));
+                found = find_hash_in_chain(table[j], looked_hash);
                 if (found == HASH_FOUND)
                     return found;
             }
@@ -138,7 +134,7 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find){
 int str_to_uppercase(const char* input, char* output, unsigned int output_len){
     unsigned int input_len = strlen(input);
     if (input_len + 1 > output_len){
-        fprintf(stderr, "Cannot convert to uppercase; buffer to small\n");
+        fprintf(stderr, "Cannot convert to uppercase; buffer too small\n");
         return EXIT_FAILURE;
     }
     for (unsigned int i = 0; i < input_len; i++) {

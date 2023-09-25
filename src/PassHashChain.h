@@ -6,7 +6,7 @@
 
 /*
  * A pseudo-class for convenient rainbow chain storage
- * (beginning password and ending hash). Names and args
+ * (beginning password and ending reduced hash). Names and args
  * of all the methods are self-explanatory.
  */
 typedef struct PassHashChain{

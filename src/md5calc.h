@@ -41,9 +41,9 @@ void convert_md5_to_string(const unsigned char* input, char* output, unsigned in
 /*
  * Converts hexadecimal string representing hash to an array of unsigned chars
  *
- * input - hexadecimal string that MUST start with 0x
+ * input - hexadecimal string that MUST start with 0x or 0X
  * output - array which we are filling with values
- * output_len - length of the output array, at least MD5_DIGEST_LENGTH
+ * output_len - length of the output array, at least equal to MD5_DIGEST_LENGTH
  */
 void convert_string_to_md5(const char* input, unsigned char* output, unsigned int output_len);
 
