@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include "charsets.h"
+#include "TableMetadata.h"
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H
 #define TURBOACCELERATED_RAINBOW_TABLES_FILEIO_H
@@ -23,6 +25,8 @@
  * Returns number of bytes read from the given FILE
  */
 int load_file(FILE* file, char* buffer, unsigned int buffer_len);
+
+void write_metadata(FILE* file, TableMetadata* t);
 
 /*
  * Writes a single line to a given plaintext in the format of (without quotes):

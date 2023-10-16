@@ -9,6 +9,7 @@ OPTION(SINGLE_TEST "Compile single test" OFF)
 if(TESTS)
     add_executable(trb
             # Src, without main
+            src/charsets.h
             src/md5calc.c
             src/md5calc.h
             src/PassHashChain.c
@@ -22,6 +23,8 @@ if(TESTS)
             src/fileio.h
             src/tablelookup.c
             src/tablelookup.h
+            src/TableMetadata.c
+            src/TableMetadata.h
             # CMocka tests
             tst/cmocka_main.c
             tst/fileio_test.c
@@ -45,6 +48,7 @@ if(TESTS)
 elseif(SINGLE_TEST)
     add_executable(trb
             # Src, without main
+            src/charsets.h
             src/md5calc.c
             src/md5calc.h
             src/PassHashChain.c
@@ -58,6 +62,8 @@ elseif(SINGLE_TEST)
             src/fileio.h
             src/tablelookup.c
             src/tablelookup.h
+            src/TableMetadata.c
+            src/TableMetadata.h
             # CMocka tests
             tst/cmocka_main_single_test.c
             tst/fileio_test.c
@@ -80,6 +86,7 @@ elseif(SINGLE_TEST)
             cmocka)
 else()
     add_executable(trb
+            src/charsets.h
             src/main.c
             src/md5calc.c
             src/md5calc.h
@@ -93,7 +100,9 @@ else()
             src/fileio.c
             src/fileio.h
             src/tablelookup.c
-            src/tablelookup.h)
+            src/tablelookup.h
+            src/TableMetadata.c
+            src/TableMetadata.h)
     target_include_directories(trb
             PUBLIC src
     )

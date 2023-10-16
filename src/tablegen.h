@@ -12,7 +12,7 @@
  * in - FILE handler for input file
  * out - FILE handler for output file
  */
-void generate_rainbow_table(FILE* in, FILE* out);
+void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta);
 
 /*
  * Function generating a single complete rainbow chain stemming from one password

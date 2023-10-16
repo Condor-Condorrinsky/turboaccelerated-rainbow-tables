@@ -30,6 +30,25 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
     return bytes_read;
 }
 
+void write_metadata(FILE* file, TableMetadata* t){
+    fprintf(file, "Chain length:%d\n", t->chain_len);
+    fprintf(file, "Password length:%d\n", t->passwd_len);
+    switch (t->charset) {
+        case DIGITS:
+            fprintf(file, "Charset:%s\n", CHARSETS_STR[DIGITS]);
+            break;
+        case ALPHANUMERIC:
+            fprintf(file, "Charset:%s\n", CHARSETS_STR[ALPHANUMERIC]);
+            break;
+        case ASCII_PRINTABLE:
+            fprintf(file, "Charset:%s\n", CHARSETS_STR[ASCII_PRINTABLE]);
+            break;
+        default:
+            fprintf(file, "Charset:%s\n", "WARNING! CHARSET UNKNOWN, THE TABLE IS MALFORMED");
+            break;
+    }
+}
+
 void write_line(FILE* file, const char* pass, const char* reduced){
     fprintf(file, "%s%s%s\n", pass, RAINBOW_TABLE_SEPARATOR, reduced);
 }

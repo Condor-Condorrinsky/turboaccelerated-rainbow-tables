@@ -16,31 +16,31 @@ int gen_table(char* input_file, char* output_file);
 int help();
 
 int main(int argc, char *argv[]){
-    int ext_stat = 0;
+    int exit_stat = 0;
     char hash_upper[HASH_STRING_MIN_LEN];
 
     if (argc == 1){
-        ext_stat = help();
-        return ext_stat;
+        exit_stat = help();
+        return exit_stat;
     }
     for (int i = 0; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0){
-            ext_stat = help();
-            return ext_stat;
+            exit_stat = help();
+            return exit_stat;
         }
     }
 
     if (argc == 4 && strcmp(argv[1], "gen-table") == 0){
-        ext_stat = gen_table(argv[2], argv[3]);
+        exit_stat = gen_table(argv[2], argv[3]);
     }
     if (argc == 4 && strcmp(argv[1], "look-up") == 0){
         str_to_uppercase(argv[3], hash_upper, sizeof hash_upper);
         hash_upper[1] = 'x';
-        ext_stat = find_in_table(argv[2], hash_upper);
+        exit_stat = find_in_table(argv[2], hash_upper);
     }
 
     printf("Nothing to do\n");
-    return ext_stat;
+    return exit_stat;
 }
 
 int find_in_table(char* input_file, const char* hash){
