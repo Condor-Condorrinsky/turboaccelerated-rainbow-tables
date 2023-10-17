@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stddef.h>
+#include <unistd.h>
 #include "tablegen.h"
 #include "tablelookup.h"
 
@@ -8,6 +9,9 @@
 #define ERR_OPEN_OUTPUT         (-2)
 #define ERR_CLOSE_INPUT         (-3)
 #define ERR_CLOSE_OUTPUT        (-4)
+#define ERR_PARSE_ARGS          (-5)
+
+void parse_flags(int argc, char *argv[], TableMetadata* meta);
 
 int find_in_table(char* input_file, const char* hash);
 
@@ -41,6 +45,47 @@ int main(int argc, char *argv[]){
 
     printf("Nothing to do\n");
     return exit_stat;
+}
+
+// TODO: parse_args function, which parses all arguments and possibly launches the program
+void parse_flags(int argc, char *argv[], TableMetadata* meta){
+    int opt;
+    init_TableMetadata(meta, DEFAULT_CHAIN_LEN, DEFAULT_PASSWD_LEN, DEFAULT_CHARSET);
+
+    while ((opt = getopt(argc, argv, ":hs:c:p:")) != -1){
+        switch (opt) {
+            case 'h':
+                help();
+                exit(EXIT_SUCCESS);
+            case 's': // character set
+                if (strcmp(optarg, CHARSETS_STR[DIGITS]) == 0){
+                    meta->charset = DIGITS;
+                } else if (strcmp(optarg, CHARSETS_STR[ALPHANUMERIC]) == 0){
+                    meta->charset = ALPHANUMERIC;
+                } else if (strcmp(optarg, CHARSETS_STR[ASCII_PRINTABLE]) == 0){
+                    meta->charset = ASCII_PRINTABLE;
+                } else {
+                    fprintf(stderr, "Passed unrecognized charset, aborting\n");
+                    exit(EXIT_FAILURE);
+                }
+                break;
+            case 'c': // chain length
+                meta->chain_len = (int) strtol(optarg, NULL, 10);
+                break;
+            case 'p': // password length
+                meta->passwd_len = (int) strtol(optarg, NULL, 10);
+                break;
+            case ':':
+                fprintf(stderr, "Specified an option without specifying a value\n");
+                exit(EXIT_FAILURE);
+            case '?':
+                fprintf(stderr, "Unknown option: %c\n", optopt);
+                break;
+            default:
+                fprintf(stderr, "Parsing args failed\n");
+                exit(EXIT_FAILURE);
+        }
+    }
 }
 
 int find_in_table(char* input_file, const char* hash){

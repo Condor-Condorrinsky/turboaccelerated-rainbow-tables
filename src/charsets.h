@@ -4,7 +4,7 @@
 enum CHARSETS{
     DIGITS          = 0,
     ALPHANUMERIC    = 1, // Digits, small and big letters of English alphabet
-    ASCII_PRINTABLE = 2  // All ASCII printable characters
+    ASCII_PRINTABLE = 2  // All ASCII printable characters, EXCLUDING whitespace chars (spaces etc.)
 };
 
 const static char* const CHARSETS_STR[] = {
