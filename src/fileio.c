@@ -32,7 +32,6 @@ int load_file(FILE* file, char* buffer, unsigned int buffer_len){
 
 void write_metadata(FILE* file, TableMetadata* t){
     fprintf(file, "Chain length:%d\n", t->chain_len);
-    fprintf(file, "Password length:%d\n", t->passwd_len);
     switch (t->charset) {
         case DIGITS:
             fprintf(file, "Charset:%s\n", CHARSETS_STR[DIGITS]);

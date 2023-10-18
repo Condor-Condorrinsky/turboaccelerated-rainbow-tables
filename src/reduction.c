@@ -37,6 +37,45 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
     mpz_clear(iteration);
 }
 
+// TODO: calc_R_set_size() to initialize set size for R() function
+void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len){
+    const char* set_size_str;
+    mpz_t set_size;
+    mpz_t result;
+
+    switch (mode) {
+        case DIGITS:
+            set_size_str = CHARSETS_SET_SIZE_STR[DIGITS];
+            break;
+        case ALPHANUMERIC:
+            set_size_str = CHARSETS_SET_SIZE_STR[ALPHANUMERIC];
+            break;
+        case ASCII_PRINTABLE:
+            set_size_str = CHARSETS_SET_SIZE_STR[ASCII_PRINTABLE];
+            break;
+        default:
+            fprintf(stderr, "Unrecognized mode for set size calculation, aborting\n");
+            exit(EXIT_FAILURE);
+    }
+
+    if (mpz_init_set_str(set_size, set_size_str, 10)){
+        fprintf(stderr, "Failed to init mpz set size in calc_R_set_size()\n");
+        exit(EXIT_FAILURE);
+    }
+    if (mpz_init_set_str(result, set_size_str, 10)){
+        fprintf(stderr, "Failed to init mpz ret in calc_R_set_size()\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < pass_len; i++) {
+        mpz_mul(result, result, set_size);
+    }
+    gmp_snprintf(output, output_len, "%Zd", result);
+
+    mpz_clear(set_size);
+    mpz_clear(result);
+}
+
 void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
     const char *PADDING = "0000000000000000000000000000000000000000000000000000000000000000";
     unsigned int num_len = strlen(number);
@@ -56,7 +95,10 @@ void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output
     safer_strncpy(number_copy, number, num_len + 1);
 
     int pad_len = (int) (desired_len - num_len);
-    if (pad_len < 0) pad_len = 0; // Avoid negative length
+    if (pad_len < 0) {
+        fprintf(stderr, "ERROR: passwords longer than 64 chars are not supported, aborting\n");
+        exit(EXIT_FAILURE);
+    }
 
     snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number_copy);
 }

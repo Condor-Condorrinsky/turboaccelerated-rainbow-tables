@@ -21,9 +21,10 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta);
  * endrslt - buffer to write a final reduced hash to
  * endrslt_len - length of the buffer we are writing to
  * iterations - how many links of chain to generate, current maximum is equal to REDUCTION_PATTERNS_SIZE
+ * passwd_len - length of password we are feeding to the generator
  */
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations);
+                    unsigned int iterations, unsigned int passwd_len);
 
 void generate_chain_verbose(const char* passwd, char* endrslt, unsigned int endrslt_len,
                     unsigned int iterations);

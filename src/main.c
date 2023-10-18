@@ -67,10 +67,9 @@ int launch(int argc, char* argv[]){
 void parse_flags(int argc, char *argv[], TableMetadata* meta){
     int opt;
     int cast_c;
-    int cast_p;
-    init_TableMetadata(meta, DEFAULT_CHAIN_LEN, DEFAULT_PASSWD_LEN, DEFAULT_CHARSET);
+    init_TableMetadata(meta, DEFAULT_CHAIN_LEN, DEFAULT_CHARSET);
 
-    while ((opt = getopt(argc, argv, ":hs:c:p:")) != -1){
+    while ((opt = getopt(argc, argv, ":hs:c:")) != -1){
         switch (opt) {
             case 'h': // help
                 help();
@@ -94,14 +93,6 @@ void parse_flags(int argc, char *argv[], TableMetadata* meta){
                     exit(ERR_PARSE_ARGS);
                 }
                 meta->chain_len = cast_c;
-                break;
-            case 'p': // password length
-                cast_p = (int) strtol(optarg, NULL, 10);
-                if (cast_p < 1) {
-                    fprintf(stderr, "WARNING: cast of password length to int failed, aborting\n");
-                    exit(ERR_PARSE_ARGS);
-                }
-                meta->passwd_len = cast_p;
                 break;
             case ':':
                 fprintf(stderr, "Specified an option without specifying a value\n");
@@ -161,8 +152,8 @@ int help(){
     printf("------------------------------TURBOACCELERATED RAINBOW TABLES------------------------------\n");
     printf("Small program to generate MD5 rainbow tables and perform hash look up on them.\n");
     printf("Usage:\n");
-    printf("    ./trb gen-table [-scp] INPUT_FILE OUTPUT_FILE - generating table from list of passwords\n");
-    printf("    ./trb look-up TABLE_FILE HASH                 - performing hash look-up on generated table\n");
+    printf("    ./trb gen-table [-sc] INPUT_FILE OUTPUT_FILE - generating table from list of passwords\n");
+    printf("    ./trb look-up TABLE_FILE HASH                - performing hash look-up on generated table\n");
     printf("Where:\n");
     printf("    INPUT_FILE  - file with passes to generate rainbow table from; newline separated with trailing newline\n");
     printf("    OUTPUT_FILE - file to store generated rainbow table; if not exists, will be created\n");
@@ -172,6 +163,5 @@ int help(){
     printf("    -h - show this help and exit\n");
     printf("    -s - set character set used in generation; allowed values: DIGITS, ALPHANUMERIC, ASCII_PRINTABLE\n");
     printf("    -c - set chain length; a positive integer\n");
-    printf("    -p - set password length\n");
     return EXIT_SUCCESS;
 }

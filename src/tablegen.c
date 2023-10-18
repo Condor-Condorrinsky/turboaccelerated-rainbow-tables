@@ -9,6 +9,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
     }
     char* passes = malloc(sizeof(char) * (fsize + 1));
     char final[MAX_REDUCED_PASS_LENGTH];
+    unsigned int pass_len;
     unsigned int cntr = 0;
 
     load_file(in, passes, sizeof(char) * (fsize + 1));
@@ -16,9 +17,10 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
     write_metadata(out, meta);
 
     char* token = strtok_r(passes, NEWLINE_STRING, &tok_saved);
+    pass_len = strlen(token);
     while (token != NULL){
         generate_chain(token, final,
-                       sizeof final, meta->chain_len);
+                       sizeof final, meta->chain_len, pass_len);
         write_line(out, token, final);
         token = strtok_r(NULL, NEWLINE_STRING, &tok_saved);
         cntr++;
@@ -28,7 +30,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
 }
 
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations){
+                    unsigned int iterations, unsigned int passwd_len){
     int buf_len;
     char rslt[MAX_REDUCED_PASS_LENGTH];
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -40,7 +42,7 @@ void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
         char iter_str[buf_len + 1];
         snprintf(iter_str, buf_len, "%d", i);
         hash(rslt, digest, sizeof digest);
-        reduce_hash(digest, rslt, iter_str, sizeof rslt, GEN_TABLE_PASS_LEN);
+        reduce_hash(digest, rslt, iter_str, sizeof rslt, passwd_len);
     }
     safer_strncpy(endrslt, rslt, endrslt_len);
 }

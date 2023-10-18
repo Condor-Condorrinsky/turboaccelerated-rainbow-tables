@@ -1,14 +1,13 @@
 #include <string.h>
 #include <gmp.h>
+#include "charsets.h"
 #include "md5calc.h"
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 #define TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H
 
-// 16 characters + null terminator
-#define MAX_REDUCED_PASS_LENGTH                  17
-
-const static char* const EIGHT_DIGIT_PINS_SET_SIZE_STR = "100000000";
+// 64 characters + null terminator
+#define MAX_REDUCED_PASS_LENGTH                  65
 
 /*
  * https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
@@ -22,6 +21,8 @@ const static char* const EIGHT_DIGIT_PINS_SET_SIZE_STR = "100000000";
  * family of related reduction functions
  */
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration);
+
+void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
 
 /*
  * https://stackoverflow.com/questions/276827/string-padding-in-c
