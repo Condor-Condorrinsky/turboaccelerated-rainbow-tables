@@ -11,50 +11,68 @@
 #define ERR_CLOSE_OUTPUT        (-4)
 #define ERR_PARSE_ARGS          (-5)
 
+int launch(int argc, char* argv[]);
+
 void parse_flags(int argc, char *argv[], TableMetadata* meta);
 
-int find_in_table(char* input_file, const char* hash);
+int find_in_table(char* input_file, const char* hash, TableMetadata* meta);
 
-int gen_table(char* input_file, char* output_file);
+int gen_table(char* input_file, char* output_file, TableMetadata* meta);
 
 int help();
 
 int main(int argc, char *argv[]){
-    int exit_stat = 0;
-    char hash_upper[HASH_STRING_MIN_LEN];
-
-    if (argc == 1){
-        exit_stat = help();
-        return exit_stat;
-    }
-    for (int i = 0; i < argc; i++) {
-        if (strcmp(argv[i], "-h") == 0){
-            exit_stat = help();
-            return exit_stat;
-        }
-    }
-
-    if (argc == 4 && strcmp(argv[1], "gen-table") == 0){
-        exit_stat = gen_table(argv[2], argv[3]);
-    }
-    if (argc == 4 && strcmp(argv[1], "look-up") == 0){
-        str_to_uppercase(argv[3], hash_upper, sizeof hash_upper);
-        hash_upper[1] = 'x';
-        exit_stat = find_in_table(argv[2], hash_upper);
-    }
+    int exit_stat = launch(argc, argv);
 
     printf("Nothing to do\n");
+
     return exit_stat;
 }
 
-// TODO: parse_args function, which parses all arguments and possibly launches the program
+int launch(int argc, char* argv[]){
+    int ret;
+    char* input_file;
+    char* output_file;
+    char* hash_upper;
+    TableMetadata table;
+
+    parse_flags(argc, argv, &table);
+
+    input_file = malloc(strlen(argv[optind+1]) * sizeof(char) + 1);
+    strcpy(input_file, argv[optind+1]);
+
+    if (strcmp(argv[optind], "gen-table") == 0){
+        output_file = malloc(strlen(argv[optind+2]) * sizeof(char) + 1);
+        strcpy(input_file, argv[optind+2]);
+        ret = gen_table(input_file, output_file, &table);
+        free(output_file);
+    }
+    else if (strcmp(argv[optind], "look-up") == 0){
+        hash_upper = malloc(strlen(argv[optind+2]) * sizeof(char) + 1);
+        strcpy(hash_upper, argv[optind+2]);
+        str_to_uppercase(hash_upper, hash_upper, sizeof hash_upper);
+        hash_upper[1] = 'x';
+        ret = find_in_table(input_file, hash_upper, &table);
+        free(hash_upper);
+    }
+    else {
+        fprintf(stderr, "Unrecognized command, no action will be taken\n");
+        ret = ERR_PARSE_ARGS;
+        return ret;
+    }
+    free(input_file);
+    return ret;
+}
+
 void parse_flags(int argc, char *argv[], TableMetadata* meta){
     int opt;
+    int cast_c;
+    int cast_p;
     init_TableMetadata(meta, DEFAULT_CHAIN_LEN, DEFAULT_PASSWD_LEN, DEFAULT_CHARSET);
 
     while ((opt = getopt(argc, argv, ":hs:c:p:")) != -1){
         switch (opt) {
-            case 'h':
+            case 'h': // help
                 help();
                 exit(EXIT_SUCCESS);
             case 's': // character set
@@ -66,29 +84,39 @@ void parse_flags(int argc, char *argv[], TableMetadata* meta){
                     meta->charset = ASCII_PRINTABLE;
                 } else {
                     fprintf(stderr, "Passed unrecognized charset, aborting\n");
-                    exit(EXIT_FAILURE);
+                    exit(ERR_PARSE_ARGS);
                 }
                 break;
             case 'c': // chain length
-                meta->chain_len = (int) strtol(optarg, NULL, 10);
+                cast_c = (int) strtol(optarg, NULL, 10);
+                if (cast_c < 1) {
+                    fprintf(stderr, "WARNING: cast of chain length to int failed, aborting\n");
+                    exit(ERR_PARSE_ARGS);
+                }
+                meta->chain_len = cast_c;
                 break;
             case 'p': // password length
-                meta->passwd_len = (int) strtol(optarg, NULL, 10);
+                cast_p = (int) strtol(optarg, NULL, 10);
+                if (cast_p < 1) {
+                    fprintf(stderr, "WARNING: cast of password length to int failed, aborting\n");
+                    exit(ERR_PARSE_ARGS);
+                }
+                meta->passwd_len = cast_p;
                 break;
             case ':':
                 fprintf(stderr, "Specified an option without specifying a value\n");
-                exit(EXIT_FAILURE);
+                exit(ERR_PARSE_ARGS);
             case '?':
                 fprintf(stderr, "Unknown option: %c\n", optopt);
                 break;
             default:
-                fprintf(stderr, "Parsing args failed\n");
-                exit(EXIT_FAILURE);
+                fprintf(stderr, "Parsing flags failed\n");
+                exit(ERR_PARSE_ARGS);
         }
     }
 }
 
-int find_in_table(char* input_file, const char* hash){
+int find_in_table(char* input_file, const char* hash, TableMetadata* meta){
     printf("Performing look up, please wait...\n");
     FILE* in = fopen(input_file, "r");
     if (in == NULL){
@@ -103,7 +131,7 @@ int find_in_table(char* input_file, const char* hash){
     return EXIT_SUCCESS;
 }
 
-int gen_table(char* input_file, char* output_file){
+int gen_table(char* input_file, char* output_file, TableMetadata* meta){
     printf("Generating table, please wait...\n");
     FILE* in = fopen(input_file, "r");
     FILE* out = fopen(output_file, "wb+");
@@ -115,7 +143,7 @@ int gen_table(char* input_file, char* output_file){
         fprintf(stderr, "Couldn't open/create output file\n");
         return ERR_OPEN_OUTPUT;
     }
-    generate_rainbow_table(in, out);
+    generate_rainbow_table(in, out, meta);
     if (fclose(in)){
         fprintf(stderr, "Couldn't close input file\n");
         return ERR_CLOSE_INPUT;
@@ -126,21 +154,24 @@ int gen_table(char* input_file, char* output_file){
         return ERR_CLOSE_OUTPUT;
     }
     printf("Table generated successfully\n");
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int help(){
     printf("------------------------------TURBOACCELERATED RAINBOW TABLES------------------------------\n");
     printf("Small program to generate MD5 rainbow tables and perform hash look up on them.\n");
     printf("Usage:\n");
-    printf("    ./trb gen-table INPUT_FILE OUTPUT_FILE - generating table from list of passwords\n");
-    printf("    ./trb look-up TABLE_FILE HASH          - performing hash look-up on generated table\n");
+    printf("    ./trb gen-table [-scp] INPUT_FILE OUTPUT_FILE - generating table from list of passwords\n");
+    printf("    ./trb look-up TABLE_FILE HASH                 - performing hash look-up on generated table\n");
     printf("Where:\n");
     printf("    INPUT_FILE  - file with passes to generate rainbow table from; newline separated with trailing newline\n");
     printf("    OUTPUT_FILE - file to store generated rainbow table; if not exists, will be created\n");
     printf("    TABLE_FILE  - file with pre-generated rainbow table\n");
     printf("    HASH        - hash to look for in table\n");
     printf("Flags:\n");
-    printf("    -h - show this help and exit; overwrites all other flags and options\n");
+    printf("    -h - show this help and exit\n");
+    printf("    -s - set character set used in generation; allowed values: DIGITS, ALPHANUMERIC, ASCII_PRINTABLE\n");
+    printf("    -c - set chain length; a positive integer\n");
+    printf("    -p - set password length\n");
     return EXIT_SUCCESS;
 }
