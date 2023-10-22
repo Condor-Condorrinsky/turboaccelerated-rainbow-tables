@@ -24,12 +24,16 @@
  * family of related reduction functions
  * set_size - C string representing a number - set size for given charset and password length for GMP library
  * e.g. "1000" for 4-letter passwords containing only digits; to be calculated by calc_R_set_size()
- * pass_len - length of the reduced password
+ * pass_len - desired length of the password created from passed digest
  */
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration,
        const char* set_size, unsigned int pass_len);
 
 void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
+
+void encode_result(int mode, unsigned int desired_len, char* data, char* output, unsigned int output_len);
+
+void encode(char* number, unsigned int desired_len, int mode, char* output_buf, unsigned int output_len);
 
 /*
  * https://stackoverflow.com/questions/276827/string-padding-in-c
@@ -51,22 +55,23 @@ void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output
 char* safer_strncpy(char* dest, const char* src, size_t n);
 
 /*
- * A helper function converting a small number (1 byte of hash) to a non-white printable ASCII character,
- * excluding '|'
+ * A helper function converting a small number (1 byte of hash) to a printable ASCII character,
+ * excluding space and pipe
  *
  * in - byte of hash to be converted
  *
  * Returns a char with a value from 33 to 126 excluding 124
  */
-char unsigned_char_to_ascii(unsigned char in);
+char uchar_to_ascii(unsigned char in);
 
 /*
- * A helper function converting a small number (1 byte of hash) to a small letter of English alphabet
+ * A helper function converting a small number (1 byte of hash) to either
+ * a small or big letter of English alphabet, or a digit
  *
  * in - byte of hash to be converted
  *
- * Returns a char with a value from 97 to 122 - ascii values for small letters of English alphabet
+ * Returns a small or big letter of English alphabet, or a digit
  */
-char unsigned_char_to_small_letter(unsigned char in);
+char uchar_to_alphanumeric(unsigned char in);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_REDUCTION_H

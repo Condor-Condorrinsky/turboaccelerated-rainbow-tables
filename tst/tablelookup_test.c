@@ -98,7 +98,7 @@ static void find_hash_test(void** state){
     load_file(tablelookupTestStruct.in, table, 1024 * sizeof(char));
     extract_hashed_vals(table, chains);
 
-    int ret = find_hash(chains, entries, looked);
+    int ret = find_hash(chains, entries, looked, "100000000");
 
     assert_int_equal(ret, HASH_FOUND);
 
@@ -119,8 +119,8 @@ static void find_hash_in_chain_test(void** state){
     setChainPasswd(c, passwd);
     setChainEnd(c, chain_hash);
 
-    int result = find_hash_in_chain(c, hash_to_look);
-    int result2 = find_hash_in_chain(c, hash_to_look_not_present);
+    int result = find_hash_in_chain(c, hash_to_look, "100000000");
+    int result2 = find_hash_in_chain(c, hash_to_look_not_present, "100000000");
 
     assert_int_equal(result, HASH_FOUND);
     assert_int_equal(result2, HASH_NOT_FOUND);

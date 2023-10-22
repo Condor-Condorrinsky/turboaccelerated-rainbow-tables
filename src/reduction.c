@@ -84,6 +84,73 @@ void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int
     mpz_clear(result);
 }
 
+void encode_result(int mode, unsigned int desired_len, char* data, char* output, unsigned int output_len){
+    switch (mode) {
+        case DIGITS:
+            pad_str_leading_zeroes(data, desired_len, output, output_len);
+            break;
+        case ALPHANUMERIC:
+            break;
+        case ASCII_PRINTABLE:
+            break;
+        default:
+            break;
+    }
+}
+
+void encode(char* number, unsigned int desired_len, int mode, char* output_buf, unsigned int output_len){
+    char letter[MAX_BYTE_TO_HEX_STR_LENGTH];
+    char num_padded[MAX_REDUCED_PASS_LENGTH];
+    unsigned char letter_num;
+    unsigned long num_len;
+    int counter = 0;
+
+    if (desired_len + 1 > output_len){
+        fprintf(stderr, "Desired length bigger than output buffer, aborting\n");
+        exit(EXIT_FAILURE);
+    }
+
+    letter[MAX_BYTE_TO_HEX_STR_LENGTH - 1] = '\0';
+    pad_str_leading_zeroes(number, desired_len,
+                           num_padded, sizeof num_padded);
+    num_len = strlen(num_padded);
+
+    while (counter < output_len && counter <= desired_len) {
+        for (int i = 0; i < num_len - 1; i += MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
+            if (counter >= output_len || counter > desired_len) break;
+            memcpy(letter, &num_padded[i], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
+            letter_num = (unsigned char) strtol(letter, NULL, 10);
+            switch (mode) {
+                case ALPHANUMERIC:
+                    output_buf[counter] = uchar_to_alphanumeric(letter_num);
+                    break;
+                case ASCII_PRINTABLE:
+                default:
+                    output_buf[counter] = uchar_to_ascii(letter_num);
+                    break;
+            }
+            counter++;
+        }
+        for (int j = (int) num_len - 1; j > 0; j -= MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
+            if (counter >= output_len || counter > desired_len) break;
+            memcpy(letter, &num_padded[j - 1], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
+            letter_num = (unsigned char) strtol(letter, NULL, 10);
+            switch (mode) {
+                case ALPHANUMERIC:
+                    output_buf[counter] = uchar_to_alphanumeric(letter_num);
+                    break;
+                case ASCII_PRINTABLE:
+                default:
+                    output_buf[counter] = uchar_to_ascii(letter_num);
+                    break;
+            }
+            counter++;
+        }
+    }
+    output_buf[counter-1] = '\0';
+}
+
+
 void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output_buf, unsigned int output_len){
     const char *PADDING = "0000000000000000000000000000000000000000000000000000000000000000";
     unsigned int num_len = strlen(number);
@@ -104,8 +171,8 @@ void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output
 
     int pad_len = (int) (desired_len - num_len);
     if (pad_len < 0) {
-        fprintf(stderr, "ERROR: passwords longer than 64 chars are not supported, aborting\n");
-        exit(EXIT_FAILURE);
+        pad_len = 0;
+        fprintf(stderr, "WARNING: negative pad length\n");
     }
 
     snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number_copy);
@@ -122,21 +189,12 @@ char* safer_strncpy(char* dest, const char* src, size_t n){
     return dest;
 }
 
-char unsigned_char_to_ascii(const unsigned char in){
-    const unsigned char ASCII_BEGINNING_PRINTABLE_CHARS = 33;
-    const unsigned char ASCII_PRINTABLE_CHARS_NO_SPACE = 93;
-    const unsigned char ASCII_PIPELINE = 124;
-    const unsigned char ASCII_EXCLAMATION_MARK = 33;
-
-    char ret = (char) ((in % ASCII_PRINTABLE_CHARS_NO_SPACE) + ASCII_BEGINNING_PRINTABLE_CHARS);
-    if (ret == ASCII_PIPELINE) ret = (char) ASCII_EXCLAMATION_MARK;
-
-    return ret;
+char uchar_to_alphanumeric(unsigned char in){
+    unsigned char val = in % strlen(ALPHANUMERIC_CHARS);
+    return ALPHANUMERIC_CHARS[val];
 }
 
-char unsigned_char_to_small_letter(const unsigned char in){
-    const unsigned char LETTERS_IN_ENGLISH_ALPHABET = 26;
-    const unsigned char ASCII_LETTER_SMALL_A = 97;
-
-    return (char) ((in % LETTERS_IN_ENGLISH_ALPHABET) + ASCII_LETTER_SMALL_A);
+char uchar_to_ascii(unsigned char in){
+    unsigned char val = in % strlen(ASCII_PRINTABLE_CHARS);
+    return ASCII_PRINTABLE_CHARS[val];
 }

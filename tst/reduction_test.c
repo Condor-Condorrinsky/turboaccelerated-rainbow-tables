@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
-#include "../src/patternenum.h"
 #include "../src/reduction.h"
 
 static void R_test(void** state){
@@ -11,10 +10,23 @@ static void R_test(void** state){
             {234, 127, 200, 43, 89, 55, 190, 255,
              20, 167, 203, 39, 75, 150, 183, 110};
     char output_buffer[MAX_REDUCED_PASS_LENGTH];
+    char* set_size = "100000000";
 
-    R(example_digest, output_buffer, sizeof output_buffer, (char*) "2");
+    R(example_digest, output_buffer, sizeof output_buffer, (char*) "2", set_size, 8);
 
     assert_string_equal(output_buffer, "00838512");
+}
+
+static void encode_result_test(void** state){
+
+}
+
+static void encode_test(void** state){
+    char* number = "123456789";
+    char output[9];
+
+    encode(number, 8, ALPHANUMERIC, output, sizeof output);
+    printf("Out: %s\n", output);
 }
 
 static void pad_str_leading_zeroes_test(void** state){
@@ -47,7 +59,7 @@ static void safer_strncpy_test(void** state){
     // assert_int_equal((int) bad_copy[test_len - 5 - 1], (int) '\0');
 }
 
-static void unsigned_char_to_ascii_test(void** state){
+static void uchar_to_ascii_test(void** state){
     unsigned char backspace = 8;
     unsigned char space = 32;
     unsigned char four = 52;
@@ -56,24 +68,24 @@ static void unsigned_char_to_ascii_test(void** state){
     unsigned char del = 127;
     unsigned char random_val = 213;
 
-    char backspace_converted = unsigned_char_to_ascii(backspace);
-    char space_converted = unsigned_char_to_ascii(space);
-    char four_converted = unsigned_char_to_ascii(four);
-    char capital_k_converted = unsigned_char_to_ascii(capital_k);
-    char left_square_bracket_converted = unsigned_char_to_ascii(left_square_bracket);
-    char del_converted = unsigned_char_to_ascii(del);
-    char random_val_converted = unsigned_char_to_ascii(random_val);
+    char backspace_converted = uchar_to_ascii(backspace);
+    char space_converted = uchar_to_ascii(space);
+    char four_converted = uchar_to_ascii(four);
+    char capital_k_converted = uchar_to_ascii(capital_k);
+    char left_square_bracket_converted = uchar_to_ascii(left_square_bracket);
+    char del_converted = uchar_to_ascii(del);
+    char random_val_converted = uchar_to_ascii(random_val);
 
     assert_int_equal((int) backspace_converted, 41);
     assert_int_equal((int) space_converted, 65);
     assert_int_equal((int) four_converted, 85);
     assert_int_equal((int) capital_k_converted, 108);
-    assert_int_equal((int) left_square_bracket_converted, 33);
+    assert_int_equal((int) left_square_bracket_converted, 125);
     assert_int_equal((int) del_converted, 67);
     assert_int_equal((int) random_val_converted, 60);
 }
 
-static void unsigned_char_to_small_letter_test(void** state){
+static void uchar_to_alphanumeric_test(void** state){
     unsigned char backspace = 8;
     unsigned char space = 32;
     unsigned char four = 52;
@@ -82,19 +94,19 @@ static void unsigned_char_to_small_letter_test(void** state){
     unsigned char del = 127;
     unsigned char random_val = 213;
 
-    char backspace_converted = unsigned_char_to_small_letter(backspace);
-    char space_converted = unsigned_char_to_small_letter(space);
-    char four_converted = unsigned_char_to_small_letter(four);
-    char capital_k_converted = unsigned_char_to_small_letter(capital_k);
-    char left_square_bracket_converted = unsigned_char_to_small_letter(left_square_bracket);
-    char del_converted = unsigned_char_to_small_letter(del);
-    char random_val_converted = unsigned_char_to_small_letter(random_val);
+    char backspace_converted = uchar_to_alphanumeric(backspace);
+    char space_converted = uchar_to_alphanumeric(space);
+    char four_converted = uchar_to_alphanumeric(four);
+    char capital_k_converted = uchar_to_alphanumeric(capital_k);
+    char left_square_bracket_converted = uchar_to_alphanumeric(left_square_bracket);
+    char del_converted = uchar_to_alphanumeric(del);
+    char random_val_converted = uchar_to_alphanumeric(random_val);
 
-    assert_int_equal((int) backspace_converted, 105);
-    assert_int_equal((int) space_converted, 103);
-    assert_int_equal((int) four_converted, 97);
-    assert_int_equal((int) capital_k_converted, 120);
-    assert_int_equal((int) left_square_bracket_converted, 110);
-    assert_int_equal((int) del_converted, 120);
-    assert_int_equal((int) random_val_converted, 102);
+    assert_int_equal((int) backspace_converted, 56);
+    assert_int_equal((int) space_converted, 87);
+    assert_int_equal((int) four_converted, 113);
+    assert_int_equal((int) capital_k_converted, 68);
+    assert_int_equal((int) left_square_bracket_converted, 84);
+    assert_int_equal((int) del_converted, 51);
+    assert_int_equal((int) random_val_converted, 82);
 }

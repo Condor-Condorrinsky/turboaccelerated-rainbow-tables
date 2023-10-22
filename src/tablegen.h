@@ -21,10 +21,10 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta);
  * endrslt - buffer to write a final reduced hash to
  * endrslt_len - length of the buffer we are writing to
  * iterations - how many links of chain to generate, current maximum is equal to REDUCTION_PATTERNS_SIZE
- * passwd_len - length of password we are feeding to the generator
+ * set_size - size of the set we are reducing passwords to; calculated using calc_set_size()
  */
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations, unsigned int passwd_len, const char* set_size);
+                    unsigned int iterations, const char* set_size);
 
 /*
  * Custom itoa() function. Converts given integer i to a string. Based on snprintf().

@@ -23,8 +23,8 @@ int main(void) {
             cmocka_unit_test(R_test),
             cmocka_unit_test(pad_str_leading_zeroes_test),
             cmocka_unit_test(safer_strncpy_test),
-            cmocka_unit_test(unsigned_char_to_ascii_test),
-            cmocka_unit_test(unsigned_char_to_small_letter_test),
+            cmocka_unit_test(uchar_to_ascii_test),
+            cmocka_unit_test(uchar_to_alphanumeric_test),
             // tablegen_test.c
             cmocka_unit_test_setup_teardown(generate_rainbow_table_test, tablegen_setup, tablegen_teardown),
             cmocka_unit_test_setup_teardown(generate_chain_test, tablegen_setup, tablegen_teardown),

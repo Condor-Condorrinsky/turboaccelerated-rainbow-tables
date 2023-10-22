@@ -23,7 +23,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
     while (token != NULL){
         generate_chain(token, final,
                        sizeof final, meta->chain_len,
-                       pass_len, set_size);
+                       set_size);
         write_line(out, token, final);
         token = strtok_r(NULL, NEWLINE_STRING, &tok_saved);
         cntr++;
@@ -33,7 +33,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
 }
 
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations, unsigned int passwd_len, const char* set_size){
+                    unsigned int iterations, const char* set_size){
     char rslt[MAX_REDUCED_PASS_LENGTH];
     unsigned char digest[MD5_DIGEST_LENGTH];
     char iter_str[SET_SIZE_BUFFER];
@@ -43,7 +43,7 @@ void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
     for (int i = 0; i < iterations; i++) {
         iter_itoa(i, iter_str, sizeof iter_str);
         hash(rslt, digest, sizeof digest);
-        reduce_hash(digest, rslt, iter_str, sizeof rslt, set_size, passwd_len);
+        reduce_hash(digest, rslt, iter_str, sizeof rslt, set_size, strlen(passwd));
     }
     safer_strncpy(endrslt, rslt, endrslt_len);
 }

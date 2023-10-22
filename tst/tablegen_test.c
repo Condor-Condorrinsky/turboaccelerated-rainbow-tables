@@ -8,9 +8,11 @@
 typedef struct TABLEGEN_TEST_STRUCT{
     FILE* in;
     FILE* out;
+    TableMetadata meta;
 } TABLEGEN_TEST_STRUCT;
 
-static TABLEGEN_TEST_STRUCT tablegenTestStruct = {.in = NULL, .out = NULL};
+static TABLEGEN_TEST_STRUCT tablegenTestStruct =
+        {.in = NULL, .out = NULL, .meta = {.chain_len = 0, .charset = DIGITS}};
 
 static int tablegen_setup(void** state){
     const char* inpath = "tst/rsrc/commonpasses.txt";
@@ -27,6 +29,9 @@ static int tablegen_setup(void** state){
         fprintf(stderr, "Cannot open input file for tablegen_test.c\n");
         return EXIT_FAILURE;
     }
+
+    tablegenTestStruct.meta.chain_len = 32;
+    tablegenTestStruct.meta.charset = DIGITS;
 
     return EXIT_SUCCESS;
 }
@@ -45,7 +50,7 @@ static int tablegen_teardown(void** state){
 }
 
 static void generate_rainbow_table_test(void** state){
-    generate_rainbow_table(tablegenTestStruct.in, tablegenTestStruct.out);
+    generate_rainbow_table(tablegenTestStruct.in, tablegenTestStruct.out, &tablegenTestStruct.meta);
 
     rewind(tablegenTestStruct.out);
     assert_int_equal((int) count_lines(tablegenTestStruct.out), 8);
@@ -55,8 +60,10 @@ static void generate_chain_test(void** state){
     const char* passwd = "97531975";
     const char* expected_result = "61678808";
     char result[MAX_REDUCED_PASS_LENGTH];
+    char set_size[SET_SIZE_BUFFER];
 
-    generate_chain(passwd, result, sizeof result, REDUCTION_PATTERNS_SIZE);
+    calc_set_size(strlen(passwd), DIGITS, set_size, sizeof set_size);
+    generate_chain(passwd, result, sizeof result, tablegenTestStruct.meta.chain_len, set_size);
 
     assert_string_equal(result, expected_result);
 }
