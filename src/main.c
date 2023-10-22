@@ -43,7 +43,7 @@ int launch(int argc, char* argv[]){
 
     if (strcmp(argv[optind], "gen-table") == 0){
         output_file = malloc(strlen(argv[optind+2]) * sizeof(char) + 1);
-        strcpy(input_file, argv[optind+2]);
+        strcpy(output_file, argv[optind+2]);
         ret = gen_table(input_file, output_file, &table);
         free(output_file);
     }

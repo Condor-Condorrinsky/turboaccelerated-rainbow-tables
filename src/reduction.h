@@ -8,6 +8,9 @@
 
 // 64 characters + null terminator
 #define MAX_REDUCED_PASS_LENGTH                  65
+// For a 64 character password with 93 possible ascii vals each we have ~ 9*10^167 combinations,
+// therefore a buffer of this size should be sufficient for all the digits of that number
+#define SET_SIZE_BUFFER                          1024
 
 /*
  * https://crypto.stackexchange.com/questions/37832/how-to-create-reduction-functions-in-rainbow-tables
@@ -19,8 +22,12 @@
  * output_len - length of the output buffer
  * reduction_iteration - constant string representing a small number used in reduction; allows to generate a whole
  * family of related reduction functions
+ * set_size - C string representing a number - set size for given charset and password length for GMP library
+ * e.g. "1000" for 4-letter passwords containing only digits; to be calculated by calc_R_set_size()
+ * pass_len - length of the reduced password
  */
-void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration);
+void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration,
+       const char* set_size, unsigned int pass_len);
 
 void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
 

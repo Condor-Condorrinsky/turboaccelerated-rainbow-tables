@@ -1,9 +1,9 @@
 #include "reduction.h"
 
-void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration){
-    const int DESIRED_PASS_LEN = 8;
+void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration,
+       const char* set_size, unsigned int pass_len){
     char digest_str[HASH_STRING_MIN_LEN];
-    unsigned int ret_string_len = strlen(EIGHT_DIGIT_PINS_SET_SIZE_STR) + 1;
+    unsigned int ret_string_len = strlen(set_size) + 1;
     char ret_string[ret_string_len];
     mpz_t ret;
     mpz_t SEARCH_SET_SIZE;
@@ -16,7 +16,7 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
         exit(EXIT_FAILURE);
     }
 
-    if (mpz_init_set_str(SEARCH_SET_SIZE, EIGHT_DIGIT_PINS_SET_SIZE_STR, 10)){
+    if (mpz_init_set_str(SEARCH_SET_SIZE, set_size, 10)){
         fprintf(stderr, "Failed to init mpz SET_SIZE\n");
         exit(EXIT_FAILURE);
     }
@@ -30,15 +30,15 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
 
     gmp_snprintf(ret_string, ret_string_len, "%Zd", ret);
 
-    pad_str_leading_zeroes(ret_string, DESIRED_PASS_LEN, output, output_len);
+    pad_str_leading_zeroes(ret_string, pass_len, output, output_len);
 
     mpz_clear(ret);
     mpz_clear(SEARCH_SET_SIZE);
     mpz_clear(iteration);
 }
 
-// TODO: calc_R_set_size() to initialize set size for R() function
 void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len){
+    unsigned int result_len;
     const char* set_size_str;
     mpz_t set_size;
     mpz_t result;
@@ -67,8 +67,16 @@ void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 0; i < pass_len; i++) {
+    for (int i = 1; i < pass_len; i++) {
         mpz_mul(result, result, set_size);
+    }
+
+    result_len = gmp_snprintf(NULL, 0, "%Zd", result);
+    if (result_len > output_len){
+        fprintf(stderr,
+                "Cannot pass calculated set size to buffer due to insufficient size. Required size: %u, received size: %u\n",
+                result_len, output_len);
+        exit(EXIT_FAILURE);
     }
     gmp_snprintf(output, output_len, "%Zd", result);
 

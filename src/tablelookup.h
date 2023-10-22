@@ -51,8 +51,9 @@ void line_to_PassHashChain(char* line, PassHashChain* c);
  * table - table of password-hash chains extracted from a pre-generated file
  * entries - number of entries in the table
  * looked_hash - C string representing hash we are trying to break
+ * set_size - string containing a number - set size
  */
-int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash);
+int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash, const char* set_size);
 
 /*
  * Helper function testing whether the chain suspected by find_hash() to contain looked_hash
@@ -60,8 +61,9 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
  *
  * c - PassHashChain struct representing hash chain to test
  * hash_to_find - hash we are trying to break
+ * set_size - string containing number - set size
  */
-int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find);
+int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find, const char* set_size);
 
 /*
  * Small helper converting all letters in given C string to uppercase

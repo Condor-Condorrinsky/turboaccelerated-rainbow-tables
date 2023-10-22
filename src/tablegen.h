@@ -24,10 +24,16 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta);
  * passwd_len - length of password we are feeding to the generator
  */
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations, unsigned int passwd_len);
+                    unsigned int iterations, unsigned int passwd_len, const char* set_size);
 
-void generate_chain_verbose(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations);
+/*
+ * Custom itoa() function. Converts given integer i to a string. Based on snprintf().
+ *
+ * i - integer to convert
+ * buf - buffer to write result to
+ * buf_len - buf length
+ */
+void iter_itoa(int i, char* buf, unsigned int buf_len);
 
 /*
  * A wrapper for compute_md5 function; for more info see md5calc.h
@@ -36,10 +42,10 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len);
 
 /*
  * A wrapper for reduce function; for more info see reduction.h
- *
- * reduced_pass_len is currently unused
  */
 void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
-                 unsigned int reduced_pass_len);
+                 const char* set_size, unsigned int reduced_pass_len);
+
+void calc_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H
