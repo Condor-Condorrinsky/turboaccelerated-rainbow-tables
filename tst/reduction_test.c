@@ -9,24 +9,59 @@ static void R_test(void** state){
     const unsigned char example_digest[MD5_DIGEST_LENGTH] =
             {234, 127, 200, 43, 89, 55, 190, 255,
              20, 167, 203, 39, 75, 150, 183, 110};
-    char output_buffer[MAX_REDUCED_PASS_LENGTH];
-    char* set_size = "100000000";
+    char output_digits[MAX_REDUCED_PASS_LENGTH];
+    char output_alphanumeric[MAX_REDUCED_PASS_LENGTH];
+    char output_ascii[MAX_REDUCED_PASS_LENGTH];
+    // 10^8
+    char* set_size_digits = "100000000";
+    // 62^8
+    char* set_size_alphanumeric = "218340105584896";
+    // 93^8
+    char* set_size_ascii = "5595818096650401";
 
-    R(example_digest, output_buffer, sizeof output_buffer, (char*) "2", set_size, 8);
+    R(example_digest, output_digits, sizeof output_digits,
+      "2", set_size_digits, 8, DIGITS);
+    R(example_digest, output_alphanumeric, sizeof output_alphanumeric,
+      "2", set_size_alphanumeric, 8, ALPHANUMERIC);
+    R(example_digest, output_ascii, sizeof output_ascii,
+      "2", set_size_ascii, 8, ASCII_PRINTABLE);
 
-    assert_string_equal(output_buffer, "00838512");
+    assert_string_equal(output_digits, "00838512");
+    assert_string_equal(output_alphanumeric, "B9WV6QMO");
+    assert_string_equal(output_ascii, "XSjHj_R7");
 }
 
 static void encode_result_test(void** state){
+    char* number = "40527010";
+    char output1[16];
+    char output2[16];
+    char output3[16];
 
+    encode_result(DIGITS, 7, number, output1, sizeof output1);
+    assert_string_equal(output1, "4052701");
+    encode_result(ALPHANUMERIC, 7, number, output2, sizeof output2);
+    assert_string_equal(output2, "eq8AA8q");
+    encode_result(ASCII_PRINTABLE, 7, number, output3, sizeof output3);
+    assert_string_equal(output3, "IUg++gU");
+
+    encode_result(DIGITS, 12, number, output1, sizeof output1);
+    assert_string_equal(output1, "000040527010");
+    encode_result(ALPHANUMERIC, 12, number, output2, sizeof output2);
+    assert_string_equal(output2, "00eq8AA8qe00");
+    encode_result(ASCII_PRINTABLE, 12, number, output3, sizeof output3);
+    assert_string_equal(output3, "!!IUg++gUI!!");
 }
 
 static void encode_test(void** state){
     char* number = "123456789";
-    char output[16];
+    char output1[16];
+    char output2[16];
 
-    encode(number, 7, ALPHANUMERIC, output, sizeof output);
-    printf("Out: %s\n", output);
+    encode(number, 7, ALPHANUMERIC, output1, sizeof output1);
+    assert_string_equal(output1, "CYuGR5j");
+
+    encode(number, 7, ASCII_PRINTABLE, output2, sizeof output2);
+    assert_string_equal(output2, "-CYozdN");
 }
 
 static void pad_str_leading_zeroes_test(void** state){

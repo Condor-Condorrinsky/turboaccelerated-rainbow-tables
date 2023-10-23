@@ -1,7 +1,7 @@
 #include "reduction.h"
 
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration,
-       const char* set_size, unsigned int pass_len){
+       const char* set_size, unsigned int pass_len, int mode){
     char digest_str[HASH_STRING_MIN_LEN];
     unsigned int ret_string_len = strlen(set_size) + 1;
     char ret_string[ret_string_len];
@@ -30,7 +30,8 @@ void R(const unsigned char* digest, char* output, unsigned int output_len, const
 
     gmp_snprintf(ret_string, ret_string_len, "%Zd", ret);
 
-    pad_str_leading_zeroes(ret_string, pass_len, output, output_len);
+    // pad_str_leading_zeroes(ret_string, pass_len, output, output_len);
+    encode_result(mode, pass_len, ret_string, output, output_len);
 
     mpz_clear(ret);
     mpz_clear(SEARCH_SET_SIZE);
@@ -85,15 +86,23 @@ void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int
 }
 
 void encode_result(int mode, unsigned int desired_len, char* data, char* output, unsigned int output_len){
+    char temp_buf[SET_SIZE_BUFFER];
+
     switch (mode) {
         case DIGITS:
-            pad_str_leading_zeroes(data, desired_len, output, output_len);
+            pad_str_leading_zeroes(data, desired_len, temp_buf, sizeof temp_buf);
+            if (desired_len < strlen(temp_buf)){
+                memcpy(output, &temp_buf, desired_len);
+                output[desired_len] = '\0';
+            } else strcpy(output, temp_buf);
             break;
         case ALPHANUMERIC:
-            break;
         case ASCII_PRINTABLE:
+            encode(data, desired_len, mode, output, output_len);
             break;
         default:
+            fprintf(stderr, "Unrecognized charset, defaulting to ASCII_PRINTABLE\n");
+            encode(data, desired_len, mode, output, output_len);
             break;
     }
 }
@@ -170,10 +179,7 @@ void pad_str_leading_zeroes(char* number, unsigned int desired_len, char* output
     safer_strncpy(number_copy, number, num_len + 1);
 
     int pad_len = (int) (desired_len - num_len);
-    if (pad_len < 0) {
-        pad_len = 0;
-        fprintf(stderr, "WARNING: negative pad length\n");
-    }
+    if (pad_len < 0) pad_len = 0;
 
     snprintf(output_buf, output_len, "%*.*s%s", pad_len, pad_len, PADDING, number_copy);
 }

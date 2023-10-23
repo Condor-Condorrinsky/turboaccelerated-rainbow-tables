@@ -29,7 +29,7 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
 
     calc_set_size(strlen(extracted_hashes[0]->passwd), DIGITS, set_size, sizeof set_size);
 
-    result = find_hash(extracted_hashes, entries, looked_hash, set_size);
+    result = find_hash(extracted_hashes, entries, looked_hash, set_size, DIGITS);
     printf("Look up finished\n");
     if (result == HASH_NOT_FOUND)
         printf("There appears to be too many collisions in table, hash couldn't be found\n");
@@ -75,7 +75,7 @@ void line_to_PassHashChain(char* line, PassHashChain* c){
     setChainEnd(c, hash);
 }
 
-int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash, const char* set_size){
+int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash, const char* set_size, int mode){
     unsigned char looked_hash_raw_copy[MD5_DIGEST_LENGTH];
     char looked_hash_working_copy[HASH_STRING_MIN_LEN];
     char looked_hash_reduced[MAX_REDUCED_PASS_LENGTH];
@@ -87,7 +87,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
             iter_itoa(j, iter_str, sizeof iter_str);
             reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
                         iter_str, sizeof looked_hash_raw_copy,
-                        set_size, strlen(table[0]->passwd));
+                        set_size, strlen(table[0]->passwd), mode);
             hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
             convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
                                   sizeof looked_hash_working_copy);
@@ -96,7 +96,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
             if (strcmp(looked_hash_reduced, getChainEnd(table[j])) == 0){
                 printf("Found possible match in chain nr i=%d, j=%d\n", i, j);
                 printf("Chain password: %s, chain end: %s\n", getChainPasswd(table[j]), getChainEnd(table[j]));
-                found = find_hash_in_chain(table[j], looked_hash, set_size);
+                found = find_hash_in_chain(table[j], looked_hash, set_size, mode);
                 if (found == HASH_FOUND)
                     return found;
             }
@@ -108,7 +108,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
     return found;
 }
 
-int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find, const char* set_size){
+int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find, const char* set_size, int mode){
     char reduced[MAX_REDUCED_PASS_LENGTH];
     unsigned char raw_hash[MD5_DIGEST_LENGTH];
     char hash_string[HASH_STRING_MIN_LEN];
@@ -126,7 +126,7 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find, c
         calc_set_size(strlen(c->passwd), DIGITS, iter_str, sizeof iter_str);
         reduce_hash(raw_hash, reduced,
                     iter_str, sizeof reduced,
-                    set_size, strlen(c->passwd));
+                    set_size, strlen(c->passwd), mode);
     }
 
     hash(reduced, raw_hash, sizeof raw_hash);

@@ -25,9 +25,10 @@
  * set_size - C string representing a number - set size for given charset and password length for GMP library
  * e.g. "1000" for 4-letter passwords containing only digits; to be calculated by calc_R_set_size()
  * pass_len - desired length of the password created from passed digest
+ * mode - switch controlling type of passwords we are reducing to; DIGITS, ALPHANUMERIC or ASCII_PRINTABLE
  */
 void R(const unsigned char* digest, char* output, unsigned int output_len, const char* reduction_iteration,
-       const char* set_size, unsigned int pass_len);
+       const char* set_size, unsigned int pass_len, int mode);
 
 void calc_R_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
 

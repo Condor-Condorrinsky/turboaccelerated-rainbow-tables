@@ -23,7 +23,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
     while (token != NULL){
         generate_chain(token, final,
                        sizeof final, meta->chain_len,
-                       set_size);
+                       set_size, meta->charset);
         write_line(out, token, final);
         token = strtok_r(NULL, NEWLINE_STRING, &tok_saved);
         cntr++;
@@ -33,7 +33,7 @@ void generate_rainbow_table(FILE* in, FILE* out, TableMetadata* meta){
 }
 
 void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
-                    unsigned int iterations, const char* set_size){
+                    unsigned int iterations, const char* set_size, int mode){
     char rslt[MAX_REDUCED_PASS_LENGTH];
     unsigned char digest[MD5_DIGEST_LENGTH];
     char iter_str[SET_SIZE_BUFFER];
@@ -43,7 +43,7 @@ void generate_chain(const char* passwd, char* endrslt, unsigned int endrslt_len,
     for (int i = 0; i < iterations; i++) {
         iter_itoa(i, iter_str, sizeof iter_str);
         hash(rslt, digest, sizeof digest);
-        reduce_hash(digest, rslt, iter_str, sizeof rslt, set_size, strlen(passwd));
+        reduce_hash(digest, rslt, iter_str, sizeof rslt, set_size, strlen(passwd), mode);
     }
     safer_strncpy(endrslt, rslt, endrslt_len);
 }
@@ -62,8 +62,8 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len){
 }
 
 void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
-                 const char* set_size, unsigned int reduced_pass_len){
-    R(digest, output, output_len, reduction_pattern, set_size, reduced_pass_len);
+                 const char* set_size, unsigned int reduced_pass_len, int mode){
+    R(digest, output, output_len, reduction_pattern, set_size, reduced_pass_len, mode);
 }
 
 void calc_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len){

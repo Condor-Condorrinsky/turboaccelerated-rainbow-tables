@@ -63,7 +63,7 @@ static void generate_chain_test(void** state){
     char set_size[SET_SIZE_BUFFER];
 
     calc_set_size(strlen(passwd), DIGITS, set_size, sizeof set_size);
-    generate_chain(passwd, result, sizeof result, tablegenTestStruct.meta.chain_len, set_size);
+    generate_chain(passwd, result, sizeof result, tablegenTestStruct.meta.chain_len, set_size, tablegenTestStruct.meta.charset);
 
     assert_string_equal(result, expected_result);
 }
