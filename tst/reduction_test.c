@@ -23,9 +23,9 @@ static void encode_result_test(void** state){
 
 static void encode_test(void** state){
     char* number = "123456789";
-    char output[9];
+    char output[16];
 
-    encode(number, 8, ALPHANUMERIC, output, sizeof output);
+    encode(number, 7, ALPHANUMERIC, output, sizeof output);
     printf("Out: %s\n", output);
 }
 

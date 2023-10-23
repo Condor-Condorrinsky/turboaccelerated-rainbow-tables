@@ -115,9 +115,9 @@ void encode(char* number, unsigned int desired_len, int mode, char* output_buf, 
                            num_padded, sizeof num_padded);
     num_len = strlen(num_padded);
 
-    while (counter < output_len && counter <= desired_len) {
+    while (counter < output_len && counter < desired_len) {
         for (int i = 0; i < num_len - 1; i += MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
-            if (counter >= output_len || counter > desired_len) break;
+            if (counter >= output_len || counter >= desired_len) break;
             memcpy(letter, &num_padded[i], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
             letter_num = (unsigned char) strtol(letter, NULL, 10);
             switch (mode) {
@@ -132,7 +132,7 @@ void encode(char* number, unsigned int desired_len, int mode, char* output_buf, 
             counter++;
         }
         for (int j = (int) num_len - 1; j > 0; j -= MAX_BYTE_TO_HEX_STR_LENGTH - 1) {
-            if (counter >= output_len || counter > desired_len) break;
+            if (counter >= output_len || counter >= desired_len) break;
             memcpy(letter, &num_padded[j - 1], MAX_BYTE_TO_HEX_STR_LENGTH - 1);
             letter_num = (unsigned char) strtol(letter, NULL, 10);
             switch (mode) {
@@ -147,7 +147,7 @@ void encode(char* number, unsigned int desired_len, int mode, char* output_buf, 
             counter++;
         }
     }
-    output_buf[counter-1] = '\0';
+    output_buf[counter] = '\0';
 }
 
 
