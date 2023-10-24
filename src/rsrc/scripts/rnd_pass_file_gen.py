@@ -4,45 +4,60 @@ import string
 import random
 import sys
 
-GEN_PASS = 'pass'
 GEN_PIN = 'pin'
+GEN_ALPHA = 'alpha'
+GEN_ASCII = 'ascii'
 
-
-def rnd_small_letter() -> str:
-    return random.choice(string.ascii_lowercase)
+ALPHANUM = string.digits + string.ascii_uppercase + string.ascii_lowercase
+# Without space and |
+ASCII_PRINTABLE = '!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{}~'
 
 
 def rnd_digit() -> str:
     return random.choice(string.digits)
 
 
-def build_word(word_len: int) -> str:
+def rnd_alphanumeric() -> str:
+    return random.choice(ALPHANUM)
+
+
+def rnd_ascii() -> str:
+    return random.choice(ASCII_PRINTABLE)
+
+
+def build_word(word_len: int, mode: str) -> str:
     word = ''
-    for i in range(word_len):
-        word += rnd_small_letter()
+    if mode == GEN_PIN:
+        for i in range(word_len):
+            word += rnd_digit()
+    elif mode == GEN_ALPHA:
+        for i in range(word_len):
+            word += rnd_alphanumeric()
+    elif mode == GEN_ASCII:
+        for i in range(word_len):
+            word += rnd_ascii()
     return word
 
 
-def build_pin(pin_len: int) -> str:
-    pin = ''
-    for i in range(pin_len):
-        pin += rnd_digit()
-    return pin
-
-
 def gen_file(word_len: int, entries: int, mode: str) -> None:
-    if mode == GEN_PASS:
-        with open(f'random_{entries}_passes_len_{word_len}.txt', 'wt') as f:
-            for i in range(entries):
-                entry = build_word(word_len) + '\n'
-                f.write(entry)
-                print(f'Generated password nr {i}')
-    elif mode == GEN_PIN:
+    if mode == GEN_PIN:
         with open(f'random_{entries}_pins_len_{word_len}.txt', 'wt') as f:
             for i in range(entries):
-                entry = build_pin(word_len) + '\n'
+                entry = build_word(word_len, mode) + '\n'
                 f.write(entry)
                 print(f'Generated PIN nr {i}')
+    elif mode == GEN_ALPHA:
+        with open(f'random_{entries}_alphanum_passes_len_{word_len}.txt', 'wt') as f:
+            for i in range(entries):
+                entry = build_word(word_len, mode) + '\n'
+                f.write(entry)
+                print(f'Generated alphanumeric password nr {i}')
+    elif mode == GEN_ASCII:
+        with open(f'random_{entries}_ascii_passes_len_{word_len}.txt', 'wt') as f:
+            for i in range(entries):
+                entry = build_word(word_len, mode) + '\n'
+                f.write(entry)
+                print(f'Generated ascii password nr {i}')
     else:
         print(f"Unrecognized option {mode}, exiting!")
 
