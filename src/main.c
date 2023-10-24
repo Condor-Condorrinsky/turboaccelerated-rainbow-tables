@@ -22,6 +22,12 @@ int gen_table(char* input_file, char* output_file, TableMetadata* meta);
 int help();
 
 int main(int argc, char *argv[]){
+
+    if (argc < 4){
+        help();
+        exit(EXIT_SUCCESS);
+    }
+
     int exit_stat = launch(argc, argv);
 
     printf("Nothing to do\n");
