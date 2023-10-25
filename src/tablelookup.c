@@ -159,13 +159,13 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find, c
     safer_strncpy(reduced, getChainPasswd(c), sizeof reduced);
 
     for (int i = 0; i < meta->chain_len; i++) {
+        iter_itoa(i, iter_str, sizeof iter_str);
         hash(reduced, raw_hash, sizeof raw_hash);
         convert_md5_to_string(raw_hash, hash_string, sizeof hash_string);
         if (strcmp(hash_string, hash_to_find) == 0){
             printf("------------------------------Password: %s------------------------------\n", reduced);
             return HASH_FOUND;
         }
-        calc_set_size(strlen(c->passwd), meta->charset, iter_str, sizeof iter_str);
         reduce_hash(raw_hash, reduced,
                     iter_str, sizeof reduced,
                     set_size, strlen(c->passwd), meta->charset);
