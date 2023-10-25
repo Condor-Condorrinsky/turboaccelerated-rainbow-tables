@@ -132,12 +132,13 @@ static void find_hash_in_chain_test(void** state){
     char* chain_hash = "61678808";
     char* hash_to_look = "0xBE874F841F54C94EE7D128C429DA112F";
     char* hash_to_look_not_present = "0x1234567890ABCDEF1234567890ABCDEF";
+    TableMetadata meta = {.chain_len=32, .charset=DIGITS};
     PassHashChain* c = newChain();
     setChainPasswd(c, passwd);
     setChainEnd(c, chain_hash);
 
-    int result = find_hash_in_chain(c, hash_to_look, "100000000", DIGITS);
-    int result2 = find_hash_in_chain(c, hash_to_look_not_present, "100000000", DIGITS);
+    int result = find_hash_in_chain(c, hash_to_look, "100000000", &meta);
+    int result2 = find_hash_in_chain(c, hash_to_look_not_present, "100000000", &meta);
 
     assert_int_equal(result, HASH_FOUND);
     assert_int_equal(result2, HASH_NOT_FOUND);

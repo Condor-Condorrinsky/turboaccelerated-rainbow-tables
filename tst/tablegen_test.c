@@ -53,7 +53,7 @@ static void generate_rainbow_table_test(void** state){
     generate_rainbow_table(tablegenTestStruct.in, tablegenTestStruct.out, &tablegenTestStruct.meta);
 
     rewind(tablegenTestStruct.out);
-    assert_int_equal((int) count_lines(tablegenTestStruct.out), 8);
+    assert_int_equal((int) count_lines(tablegenTestStruct.out), 8 + 2);
 }
 
 static void generate_chain_test(void** state){
