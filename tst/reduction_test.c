@@ -31,6 +31,20 @@ static void R_test(void** state){
     assert_string_equal(output_ascii, "XSjHj_R7");
 }
 
+static void calc_R_set_size_test(void** state){
+    char digits[100];
+    char alpha[100];
+    char ascii[100];
+
+    calc_R_set_size(13, DIGITS, digits, sizeof digits);
+    calc_R_set_size(10, ALPHANUMERIC, alpha, sizeof alpha);
+    calc_R_set_size(9, ASCII_PRINTABLE, ascii, sizeof ascii);
+
+    assert_string_equal(digits, "10000000000000");
+    assert_string_equal(alpha, "839299365868340224");
+    assert_string_equal(ascii, "520411082988487293");
+}
+
 static void encode_result_test(void** state){
     char* number = "40527010";
     char output1[16];

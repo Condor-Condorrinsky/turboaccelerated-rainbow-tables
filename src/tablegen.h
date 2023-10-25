@@ -1,5 +1,4 @@
 #include "fileio.h"
-#include "patternenum.h"
 #include "reduction.h"
 
 #ifndef TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H
@@ -46,6 +45,9 @@ void hash(const char* input, unsigned char* digest, unsigned int digest_len);
 void reduce_hash(const unsigned char* digest, char* output, const char* reduction_pattern, unsigned int output_len,
                  const char* set_size, unsigned int reduced_pass_len, int mode);
 
+/*
+ * A wrapper for calc_R_set_size function; for more info see reduction.h
+ */
 void calc_set_size(unsigned int pass_len, int mode, char* output, unsigned int output_len);
 
 #endif //TURBOACCELERATED_RAINBOW_TABLES_TABLEGEN_H

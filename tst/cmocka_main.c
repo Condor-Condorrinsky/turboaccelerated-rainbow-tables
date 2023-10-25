@@ -21,6 +21,9 @@ int main(void) {
             cmocka_unit_test(convert_string_to_md5_test),
             // reduction_test.c
             cmocka_unit_test(R_test),
+            cmocka_unit_test(calc_R_set_size_test),
+            cmocka_unit_test(encode_result_test),
+            cmocka_unit_test(encode_test),
             cmocka_unit_test(pad_str_leading_zeroes_test),
             cmocka_unit_test(safer_strncpy_test),
             cmocka_unit_test(uchar_to_ascii_test),
@@ -28,8 +31,10 @@ int main(void) {
             // tablegen_test.c
             cmocka_unit_test_setup_teardown(generate_rainbow_table_test, tablegen_setup, tablegen_teardown),
             cmocka_unit_test_setup_teardown(generate_chain_test, tablegen_setup, tablegen_teardown),
+            cmocka_unit_test(iter_itoa_test),
             // tablelookup_test.c
             cmocka_unit_test_setup_teardown(lookup_test, tablelookup_setup, tablelookup_teardown),
+            cmocka_unit_test(parse_table_meta_test),
             cmocka_unit_test_setup_teardown(extract_hashed_vals_test, tablelookup_setup, tablelookup_teardown),
             cmocka_unit_test_setup_teardown(line_to_PassHashChain_test, tablelookup_setup, tablelookup_teardown),
             cmocka_unit_test_setup_teardown(find_hash_test, tablelookup_setup, tablelookup_teardown),

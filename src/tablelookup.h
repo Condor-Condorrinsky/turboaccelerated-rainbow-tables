@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include "fileio.h"
 #include "PassHashChain.h"
-#include "patternenum.h"
 #include "reduction.h"
 #include "tablegen.h"
 
@@ -26,6 +25,15 @@
  */
 int lookup(FILE* rainbow_file, const char* looked_hash);
 
+/*
+ * Parses metadata at the top of the table
+ *
+ * complete_table - raw file loaded as string
+ * table_after_parse - an address of a pointer (usage: &ptr) to store table after parsing
+ * as the original table gets destroyed
+ *
+ * Returns TableMetaData struct with data parsed from the passed table
+ */
 TableMetadata parse_table_meta(char* complete_table, char** table_after_parse);
 
 /*
@@ -56,7 +64,8 @@ void line_to_PassHashChain(char* line, PassHashChain* c);
  * set_size - string containing a number - set size
  * mode - DIGITS, ALPHANUMERIC or ASCII_PRINTABLE
  */
-int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash, const char* set_size, int mode);
+int find_hash(PassHashChain** table, unsigned int entries, const char* looked_hash, const char* set_size,
+              TableMetadata* meta);
 
 /*
  * Helper function testing whether the chain suspected by find_hash() to contain looked_hash
@@ -67,7 +76,8 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
  * set_size - string containing number - set size
  * mode - DIGITS, ALPHANUMERIC or ASCII PRINTABLE
  */
-int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find, const char* set_size, int mode);
+int find_hash_in_chain(const PassHashChain* c, const char* hash_to_find, const char* set_size,
+                       TableMetadata* meta);
 
 /*
  * Small helper converting all letters in given C string to uppercase

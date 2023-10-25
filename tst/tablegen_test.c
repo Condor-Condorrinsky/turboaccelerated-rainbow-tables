@@ -67,3 +67,20 @@ static void generate_chain_test(void** state){
 
     assert_string_equal(result, expected_result);
 }
+
+static void iter_itoa_test(void** state){
+    char ten[20];
+    char big[20];
+    char neg[20];
+    char zero[20];
+
+    iter_itoa(10, ten, sizeof ten);
+    iter_itoa(14124155, big, sizeof big);
+    iter_itoa(-23535, neg, sizeof neg);
+    iter_itoa(0, zero, sizeof zero);
+
+    assert_string_equal(ten, "10");
+    assert_string_equal(big, "14124155");
+    assert_string_equal(neg, "-23535");
+    assert_string_equal(zero, "0");
+}

@@ -18,7 +18,6 @@ if(TESTS)
             src/reduction.h
             src/tablegen.c
             src/tablegen.h
-            src/patternenum.h
             src/fileio.c
             src/fileio.h
             src/tablelookup.c
@@ -57,7 +56,6 @@ elseif(SINGLE_TEST)
             src/reduction.h
             src/tablegen.c
             src/tablegen.h
-            src/patternenum.h
             src/fileio.c
             src/fileio.h
             src/tablelookup.c
@@ -96,7 +94,6 @@ else()
             src/reduction.h
             src/tablegen.c
             src/tablegen.h
-            src/patternenum.h
             src/fileio.c
             src/fileio.h
             src/tablelookup.c
