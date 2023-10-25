@@ -41,6 +41,23 @@ static void lookup_test(void** state){
     assert_int_equal(ret, HASH_FOUND);
 }
 
+static void parse_table_meta_test(void** state){
+    char* data = "Chain length:16\n"
+                 "Charset:ALPHANUMERIC\n"
+                 "J4lyVcBN3M|xVaW5KGMvv";
+    char data_copy[100];
+    char* table_after_parse;
+    TableMetadata test;
+
+    strcpy(data_copy, data);
+    test = parse_table_meta(data_copy, &table_after_parse);
+
+    assert_int_equal(test.chain_len, 16);
+    assert_int_equal(test.charset, ALPHANUMERIC);
+
+    assert_string_equal(table_after_parse, "J4lyVcBN3M|xVaW5KGMvv");
+}
+
 static void extract_hashed_vals_test(void** state){
     char* table = (char*) malloc(1024 * sizeof(char));
     unsigned int entries = count_lines(tablelookupTestStruct.in);

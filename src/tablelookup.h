@@ -26,6 +26,8 @@
  */
 int lookup(FILE* rainbow_file, const char* looked_hash);
 
+TableMetadata parse_table_meta(char* complete_table, char** table_after_parse);
+
 /*
  * Extracts all reduced values from pre-generated table and places the result
  * in given PassHashChain "array". It is caller's responsibility

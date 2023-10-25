@@ -11,6 +11,7 @@
 #define IO_EXIT_FAILURE                 1
 
 #define RAINBOW_TABLE_SEPARATOR         "|"
+#define RAINBOW_TABLE_META_SEPARATOR    ":"
 #define NEWLINE_STRING                  "\n"
 #define NEWLINE_CHAR                    '\n'
 

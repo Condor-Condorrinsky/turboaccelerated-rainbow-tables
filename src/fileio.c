@@ -34,16 +34,17 @@ void write_metadata(FILE* file, TableMetadata* t){
     fprintf(file, "Chain length:%d\n", t->chain_len);
     switch (t->charset) {
         case DIGITS:
-            fprintf(file, "Charset:%s\n", CHARSETS_STR[DIGITS]);
+            fprintf(file, "Charset%s%s\n", RAINBOW_TABLE_META_SEPARATOR, CHARSETS_STR[DIGITS]);
             break;
         case ALPHANUMERIC:
-            fprintf(file, "Charset:%s\n", CHARSETS_STR[ALPHANUMERIC]);
+            fprintf(file, "Charset%s%s\n", RAINBOW_TABLE_META_SEPARATOR, CHARSETS_STR[ALPHANUMERIC]);
             break;
         case ASCII_PRINTABLE:
-            fprintf(file, "Charset:%s\n", CHARSETS_STR[ASCII_PRINTABLE]);
+            fprintf(file, "Charset%s%s\n", RAINBOW_TABLE_META_SEPARATOR, CHARSETS_STR[ASCII_PRINTABLE]);
             break;
         default:
-            fprintf(file, "Charset:%s\n", "WARNING! CHARSET UNKNOWN, THE TABLE IS MALFORMED");
+            fprintf(file, "Charset%s%s\n", RAINBOW_TABLE_META_SEPARATOR,
+                    "WARNING! CHARSET UNKNOWN, THE TABLE IS MALFORMED");
             break;
     }
 }

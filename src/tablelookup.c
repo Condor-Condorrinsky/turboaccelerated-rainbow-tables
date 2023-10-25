@@ -45,6 +45,37 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
     return result;
 }
 
+TableMetadata parse_table_meta(char* complete_table, char** table_after_parse){
+    TableMetadata ret;
+    char* token;
+    char* tok_saved;
+    char* chain_len;
+    char* charset;
+    char* chain_charset_saved;
+
+    init_TableMetadata(&ret, DEFAULT_CHAIN_LEN, DEFAULT_CHARSET);
+
+    token = strtok_r(complete_table, NEWLINE_STRING, &tok_saved);
+    strtok_r(token, RAINBOW_TABLE_META_SEPARATOR, &chain_charset_saved);
+    chain_len = strtok_r(NULL, RAINBOW_TABLE_META_SEPARATOR, &chain_charset_saved);
+
+    token = strtok_r(tok_saved, NEWLINE_STRING, &tok_saved);
+    strtok_r(token, RAINBOW_TABLE_META_SEPARATOR, &chain_charset_saved);
+    charset = strtok_r(NULL, RAINBOW_TABLE_META_SEPARATOR, &chain_charset_saved);
+
+    ret.chain_len = (int) strtol(chain_len, NULL, 10);
+    if (strcmp(charset, CHARSETS_STR[DIGITS]) == 0){
+        ret.charset = DIGITS;
+    } else if (strcmp(charset, CHARSETS_STR[ALPHANUMERIC]) == 0){
+        ret.charset = ALPHANUMERIC;
+    } else if (strcmp(charset, CHARSETS_STR[ASCII_PRINTABLE]) == 0){
+        ret.charset = ASCII_PRINTABLE;
+    }
+    *table_after_parse = tok_saved;
+
+    return ret;
+}
+
 void extract_hashed_vals(char* complete_table, PassHashChain** extracted_table){
     char* token;
     char* token_saved;
