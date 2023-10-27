@@ -7,9 +7,10 @@
 
 typedef struct TABLELOOKUP_TEST_STRUCT{
     FILE* in;
+    TableMetadata meta;
 } TABLELOOKUP_TEST_STRUCT;
 
-static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in = NULL};
+static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in=NULL, .meta={.chain_len=32, .charset=DIGITS}};
 
 static int tablelookup_setup(void** state){
     const char* path = "tst/rsrc/example_rainbow_table.txt";
