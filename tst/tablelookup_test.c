@@ -7,10 +7,9 @@
 
 typedef struct TABLELOOKUP_TEST_STRUCT{
     FILE* in;
-    TableMetadata meta;
 } TABLELOOKUP_TEST_STRUCT;
 
-static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in=NULL, .meta={.chain_len=32, .charset=DIGITS}};
+static TABLELOOKUP_TEST_STRUCT tablelookupTestStruct = {.in=NULL};
 
 static int tablelookup_setup(void** state){
     const char* path = "tst/rsrc/example_rainbow_table.txt";
@@ -35,7 +34,7 @@ static int tablelookup_teardown(void** state){
 }
 
 static void lookup_test(void** state){
-    const char* hash_to_find = (char*) "0xBE874F841F54C94EE7D128C429DA112F";
+    const char* hash_to_find = "0xBE874F841F54C94EE7D128C429DA112F";
 
     int ret = lookup(tablelookupTestStruct.in, hash_to_find);
 
@@ -47,7 +46,7 @@ static void parse_table_meta_test(void** state){
                  "Charset:ALPHANUMERIC\n"
                  "J4lyVcBN3M|xVaW5KGMvv";
     char data_copy[100];
-    char* table_after_parse;
+    char* table_after_parse = malloc(1024 * sizeof(char));
     TableMetadata test;
 
     strcpy(data_copy, data);
@@ -57,10 +56,13 @@ static void parse_table_meta_test(void** state){
     assert_int_equal(test.charset, ALPHANUMERIC);
 
     assert_string_equal(table_after_parse, "J4lyVcBN3M|xVaW5KGMvv");
+
+    free(table_after_parse);
 }
 
 static void extract_hashed_vals_test(void** state){
-    char* table = (char*) malloc(1024 * sizeof(char));
+    char* table = malloc(1024 * sizeof(char));
+    char* table_after_parse = malloc(1024 * sizeof(char));
     unsigned int entries = count_lines(tablelookupTestStruct.in);
     PassHashChain **chains = malloc(entries * sizeof chains);
 
@@ -69,7 +71,8 @@ static void extract_hashed_vals_test(void** state){
     }
 
     load_file(tablelookupTestStruct.in, table, 1024 * sizeof(char));
-    extract_hashed_vals(table, chains);
+    parse_table_meta(table, &table_after_parse);
+    extract_hashed_vals(table_after_parse, chains);
 
     // Some random checks
     assert_string_equal(getChainPasswd(chains[0]), "12345678");
@@ -86,6 +89,7 @@ static void extract_hashed_vals_test(void** state){
     }
 
     free(table);
+    free(table_after_parse);
     free(chains);
 }
 
@@ -104,19 +108,22 @@ static void line_to_PassHashChain_test(void** state){
 }
 
 static void find_hash_test(void** state){
-    const char* looked = (char*) "0xBE874F841F54C94EE7D128C429DA112F";
-    char* table = (char*) malloc(1024 * sizeof(char));
-    unsigned int entries = count_lines(tablelookupTestStruct.in);
+    const char* looked = "0xBE874F841F54C94EE7D128C429DA112F";
+    char* table = malloc(1024 * sizeof(char));
+    char* table_after_meta = malloc(1024 * sizeof(char));
+    unsigned int entries = count_lines(tablelookupTestStruct.in) - 2;
     PassHashChain **chains = malloc(entries * sizeof chains);
+    TableMetadata meta;
 
     for (int i = 0; i < entries; i++) {
         chains[i] = newChain();
     }
 
     load_file(tablelookupTestStruct.in, table, 1024 * sizeof(char));
-    extract_hashed_vals(table, chains);
+    meta = parse_table_meta(table, &table_after_meta);
+    extract_hashed_vals(table_after_meta, chains);
 
-    int ret = find_hash(chains, entries, looked, "100000000", DIGITS);
+    int ret = find_hash(chains, entries, looked, "100000000", &meta);
 
     assert_int_equal(ret, HASH_FOUND);
 
@@ -125,6 +132,7 @@ static void find_hash_test(void** state){
     }
 
     free(table);
+    free(table_after_meta);
     free(chains);
 }
 

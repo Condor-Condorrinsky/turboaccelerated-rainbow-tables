@@ -19,9 +19,10 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
     rainbow_table[size] = '\0';
     printf("Loaded file into memory...\n");
 
+    table_metadata_parsed = malloc(sizeof(char) * (size + 1));
     meta = parse_table_meta(rainbow_table, &table_metadata_parsed);
     printf("Parsed metadata associated with table...\n");
-    printf("Chain length=%d, charset=%d...\n", meta.chain_len, meta.charset);
+    printf("Chain length=%d, charset=%s...\n", meta.chain_len, CHARSETS_STR[meta.charset]);
 
     entries = count_lines(rainbow_file);
     entries -= METADATA_ENTRIES;
@@ -49,6 +50,7 @@ int lookup(FILE* rainbow_file, const char* looked_hash){
         deleteChain(extracted_hashes[i]);
     }
     free(rainbow_table);
+    free(table_metadata_parsed);
     free(extracted_hashes);
 
     return result;
@@ -80,7 +82,7 @@ TableMetadata parse_table_meta(char* complete_table, char** table_after_parse){
     } else if (strcmp(charset, CHARSETS_STR[ASCII_PRINTABLE]) == 0){
         ret.charset = ASCII_PRINTABLE;
     }
-    *table_after_parse = tok_saved;
+    strcpy(*table_after_parse, tok_saved);
 
     return ret;
 }
