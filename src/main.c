@@ -56,7 +56,7 @@ int launch(int argc, char* argv[]){
     else if (strcmp(argv[optind], "look-up") == 0){
         hash_upper = malloc(strlen(argv[optind+2]) * sizeof(char) + 1);
         strcpy(hash_upper, argv[optind+2]);
-        str_to_uppercase(hash_upper, hash_upper, sizeof hash_upper);
+        str_to_uppercase(hash_upper, hash_upper, strlen(hash_upper));
         hash_upper[1] = 'x';
         ret = find_in_table(input_file, hash_upper, &table);
         free(hash_upper);

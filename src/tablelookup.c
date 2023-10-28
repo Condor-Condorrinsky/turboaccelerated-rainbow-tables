@@ -185,7 +185,7 @@ int find_hash_in_chain(const PassHashChain* const c, const char* hash_to_find, c
 
 int str_to_uppercase(const char* input, char* output, unsigned int output_len){
     unsigned int input_len = strlen(input);
-    if (input_len + 1 > output_len){
+    if (input_len > output_len){
         fprintf(stderr, "Cannot convert to uppercase; buffer too small\n");
         return EXIT_FAILURE;
     }
