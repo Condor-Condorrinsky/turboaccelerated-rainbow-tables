@@ -129,7 +129,7 @@ int find_hash(PassHashChain** table, unsigned int entries, const char* looked_ha
         for (int j = i; j < meta->chain_len; j++){
             iter_itoa(j, iter_str, sizeof iter_str);
             reduce_hash(looked_hash_raw_copy, looked_hash_reduced,
-                        iter_str, sizeof looked_hash_raw_copy,
+                        iter_str, sizeof looked_hash_reduced,
                         set_size, strlen(table[0]->passwd), meta->charset);
             hash(looked_hash_reduced, looked_hash_raw_copy, sizeof looked_hash_raw_copy);
             convert_md5_to_string(looked_hash_raw_copy, looked_hash_working_copy,
